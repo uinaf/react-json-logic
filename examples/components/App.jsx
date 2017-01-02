@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactJsonLogic, { applyLogic } from '../../dist';
-import '../../dist/style.css';
 
 class App extends Component {
   constructor() {
