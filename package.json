@@ -1,0 +1,106 @@
+{
+  "name": "react-component-starter",
+  "version": "0.0.1",
+  "description": "Starter project for making reusable React Components. Includes linting, testing and example project setup.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "webpack --watch --config config/webpack/lib.dev.js",
+    "start:docs": "node config/server.js",
+    "build": "npm run build:lib && npm run build:docs",
+    "build:lib": "rimraf dist && NODE_ENV=production webpack --config config/webpack/lib.prod.js",
+    "build:docs": "rimraf docs && NODE_ENV=production webpack --config config/webpack/docs.prod.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Altay Aydemir <altay.aydemir@gmail.com>",
+  "license": "MIT",
+  "homepage": "http://altayaydemir.github.io/react-component-starter",
+  "repository": {
+    "url": "https://github.com/altayaydemir/react-component-starter.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/altayaydemir/react-component-starter/issues"
+  },
+  "peerDependencies": {
+    "react": ">=15.0",
+    "react-dom": ">=15.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "6.6.0",
+    "babel-cli": "6.18.0",
+    "babel-core": "6.21.0",
+    "babel-eslint": "7.1.1",
+    "babel-loader": "6.2.10",
+    "babel-plugin-transform-object-rest-spread": "6.20.2",
+    "babel-preset-es2015": "6.18.0",
+    "babel-preset-react": "6.16.0",
+    "babel-preset-stage-0": "6.16.0",
+    "babel-register": "6.18.0",
+    "css-loader": "0.26.1",
+    "enzyme": "2.7.0",
+    "eslint": "3.12.2",
+    "eslint-config-airbnb": "13.0.0",
+    "eslint-loader": "1.6.1",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "2.2.3",
+    "eslint-plugin-react": "6.8.0",
+    "extract-text-webpack-plugin": "1.0.1",
+    "html-webpack-plugin": "2.25.0",
+    "jest": "18.1.0",
+    "node-sass": "4.1.1",
+    "postcss-loader": "1.2.1",
+    "react": "15.4.1",
+    "react-addons-test-utils": "15.4.1",
+    "react-dom": "15.4.1",
+    "react-hot-loader": "3.0.0-beta.6",
+    "rimraf": "2.5.4",
+    "sass-loader": "4.1.1",
+    "style-loader": "0.13.1",
+    "webpack": "1.14.0",
+    "webpack-dev-server": "1.16.2"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": "airbnb",
+    "env": {
+      "browser": true,
+      "jest": true
+    },
+    "rules": {
+      "global-require": 0,
+      "import/no-extraneous-dependencies": 0,
+      "import/imports-first": 0
+    }
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015",
+      "stage-0"
+    ],
+    "plugins": [
+      "react-hot-loader/babel",
+      "transform-object-rest-spread"
+    ]
+  },
+  "jest": {
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.jsx?$",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "node"
+    ],
+    "collectCoverageFrom": [
+      "**/src/**"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "<rootDir>/config/jest/styleMock.js",
+      "^.+\\.(jpe?g|png|gif|ttf|eot|svg|md)$": "<rootDir>/config/jest/fileMock.js"
+    }
+  }
+}
