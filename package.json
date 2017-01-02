@@ -1,7 +1,7 @@
 {
-  "name": "react-component-starter",
+  "name": "react-json-logic",
   "version": "0.0.1",
-  "description": "Starter project for making reusable React Components. Includes linting, testing and example project setup.",
+  "description": "Build and evaluate JsonLogic rules with React Components.",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "concurrently \"yarn run start\" \"yarn run start:docs\"",
@@ -18,13 +18,13 @@
   ],
   "author": "Altay Aydemir <altay.aydemir@gmail.com>",
   "license": "MIT",
-  "homepage": "http://altayaydemir.github.io/react-component-starter",
+  "homepage": "http://altayaydemir.github.io/react-json-logic",
   "repository": {
-    "url": "https://github.com/altayaydemir/react-component-starter.git",
+    "url": "https://github.com/altayaydemir/react-json-logic.git",
     "type": "git"
   },
   "bugs": {
-    "url": "https://github.com/altayaydemir/react-component-starter/issues"
+    "url": "https://github.com/altayaydemir/react-json-logic/issues"
   },
   "peerDependencies": {
     "react": ">=15.0",
