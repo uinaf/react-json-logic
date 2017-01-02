@@ -14,7 +14,7 @@ const Select = ({ value, options, onChange }) => (
       value={value}
       onChange={e => onChange(e.target.value)}
     >
-      <option value={''}>
+      <option value={''} disabled>
         Select an Operator
       </option>
 

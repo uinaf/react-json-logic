@@ -4,9 +4,10 @@
   "description": "Starter project for making reusable React Components. Includes linting, testing and example project setup.",
   "main": "./dist/index.js",
   "scripts": {
+    "dev": "concurrently \"yarn run start\" \"yarn run start:docs\"",
     "start": "webpack --watch --config config/webpack/lib.dev.js",
     "start:docs": "node config/server.js",
-    "build": "npm run build:lib && npm run build:docs",
+    "build": "yarn run build:lib && yarn run build:docs",
     "build:lib": "rimraf dist && NODE_ENV=production webpack --config config/webpack/lib.prod.js",
     "build:docs": "rimraf docs && NODE_ENV=production webpack --config config/webpack/docs.prod.js",
     "test": "jest --coverage",
@@ -29,6 +30,9 @@
     "react": ">=15.0",
     "react-dom": ">=15.0"
   },
+  "dependencies": {
+    "json-logic-js": "1.0.9"
+  },
   "devDependencies": {
     "autoprefixer": "6.6.0",
     "babel-cli": "6.18.0",
@@ -40,6 +44,7 @@
     "babel-preset-react": "6.16.0",
     "babel-preset-stage-0": "6.16.0",
     "babel-register": "6.18.0",
+    "concurrently": "^3.1.0",
     "css-loader": "0.26.1",
     "enzyme": "2.7.0",
     "eslint": "3.12.2",

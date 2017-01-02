@@ -43,7 +43,6 @@ class Any extends Component {
 
     this.setState({ field, value });
     this.props.onChange(value);
-    this.forceUpdate();
   };
 
   onChildValueChange = (childValue, index) => {
