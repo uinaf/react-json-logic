@@ -1,6 +1,6 @@
 # React JsonLogic 
 
-Build and evaluate JsonLogic rules with React Components.
+Build and evaluate [JsonLogic](http://jsonlogic.com/) rules with React Components.
 
 ## Installation
 
