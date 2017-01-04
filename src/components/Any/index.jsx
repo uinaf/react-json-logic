@@ -8,9 +8,11 @@ import Select from '../Select';
 import { OPERATORS } from '../../options';
 
 // PropTypes
+const { string, func } = PropTypes;
 const propTypes = {
-  field: PropTypes.string,
-  onChange: PropTypes.func,
+  field: string,
+  onChange: func,
+  parent: string,
 };
 
 const defaultProps = {
@@ -59,12 +61,19 @@ class Any extends Component {
     this.props.onChange(value);
   }
 
+  getAvailableOperators = () => {
+    const { parent } = this.props;
+    return OPERATORS.filter(operator => !operator.notAvailableUnder.some(item => item === parent));
+  }
+
   renderChild = (childField, index) => {
+    const parent = this.state.field;
     const Child = childField.default;
 
     return (
       <Child
-        key={`${this.state.field}.${index}`}
+        key={`${parent}.${index}`}
+        parent={parent}
         onChange={value => this.onChildValueChange(value, index)}
       />
     );
@@ -77,8 +86,8 @@ class Any extends Component {
     return (
       <div>
         <Select
-          options={OPERATORS}
           value={field}
+          options={this.getAvailableOperators()}
           onChange={this.onFieldChange}
         />
 

@@ -22,7 +22,10 @@ class JsonLogicBuilder extends Component {
   render() {
     return (
       <div>
-        <Any onChange={this.onChange} />
+        <Any
+          onChange={this.onChange}
+          parent="master"
+        />
       </div>
     );
   }
