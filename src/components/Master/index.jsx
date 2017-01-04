@@ -5,15 +5,21 @@ import React, { PropTypes, Component } from 'react';
 import Any from '../Any';
 
 // PropTypes
+const { func, object } = PropTypes;
 const propTypes = {
-  onChange: PropTypes.func,
+  onChange: func,
+  value: object,
+};
+
+const defaultProps = {
+  value: {},
 };
 
 class JsonLogicBuilder extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      value: {},
+      value: props.value,
     };
   }
 
@@ -23,8 +29,9 @@ class JsonLogicBuilder extends Component {
     return (
       <div>
         <Any
-          onChange={this.onChange}
           parent="master"
+          onChange={this.onChange}
+          value={this.state.value}
         />
       </div>
     );
@@ -32,5 +39,6 @@ class JsonLogicBuilder extends Component {
 }
 
 JsonLogicBuilder.propTypes = propTypes;
+JsonLogicBuilder.defaultProps = defaultProps;
 
 export default JsonLogicBuilder;

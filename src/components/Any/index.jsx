@@ -8,30 +8,31 @@ import Select from '../Select';
 import { OPERATORS } from '../../options';
 
 // PropTypes
-const { string, func } = PropTypes;
+const { string, func, object, oneOfType } = PropTypes;
 const propTypes = {
   field: string,
   onChange: func,
   parent: string,
+  value: oneOfType([object, string]),
 };
 
 const defaultProps = {
   field: '',
+  value: {},
 };
 
 class Any extends Component {
   constructor(props) {
     super(props);
+    const { value } = props;
+    let field = props.field;
 
-    const { field } = props;
-    const value = {};
-    value[field] = [];
+    if (Object.keys(value).length > 0) {
+      const firstElem = Object.keys(value)[0];
+      field = OPERATORS.some(operator => operator.label === firstElem) ? firstElem : 'value';
+    }
 
     this.state = { field, value };
-  }
-
-  componentDidMount() {
-    this.props.onChange(this.state.value);
   }
 
   onFieldChange = (field) => {
@@ -68,12 +69,22 @@ class Any extends Component {
 
   renderChild = (childField, index) => {
     const parent = this.state.field;
+    const parentValue = this.state.value;
+
     const Child = childField.default;
+    let childValue = '';
+
+    if (parent !== 'value') {
+      childValue = parentValue[parent][index];
+    } else {
+      childValue = parentValue;
+    }
 
     return (
       <Child
         key={`${parent}.${index}`}
         parent={parent}
+        value={childValue}
         onChange={value => this.onChildValueChange(value, index)}
       />
     );
