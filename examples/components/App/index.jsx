@@ -2,6 +2,7 @@
 import React from 'react';
 
 // UI
+import GitHubForkRibbon from 'react-github-fork-ribbon';
 import style from './style.scss';
 
 // Examples
@@ -9,6 +10,15 @@ import Demo from '../Demo';
 
 const App = () => (
   <div className={style.App}>
+    <GitHubForkRibbon
+      href="//github.com/altayaydemir/react-json-logic"
+      target="_blank"
+      position="right"
+      color="black"
+    >
+      Fork me on GitHub
+    </GitHubForkRibbon>
+
     <div className={style.Header}>
       <img className={style.ReactLogo} src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/React.js_logo.svg/2000px-React.js_logo.svg.png" alt="react" />
       <img className={style.Baby} src="https://media.giphy.com/media/5X7GDf7zc1Ebu/giphy.gif" alt="baby" />
