@@ -83,7 +83,8 @@
     "rules": {
       "global-require": 0,
       "import/no-extraneous-dependencies": 0,
-      "import/imports-first": 0
+      "import/imports-first": 0,
+      "no-param-reassign": 0
     }
   },
   "babel": {

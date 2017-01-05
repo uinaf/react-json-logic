@@ -8,16 +8,14 @@ import Select from '../Select';
 import { OPERATORS } from '../../options';
 
 // PropTypes
-const { string, func, object, oneOfType } = PropTypes;
+const { string, any, func } = PropTypes;
 const propTypes = {
-  field: string,
   onChange: func,
   parent: string,
-  value: oneOfType([object, string]),
+  value: any,
 };
 
 const defaultProps = {
-  field: '',
   value: {},
 };
 
@@ -25,11 +23,13 @@ class Any extends Component {
   constructor(props) {
     super(props);
     const { value } = props;
-    let field = props.field;
+    let field = 'value';
 
-    if (Object.keys(value).length > 0) {
+    if (typeof value === 'object' && Object.keys(value).length > 0) {
       const firstElem = Object.keys(value)[0];
       field = OPERATORS.some(operator => operator.signature === firstElem) ? firstElem : 'value';
+    } else if (typeof value === 'object') {
+      field = '';
     }
 
     this.state = { field, value };

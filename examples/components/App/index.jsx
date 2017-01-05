@@ -51,7 +51,7 @@ const App = () => (
 
       <Demo
         title="With Accessor"
-        value={JSON.parse('{"==":["1",{"var":["b.a"]}]}')}
+        value={JSON.parse('{"===":[1,{"var":["b.a"]}]}')}
         data={{ b: { a: 1 } }}
       />
     </div>
