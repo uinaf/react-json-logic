@@ -7,18 +7,22 @@ const propTypes = {
   value: PropTypes.any,
 };
 
+const defaultProps = {
+  value: {},
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       value: props.value,
-      result: 'Not Evauluated',
+      result: 'Not Evaluated',
     };
   }
 
-  onEvaluate = () => {
-    this.setState({ result: applyLogic(this.state.value) });
-  }
+  onChange = value => this.setState({ value })
+
+  onEvaluate = () => this.setState({ result: applyLogic(this.state.value) })
 
   render() {
     const { title } = this.props;
@@ -32,7 +36,7 @@ class App extends Component {
 
         <ReactJsonLogic
           value={value}
-          onChange={e => this.setState({ value: e })}
+          onChange={this.onChange}
         />
 
         <hr />
@@ -57,5 +61,6 @@ class App extends Component {
 }
 
 App.propTypes = propTypes;
+App.defaultProps = defaultProps;
 
 export default App;

@@ -20,15 +20,28 @@ const App = () => (
     </GitHubForkRibbon>
 
     <div className={style.Header}>
-      <img className={style.ReactLogo} src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/React.js_logo.svg/2000px-React.js_logo.svg.png" alt="react" />
-      <img className={style.Baby} src="https://media.giphy.com/media/5X7GDf7zc1Ebu/giphy.gif" alt="baby" />
-      <img className={style.JsonLogicLogo} src="http://jsonlogic.com/images/jsonlogic-white.png" alt="jsonlogic" />
+      <img
+        className={style.ReactLogo}
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/React.js_logo.svg/2000px-React.js_logo.svg.png"
+        alt="react"
+      />
+
+      <img
+        className={style.Baby}
+        src="https://media.giphy.com/media/5X7GDf7zc1Ebu/giphy.gif"
+        alt="baby"
+      />
+
+      <img
+        className={style.JsonLogicLogo}
+        src="http://jsonlogic.com/images/jsonlogic-white.png"
+        alt="jsonlogic"
+      />
     </div>
 
     <div className={style.Content}>
       <Demo
         title="No Initial Value"
-        value={{}}
       />
 
       <Demo
