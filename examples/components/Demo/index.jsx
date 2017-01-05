@@ -2,13 +2,17 @@ import React, { PropTypes, Component } from 'react';
 import ReactJsonLogic, { applyLogic } from '../../../dist';
 import style from './style.scss';
 
+// PropTypes
+const { string, object, oneOfType } = PropTypes;
 const propTypes = {
-  title: PropTypes.string,
-  value: PropTypes.any,
+  title: string,
+  value: oneOfType([object, string]),
+  data: object,
 };
 
 const defaultProps = {
   value: {},
+  data: {},
 };
 
 class App extends Component {
@@ -16,17 +20,22 @@ class App extends Component {
     super(props);
     this.state = {
       value: props.value,
+      data: JSON.stringify(props.data),
       result: 'Not Evaluated',
     };
   }
 
-  onChange = value => this.setState({ value })
+  onFieldValueChange = value => this.setState({ value })
 
-  onEvaluate = () => this.setState({ result: applyLogic(this.state.value) })
+  onAccessorDataChange = data => this.setState({ data })
+
+  onEvaluate = () => this.setState({
+    result: applyLogic(this.state.value, JSON.parse(this.state.data)),
+  })
 
   render() {
     const { title } = this.props;
-    const { value, result } = this.state;
+    const { value, data, result } = this.state;
 
     return (
       <div className={style.Wrapper}>
@@ -36,7 +45,7 @@ class App extends Component {
 
         <ReactJsonLogic
           value={value}
-          onChange={this.onChange}
+          onChange={this.onFieldValueChange}
         />
 
         <hr />
@@ -47,7 +56,21 @@ class App extends Component {
           {JSON.stringify(value)}
         </code>
 
-        <button onClick={() => this.onEvaluate()}>
+        <hr />
+
+        <h4>Data for Accessor Fields <small>(Must be JSON)</small></h4>
+
+        <textarea
+          value={data}
+          onChange={e => this.onAccessorDataChange(e.target.value)}
+        />
+
+        <hr />
+
+        <button
+          disabled={Object.keys(value).length === 0}
+          onClick={() => this.onEvaluate()}
+        >
           Evaluate
         </button>
 

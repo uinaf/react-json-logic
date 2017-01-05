@@ -8,13 +8,17 @@
 export const FIELD_TYPES = {
   ANY: require('./components/Any'),
   INPUT: require('./components/Input'),
+  ACCESSOR: require('./components/Accessor'),
 };
 
 /**
  * Operators Available for Usage to Build JSON Logic Expressions.
  *
+ * - signature
+ *   Signature of the operator.
+ *
  * - label
- *   Signature (also the visible label) of the operator.
+ *   Visible name of the operator.
  *
  * - fields
  *   Child fields that operator's structure constists of.
@@ -25,56 +29,73 @@ export const FIELD_TYPES = {
 
 export const OPERATORS = [
   {
+    signature: 'value',
     label: 'value',
     fields: [FIELD_TYPES.INPUT],
     notAvailableUnder: ['master', 'or', 'and'],
   },
   {
+    signature: 'var',
+    label: 'accessor',
+    fields: [FIELD_TYPES.ACCESSOR],
+    notAvailableUnder: ['master'],
+  },
+  {
+    signature: 'or',
     label: 'or',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: 'and',
     label: 'and',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '===',
     label: '===',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '==',
     label: '==',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '<=',
     label: '<=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '>=',
     label: '>=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '<',
     label: '<',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '>',
     label: '>',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '!=',
     label: '!=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
   },
   {
+    signature: '!==',
     label: '!==',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],

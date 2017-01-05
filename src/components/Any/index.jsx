@@ -29,7 +29,7 @@ class Any extends Component {
 
     if (Object.keys(value).length > 0) {
       const firstElem = Object.keys(value)[0];
-      field = OPERATORS.some(operator => operator.label === firstElem) ? firstElem : 'value';
+      field = OPERATORS.some(operator => operator.signature === firstElem) ? firstElem : 'value';
     }
 
     this.state = { field, value };
@@ -92,7 +92,7 @@ class Any extends Component {
 
   render() {
     const { field } = this.state;
-    const selectedOperator = OPERATORS.find(operator => operator.label === field);
+    const selectedOperator = OPERATORS.find(operator => operator.signature === field);
 
     return (
       <div>

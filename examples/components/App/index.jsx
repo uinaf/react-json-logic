@@ -48,6 +48,12 @@ const App = () => (
         title="With Initial Value"
         value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]}]},"1"]}')}
       />
+
+      <Demo
+        title="With Accessor"
+        value={JSON.parse('{"==":["1",{"var":["b.a"]}]}')}
+        data={{ b: { a: 1 } }}
+      />
     </div>
   </div>
 );

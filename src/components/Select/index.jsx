@@ -2,10 +2,11 @@
 import React, { PropTypes } from 'react';
 
 // PropTypes
+const { string, array, func } = PropTypes;
 const propTypes = {
-  value: PropTypes.string,
-  options: PropTypes.array,
-  onChange: PropTypes.func,
+  value: string,
+  options: array,
+  onChange: func,
 };
 
 const Select = ({ value, options, onChange }) => (
@@ -21,7 +22,7 @@ const Select = ({ value, options, onChange }) => (
       {options.map((option, index) => (
         <option
           key={index}
-          value={option.label}
+          value={option.signature}
         >
           {option.label}
         </option>
