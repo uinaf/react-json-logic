@@ -1,3 +1,16 @@
+/**
+ * Input Field
+ *
+ * This can be considered as a free entry field which contains logic about the type of its content.
+ *
+ * - onChange: Returns the latest part of the expression rendered by this component. Used by its
+ * parent (and grand parents) to complete structure, part by part.
+ *
+ * - value: Value of the field, passed from its parent.
+ *
+ * - type: Type of the field, will be determined with respect to the `typeof` result of the value.
+ */
+
 // Core
 import React, { Component, PropTypes } from 'react';
 
