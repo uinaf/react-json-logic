@@ -14,7 +14,11 @@
     "test:watch": "jest --watch"
   },
   "keywords": [
-    "react"
+    "react",
+    "json-logic",
+    "json-logic-js",
+    "react-json-logic",
+    "json-logic-builder"
   ],
   "author": "Altay Aydemir <altay.aydemir@gmail.com>",
   "license": "MIT",
@@ -34,7 +38,7 @@
     "json-logic-js": "1.0.9"
   },
   "devDependencies": {
-    "autoprefixer": "6.6.0",
+    "autoprefixer": "6.6.1",
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
@@ -54,7 +58,7 @@
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.8.0",
     "extract-text-webpack-plugin": "1.0.1",
-    "html-webpack-plugin": "2.25.0",
+    "html-webpack-plugin": "2.26.0",
     "jest": "18.1.0",
     "node-sass": "4.1.1",
     "postcss-loader": "1.2.1",
