@@ -20,6 +20,9 @@
 // Core
 import React, { PropTypes, Component } from 'react';
 
+// Helpers
+import isEqual from 'lodash.isequal';
+
 // UI
 import Select from '../Select';
 
@@ -42,7 +45,22 @@ const defaultProps = {
 class Any extends Component {
   constructor(props) {
     super(props);
+    this.onInitializeState(props);
+  }
 
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.value, nextProps.value)) {
+      this.onInitializeState(nextProps);
+    }
+  }
+
+  /**
+   * Initializes component state with respect to props.
+   *
+   * This method will be called on initial render (from constructor) and cases like async loading,
+   * which may end up with change in props.
+   */
+  onInitializeState = (props) => {
     const value = props.value;
     let field = 'value';
 

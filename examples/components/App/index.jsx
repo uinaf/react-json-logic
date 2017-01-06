@@ -7,6 +7,7 @@ import style from './style.scss';
 
 // Examples
 import Demo from '../Demo';
+import DemoAsync from '../DemoAsync';
 
 const App = () => (
   <div className={style.App}>
@@ -47,6 +48,10 @@ const App = () => (
       <Demo
         title="With Initial Value"
         value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]}]},"1"]}')}
+      />
+
+      <DemoAsync
+        title="With Initial Value (Async Loaded)"
       />
 
       <Demo
