@@ -12,6 +12,9 @@
 // Core
 import React, { PropTypes, Component } from 'react';
 
+// Helpers
+import isEqual from 'lodash.isequal';
+
 // UI
 import Any from '../Any';
 
@@ -34,6 +37,12 @@ class JsonLogicBuilder extends Component {
     this.state = {
       value: props.value,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.value, nextProps.value)) {
+      this.setState({ value: nextProps.value });
+    }
   }
 
   onChange = value => this.setState({ value }, () => this.props.onChange(value))
