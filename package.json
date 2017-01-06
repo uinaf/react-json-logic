@@ -1,6 +1,6 @@
 {
   "name": "react-json-logic",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Build and evaluate JsonLogic rules with React Components.",
   "main": "./dist/index.js",
   "scripts": {
