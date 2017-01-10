@@ -23,8 +23,13 @@ class Accessor extends Component {
 
   onChange = (value, level) => {
     let values = this.state.value.split('.');
-    values[level] = value;
-    values = values.join('.');
+
+    if (level === 0) {
+      values = value;
+    } else {
+      values[level] = value;
+      values = values.join('.');
+    }
 
     this.setState({ value: values }, () => this.props.onChange(values));
   }
@@ -33,13 +38,17 @@ class Accessor extends Component {
     const { value } = this.state;
     const splittedValue = value.split('.');
 
-    if (typeof data === 'object') {
+    if (typeof data === 'object' && Object.keys(data).length > 0) {
       return (
         <span>
           <select
-            value={splittedValue[level]}
+            value={splittedValue[level] || ''}
             onChange={e => this.onChange(e.target.value, level)}
           >
+            <option disabled>
+              Select
+            </option>
+
             {Object.keys(data).map((item, index) => (
               <option
                 key={`${level}.${index}`}
@@ -50,7 +59,7 @@ class Accessor extends Component {
             ))}
           </select>
 
-          {Object.keys(data).map(() => this.renderSelector(data[splittedValue[level]], level + 1))}
+          {this.renderSelector(data[splittedValue[level]], level + 1)}
         </span>
       );
     }
