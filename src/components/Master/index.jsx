@@ -19,11 +19,11 @@ import isEqual from 'lodash.isequal';
 import Any from '../Any';
 
 // PropTypes
-const { func, object } = PropTypes;
+const { func, object, string, oneOfType } = PropTypes;
 const propTypes = {
   onChange: func,
   value: object,
-  data: object,
+  data: oneOfType([object, string]),
 };
 
 const defaultProps = {
@@ -47,12 +47,24 @@ class JsonLogicBuilder extends Component {
 
   onChange = value => this.setState({ value }, () => this.props.onChange(value))
 
+  parseData = (data) => {
+    if (typeof data !== 'object') {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return {};
+      }
+    }
+
+    return data;
+  }
+
   render() {
     return (
       <div>
         <Any
           parent="master"
-          data={this.props.data}
+          data={this.parseData(this.props.data)}
           onChange={this.onChange}
           value={this.state.value}
         />

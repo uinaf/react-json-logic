@@ -44,6 +44,7 @@ class App extends Component {
         </h3>
 
         <ReactJsonLogic
+          data={data}
           value={value}
           onChange={this.onFieldValueChange}
         />

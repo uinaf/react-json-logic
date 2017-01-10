@@ -1,5 +1,5 @@
 // Core
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 // PropTypes
 const { string, object, func } = PropTypes;
@@ -10,18 +10,30 @@ const propTypes = {
   data: object,
 };
 
-const Input = ({ name, onChange, value, data }) => (
-  <div>
-    {JSON.stringify(data)}
-    <input
-      name={name}
-      onChange={e => onChange(e.target.value)}
-      defaultValue={value}
-      placeholder="Accessor"
-    />
-  </div>
-);
+class Accessor extends Component {
+  constructor(props) {
+    super(props);
+    console.log(props.data);
+  }
 
-Input.propTypes = propTypes;
+  render() {
+    const { name, onChange, value, data } = this.props;
 
-export default Input;
+    return (
+      <div>
+        {JSON.stringify(data)}
+
+        <input
+          name={name}
+          onChange={e => onChange(e.target.value)}
+          defaultValue={value}
+          placeholder="Accessor"
+        />
+      </div>
+    );
+  }
+}
+
+Accessor.propTypes = propTypes;
+
+export default Accessor;

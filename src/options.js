@@ -5,7 +5,6 @@
  * Input:     Basic HTML input with type selection.
  * Accessor:  Data accessor field ("var" operator in JSON Logic)
  */
-
 export const FIELD_TYPES = {
   ANY: require('./components/Any'),
   INPUT: require('./components/Input'),
@@ -27,7 +26,6 @@ export const FIELD_TYPES = {
  * - notAvailableUnder
  *   Array of operators that wont be able to render this operator as its child field.
  */
-
 export const OPERATORS = [
   {
     type: 'Value Field',

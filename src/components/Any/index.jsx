@@ -2,7 +2,7 @@
  * Any Field
  *
  * This field is like a blueprint for whole structure. It's used for recursive rendering of
- * nested JSON Logic expression. Has a dropbox for selecting the type of children fields and
+ * nested JSON Logic expression. Has a dropdown for selecting the type of children fields and
  * contains its children fields as child components.
  *
  * - onChange: Returns the latest part of the expression rendered by this component. Used by its
@@ -124,7 +124,7 @@ class Any extends Component {
     const parent = this.state.field;
     const parentValue = this.state.value;
 
-    const Child = childField.default;
+    const ChildComponent = childField.default;
     let childValue = '';
 
     if (parent !== 'value') {
@@ -134,7 +134,7 @@ class Any extends Component {
     }
 
     return (
-      <Child
+      <ChildComponent
         key={`${parent}.${index}`}
         parent={parent}
         value={childValue}
