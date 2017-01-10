@@ -109,11 +109,21 @@ class Any extends Component {
 
   /**
    * Used for selection of available child components.
+   * Removes accessor field from the list if props.data is empty
    * Return value of this method will be the entry point of Select component.
    */
   getAvailableOperators = () => {
-    const { parent } = this.props;
-    return OPERATORS.filter(operator => !operator.notAvailableUnder.some(item => item === parent));
+    const { parent, data } = this.props;
+
+    let operators = OPERATORS.filter(operator =>
+      !operator.notAvailableUnder.some(item => item === parent),
+    );
+
+    if (Object.keys(data).length === 0) {
+      operators = operators.filter(operator => operator.signature !== 'var');
+    }
+
+    return operators;
   }
 
   /**
