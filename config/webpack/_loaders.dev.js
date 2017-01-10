@@ -3,6 +3,10 @@ const extractCSS = require('./_extractCSS');
 
 module.exports = [
   {
+    test: /\.json$/,
+    loader: 'json',
+  },
+  {
     test: /\.jsx?$/,
     loader: 'babel',
     include: [

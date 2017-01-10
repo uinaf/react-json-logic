@@ -1,0 +1,195 @@
+{
+  "activity": {
+    "answers": [
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:32Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "41"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:33Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "38"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:34Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "20"
+      }
+    ]
+  },
+  "category": {
+    "action_type": "questionnaire",
+    "answers": [
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:32Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "41"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:33Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "38"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:34Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "20"
+      }
+    ],
+    "key": "activity_category_2292027234"
+  },
+  "question": {
+    "answers": [
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:32Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "41"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:33Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "38"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:34Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "20"
+      }
+    ],
+    "key": "ratio_question_8476053142",
+    "type": "RatioQuestion"
+  },
+  "section": {
+    "answers": [
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:32Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "41"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:33Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "38"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:34Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "20"
+      }
+    ],
+    "key": "choice_set_section_8213252125"
+  },
+  "visit": {
+    "answers": [
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:32Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "41"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:33Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "38"
+      },
+      {
+        "activity_category_key": "activity_category_2292027234",
+        "answered_at": "2017-01-03T09:21:34Z",
+        "choice_key": null,
+        "choice_set_section_key": null,
+        "combo_item_key": null,
+        "question_key": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "20"
+      }
+    ],
+    "auditor_id": "mehmet",
+    "sealed": false,
+    "status": 0,
+    "store": {
+      "address": "address",
+      "city": "Istanbul",
+      "code": "8373506",
+      "country": "Turkey",
+      "district": "Besiktas",
+      "hint": "8373506 BERKA--FERHATPASA address, Besiktas, Istanbul, state, Turkey",
+      "latitude": 40.989266,
+      "longitude": 28.386703,
+      "name": "BERKA--FERHATPASA",
+      "state": "state",
+      "store_type": ""
+    },
+    "store_code": "8373506",
+    "visit_status": "SUCCEEDED"
+  }
+}

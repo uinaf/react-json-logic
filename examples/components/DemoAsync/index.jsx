@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import ReactJsonLogic, { applyLogic } from '../../../dist';
+import Editor from '../Editor';
 import style from './style.scss';
 
 // PropTypes
@@ -72,12 +73,10 @@ class App extends Component {
 
         <h4>Data for Accessor Fields <small>(Must be JSON)</small></h4>
 
-        <textarea
+        <Editor
           value={data}
-          onChange={e => this.onAccessorDataChange(e.target.value)}
+          onChange={e => this.onAccessorDataChange(e)}
         />
-
-        <hr />
 
         <button
           disabled={Object.keys(value).length === 0}

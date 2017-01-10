@@ -34,7 +34,16 @@ class Accessor extends Component {
     const { value } = this.state;
     const splittedValue = value.split('.');
 
-    if (typeof data === 'object' && Object.keys(data).length > 0) {
+    let iterator = null;
+
+    // @TODO: Parsing array fields discussion.
+    if (Array.isArray(data)) {
+      iterator = Object.keys(data);
+    } else if (typeof data === 'object') {
+      iterator = Object.keys(data);
+    }
+
+    if (iterator) {
       return (
         <span>
           <select
@@ -45,7 +54,7 @@ class Accessor extends Component {
               Select
             </option>
 
-            {Object.keys(data).map((item, index) => (
+            {iterator.map((item, index) => (
               <option
                 key={`${level}.${index}`}
                 value={item}

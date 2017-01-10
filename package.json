@@ -35,7 +35,8 @@
     "react-dom": ">=15.0"
   },
   "dependencies": {
-    "json-logic-js": "1.0.9"
+    "json-logic-js": "1.0.9",
+    "react-codemirror": "^0.3.0"
   },
   "devDependencies": {
     "autoprefixer": "6.6.1",
@@ -48,6 +49,7 @@
     "babel-preset-react": "6.16.0",
     "babel-preset-stage-0": "6.16.0",
     "babel-register": "6.18.0",
+    "brace": "^0.9.1",
     "concurrently": "3.1.0",
     "css-loader": "0.26.1",
     "enzyme": "2.7.0",
@@ -60,10 +62,12 @@
     "extract-text-webpack-plugin": "1.0.1",
     "html-webpack-plugin": "2.26.0",
     "jest": "18.1.0",
+    "json-loader": "^0.5.4",
     "lodash.isequal": "^4.4.0",
     "node-sass": "4.1.1",
     "postcss-loader": "1.2.1",
     "react": "15.4.1",
+    "react-ace": "^4.1.1",
     "react-addons-test-utils": "15.4.1",
     "react-dom": "15.4.1",
     "react-github-fork-ribbon": "0.4.4",
