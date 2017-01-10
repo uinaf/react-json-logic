@@ -10,7 +10,7 @@ const propTypes = {
 };
 
 const Select = ({ value, options, onChange }) => (
-  <div>
+  <div style={{ display: 'inline' }}>
     <select
       value={value}
       onChange={e => onChange(e.target.value)}

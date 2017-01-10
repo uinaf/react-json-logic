@@ -50,7 +50,7 @@ const App = () => (
 
       <Demo
         title="With Initial Value"
-        value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]}]},"1"]}')}
+        value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}')}
       />
 
       <DemoAsync
@@ -65,7 +65,7 @@ const App = () => (
 
       <Demo
         title="With Accessor - Complex JSON"
-        value={JSON.parse('{"===":["41",{"var":["activity.answers.0.value"]}]}')}
+        value={JSON.parse('{"<":["2017-01-09",{"var":["activity.answers.1.answeredAt"]}]}')}
         data={question}
       />
     </div>

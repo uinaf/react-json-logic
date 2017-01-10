@@ -2,194 +2,283 @@
   "activity": {
     "answers": [
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:32Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
         "type": "EntryAnswer",
-        "value": "41"
+        "value": "0"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:33Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "1"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "2"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "3"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "4"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
         "value": "38"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:34Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
-        "value": "20"
+        "value": "61"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:25Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "0"
       }
     ]
   },
   "category": {
-    "action_type": "questionnaire",
+    "actionType": "questionnaire",
     "answers": [
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:32Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
         "type": "EntryAnswer",
-        "value": "41"
+        "value": "0"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:33Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "1"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "2"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "3"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "4"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
         "value": "38"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:34Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
-        "value": "20"
+        "value": "61"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:25Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "0"
       }
     ],
     "key": "activity_category_2292027234"
   },
   "question": {
-    "answers": [
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:32Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "41"
-      },
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:33Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "38"
-      },
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:34Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "20"
-      }
-    ],
-    "key": "ratio_question_8476053142",
-    "type": "RatioQuestion"
+    "answers": [],
+    "key": "scale_question_1172846547",
+    "type": "ScaleQuestion"
   },
   "section": {
-    "answers": [
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:32Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "41"
-      },
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:33Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "38"
-      },
-      {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:34Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "20"
-      }
-    ],
-    "key": "choice_set_section_8213252125"
+    "answers": [],
+    "key": "choice_set_section_4038520581",
+    "required": false
   },
   "visit": {
     "answers": [
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:32Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
         "type": "EntryAnswer",
-        "value": "41"
+        "value": "0"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:33Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "1"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "2"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "3"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:19Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "order_question_8645829225",
+        "type": "EntryAnswer",
+        "value": "4"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
         "value": "38"
       },
       {
-        "activity_category_key": "activity_category_2292027234",
-        "answered_at": "2017-01-03T09:21:34Z",
-        "choice_key": null,
-        "choice_set_section_key": null,
-        "combo_item_key": null,
-        "question_key": "ratio_question_8476053142",
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:23Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
-        "value": "20"
+        "value": "61"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-10T14:09:25Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "0"
       }
     ],
-    "auditor_id": "mehmet",
+    "auditorId": "mehmet",
     "sealed": false,
     "status": 0,
     "store": {
       "address": "address",
       "city": "Istanbul",
-      "code": "8373506",
+      "code": "8373517",
       "country": "Turkey",
       "district": "Besiktas",
-      "hint": "8373506 BERKA--FERHATPASA address, Besiktas, Istanbul, state, Turkey",
-      "latitude": 40.989266,
-      "longitude": 28.386703,
-      "name": "BERKA--FERHATPASA",
+      "hint": "8373517 BERKA--INONU 1 address, Besiktas, Istanbul, state, Turkey",
+      "latitude": 41.390248,
+      "longitude": 28.588807,
+      "name": "BERKA--INONU 1",
       "state": "state",
-      "store_type": ""
+      "storeType": ""
     },
-    "store_code": "8373506",
-    "visit_status": "SUCCEEDED"
+    "storeCode": "8373517",
+    "visitStatus": "SUCCEEDED"
   }
 }

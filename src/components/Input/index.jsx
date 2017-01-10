@@ -15,10 +15,20 @@
 import React, { Component, PropTypes } from 'react';
 
 // Constants
-const INPUT_TYPES = ['text', 'number'];
+const INPUT_TYPES = ['text', 'number', 'date'];
 
 // Helpers
-const isNumeric = n => typeof n === 'number';
+const isNumeric = value => typeof value === 'number';
+const isDate = value => Date.parse(value) !== 'Invalid Date';
+const getType = (value, defaultType) => {
+  if (isDate(value)) {
+    return 'date';
+  } else if (isNumeric(value)) {
+    return 'number';
+  }
+
+  return defaultType;
+};
 
 // PropTypes
 const { any, string, func } = PropTypes;
@@ -39,7 +49,7 @@ class Input extends Component {
     super(props);
     this.state = {
       value: props.value,
-      type: isNumeric(props.value) ? 'number' : props.type,
+      type: getType(props.value, props.type),
     };
   }
 

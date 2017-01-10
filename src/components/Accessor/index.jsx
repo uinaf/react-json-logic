@@ -39,7 +39,7 @@ class Accessor extends Component {
     // @TODO: Parsing array fields discussion.
     if (Array.isArray(data)) {
       iterator = Object.keys(data);
-    } else if (typeof data === 'object') {
+    } else if (data !== null && typeof data === 'object') {
       iterator = Object.keys(data);
     }
 

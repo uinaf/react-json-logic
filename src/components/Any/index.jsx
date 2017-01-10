@@ -24,10 +24,10 @@ import React, { PropTypes, Component } from 'react';
 import isEqual from 'lodash.isequal';
 
 // UI
-import Select from '../Select';
+import SelectOperator from '../SelectOperator';
 
 // Constants
-import { OPERATORS } from '../../options';
+import { FIELD_TYPES, OPERATORS } from '../../options';
 
 // PropTypes
 const { string, any, object, func } = PropTypes;
@@ -43,9 +43,13 @@ const defaultProps = {
 };
 
 class Any extends Component {
-  constructor(props) {
-    super(props);
-    this.onInitializeState(props);
+  constructor() {
+    super();
+    this.state = { selectedOperator: null, fields: [] };
+  }
+
+  componentDidMount() {
+    this.onInitializeState(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -63,6 +67,8 @@ class Any extends Component {
   onInitializeState = (props) => {
     const value = props.value;
     let field = 'value';
+    let selectedOperator = null;
+    let fields = [];
 
     if (typeof value === 'object' && Object.keys(value).length > 0) {
       const firstElem = Object.keys(value)[0];
@@ -71,13 +77,20 @@ class Any extends Component {
       field = '';
     }
 
-    this.state = { field, value };
+    selectedOperator = OPERATORS.find(operator => operator.signature === field);
+
+    if (selectedOperator) {
+      fields = selectedOperator.fields;
+    }
+
+    this.setState({ field, value, selectedOperator, fields });
   }
 
   /**
    * Resets the content and type of its children.
    */
   onFieldChange = (field) => {
+    const selectedOperator = OPERATORS.find(operator => operator.signature === field);
     let value = {};
 
     if (field === 'value') {
@@ -86,8 +99,12 @@ class Any extends Component {
       value[field] = [];
     }
 
-    this.setState({ field, value });
-    this.props.onChange(value);
+    this.setState({
+      field,
+      value,
+      selectedOperator,
+      fields: selectedOperator.fields,
+    }, () => this.props.onChange(value));
   };
 
   /**
@@ -103,8 +120,7 @@ class Any extends Component {
       value[field][index] = childValue;
     }
 
-    this.setState({ value });
-    this.props.onChange(value);
+    this.setState({ value }, () => this.props.onChange(value));
   }
 
   /**
@@ -126,15 +142,29 @@ class Any extends Component {
     return operators;
   }
 
+  addField = () => {
+    this.setState({ fields: [...this.state.fields, FIELD_TYPES.ANY] });
+  }
+
+  removeField = (index) => {
+    const { value, field, fields } = this.state;
+
+    fields.splice(index, 1);
+    value[field].splice(index, 1);
+
+    this.setState({ fields, value }, () => this.props.onChange(value));
+  }
+
   /**
    * Renders child component by checking its type, initial value.
    * Also passes onChange action and data (which will be consumed by Accessor field) to the child.
    */
   renderChild = (childField, index) => {
-    const parent = this.state.field;
-    const parentValue = this.state.value;
+    const { field, value, selectedOperator, fields } = this.state;
+    const parent = field;
+    const parentValue = value;
+    const isRemovable = fields.length > selectedOperator.fieldCount.min;
 
-    const ChildComponent = childField.default;
     let childValue = '';
 
     if (parent !== 'value') {
@@ -143,32 +173,55 @@ class Any extends Component {
       childValue = parentValue;
     }
 
+    const ChildComponent = childField.default;
+
     return (
-      <ChildComponent
-        key={`${parent}.${index}`}
-        parent={parent}
-        value={childValue}
-        onChange={value => this.onChildValueChange(value, index)}
-        data={this.props.data}
-      />
+      <div style={{ position: 'relative' }}>
+        {isRemovable &&
+          <button
+            style={{ position: 'absolute', left: -20 }}
+            onClick={() => this.removeField(index)}
+          >
+            x
+          </button>
+        }
+
+        <ChildComponent
+          key={`${parent}.${index}`}
+          parent={parent}
+          value={childValue}
+          onChange={val => this.onChildValueChange(val, index)}
+          data={this.props.data}
+        />
+      </div>
     );
   }
 
   render() {
-    const { field } = this.state;
-    const selectedOperator = OPERATORS.find(operator => operator.signature === field);
+    const { field, fields, selectedOperator } = this.state;
+    let canAddMoreChildren = false;
+
+    if (selectedOperator) {
+      canAddMoreChildren = fields.length < selectedOperator.fieldCount.max;
+    }
 
     return (
       <div>
-        <Select
+        <SelectOperator
           value={field}
           options={this.getAvailableOperators()}
           onChange={this.onFieldChange}
         />
 
+        {canAddMoreChildren &&
+          <button onClick={() => this.addField()}>
+            +
+          </button>
+        }
+
         {selectedOperator &&
           <div style={{ marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
-            {selectedOperator.fields.map(this.renderChild)}
+            {fields.map(this.renderChild)}
           </div>
         }
       </div>

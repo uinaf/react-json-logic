@@ -33,6 +33,10 @@ export const OPERATORS = [
     label: 'value',
     fields: [FIELD_TYPES.INPUT],
     notAvailableUnder: ['master', 'or', 'and'],
+    fieldCount: {
+      min: 1,
+      max: 1,
+    },
   },
   {
     type: 'Accessor',
@@ -40,6 +44,10 @@ export const OPERATORS = [
     label: 'accessor',
     fields: [FIELD_TYPES.ACCESSOR],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 1,
+      max: 1,
+    },
   },
   {
     type: 'Statement',
@@ -47,6 +55,10 @@ export const OPERATORS = [
     label: 'or',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 10,
+    },
   },
   {
     type: 'Statement',
@@ -54,6 +66,10 @@ export const OPERATORS = [
     label: 'and',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 10,
+    },
   },
   {
     type: 'Logical',
@@ -61,6 +77,10 @@ export const OPERATORS = [
     label: '===',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Logical',
@@ -68,6 +88,10 @@ export const OPERATORS = [
     label: '==',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Logical',
@@ -75,6 +99,10 @@ export const OPERATORS = [
     label: '!=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Logical',
@@ -82,6 +110,10 @@ export const OPERATORS = [
     label: '!==',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Numeric',
@@ -89,6 +121,10 @@ export const OPERATORS = [
     label: '<=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Numeric',
@@ -96,6 +132,10 @@ export const OPERATORS = [
     label: '>=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Numeric',
@@ -103,6 +143,10 @@ export const OPERATORS = [
     label: '<',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Numeric',
@@ -110,6 +154,10 @@ export const OPERATORS = [
     label: '>',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Numeric',
@@ -117,6 +165,10 @@ export const OPERATORS = [
     label: 'Between',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Arithmetic',
@@ -124,6 +176,10 @@ export const OPERATORS = [
     label: '+',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Arithmetic',
@@ -131,6 +187,10 @@ export const OPERATORS = [
     label: '-',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Arithmetic',
@@ -138,6 +198,10 @@ export const OPERATORS = [
     label: '*',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Arithmetic',
@@ -145,6 +209,10 @@ export const OPERATORS = [
     label: '/',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
   {
     type: 'Arithmetic',
@@ -152,5 +220,9 @@ export const OPERATORS = [
     label: '%',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
+    fieldCount: {
+      min: 2,
+      max: 2,
+    },
   },
 ];
