@@ -22,14 +22,10 @@ class Accessor extends Component {
   }
 
   onChange = (value, level) => {
-    let values = this.state.value.split('.');
+    let values = this.state.value.split('.').slice(0, level);
 
-    if (level === 0) {
-      values = value;
-    } else {
-      values[level] = value;
-      values = values.join('.');
-    }
+    values[level] = value;
+    values = values.join('.');
 
     this.setState({ value: values }, () => this.props.onChange(values));
   }
