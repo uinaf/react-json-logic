@@ -59,7 +59,7 @@ const App = () => (
 
       <Demo
         title="with Accessor - Complex JSON"
-        value={JSON.parse('{"<":["2017-01-09",{"var":["activity.answers.1.answeredAt"]}]}')}
+        value={JSON.parse('{"<":["2017-01-09",{"var":["activity.answers.answeredAt"]}]}')}
         data={question}
       />
     </div>

@@ -179,6 +179,7 @@ class Any extends Component {
       <div style={{ position: 'relative' }}>
         {isRemovable &&
           <button
+            type="button"
             style={{ position: 'absolute', left: -20 }}
             onClick={() => this.removeField(index)}
           >
@@ -214,7 +215,10 @@ class Any extends Component {
         />
 
         {canAddMoreChildren &&
-          <button onClick={() => this.addField()}>
+          <button
+            type="button"
+            onClick={() => this.addField()}
+          >
             +
           </button>
         }
