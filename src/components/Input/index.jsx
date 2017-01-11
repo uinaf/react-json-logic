@@ -19,11 +19,13 @@ const INPUT_TYPES = ['text', 'number', 'date'];
 
 // Helpers
 const isNumeric = value => typeof value === 'number';
-const isDate = value => Date.parse(value) !== 'Invalid Date';
+// const isDate = value => Date.parse(value) !== 'Invalid Date';
 const getType = (value, defaultType) => {
-  if (isDate(value)) {
-    return 'date';
-  } else if (isNumeric(value)) {
+  // if (isDate(value)) {
+  //   return 'date';
+  // } else
+
+  if (isNumeric(value)) {
     return 'number';
   }
 

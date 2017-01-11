@@ -31,12 +31,6 @@ const App = () => (
       />
 
       <img
-        className={style.Baby}
-        src="https://media.giphy.com/media/5X7GDf7zc1Ebu/giphy.gif"
-        alt="baby"
-      />
-
-      <img
         className={style.JsonLogicLogo}
         src="http://jsonlogic.com/images/jsonlogic-white.png"
         alt="jsonlogic"
@@ -49,22 +43,22 @@ const App = () => (
       />
 
       <Demo
-        title="With Initial Value"
+        title="with Initial Value"
         value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}')}
       />
 
       <DemoAsync
-        title="With Initial Value (Async Loaded)"
+        title="with Initial Value (Async Loaded)"
       />
 
       <Demo
-        title="With Accessor"
+        title="with Accessor"
         value={JSON.parse('{"===":[1,{"var":["a.b"]}]}')}
         data={{ a: { b: 1, c: 15, d: { f: 18 } }, x: { y: 15 } }}
       />
 
       <Demo
-        title="With Accessor - Complex JSON"
+        title="with Accessor - Complex JSON"
         value={JSON.parse('{"<":["2017-01-09",{"var":["activity.answers.1.answeredAt"]}]}')}
         data={question}
       />
