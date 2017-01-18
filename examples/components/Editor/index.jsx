@@ -25,7 +25,7 @@ const Editor = ({ value, onChange }) => (
       theme="github"
       onChange={onChange}
       name="UNIQUE_ID_OF_DIV"
-      editorProps={{ $blockScrolling: true }}
+      editorProps={{ $blockScrolling: 'Infinite' }}
       value={value}
       tabSize={2}
       width="100%"

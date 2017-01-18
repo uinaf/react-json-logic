@@ -1,5 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactJsonLogic, { applyLogic } from '../../../dist';
+import '../../../dist/style.css';
+
 import Editor from '../Editor';
 import style from './style.scss';
 
@@ -54,9 +56,16 @@ class App extends Component {
 
         <h4>Built Logic</h4>
 
-        <code>
-          {JSON.stringify(value)}
-        </code>
+        <Editor
+          value={JSON.stringify(value, null, '\t')}
+          onChange={(e) => {
+            try {
+              return this.onFieldValueChange(JSON.parse(e));
+            } catch (err) {
+              return '';
+            }
+          }}
+        />
 
         <hr />
 

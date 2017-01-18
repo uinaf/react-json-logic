@@ -1,283 +1,146 @@
 {
   "activity": {
-    "answers": [
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "0"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "1"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "2"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "3"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "4"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "38"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "61"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:25Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "0"
-      }
-    ]
+    "answers": [{
+      "activityCategoryKey": "activity_category_2292027234",
+      "answeredAt": "2017-01-18T09:51:33Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "order_question_8645829225",
+      "type": "EntryAnswer",
+      "value": "0"
+    },
+    {
+      "activityCategoryKey": "activity_category_2292027234",
+      "answeredAt": "2017-01-18T09:51:33Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "order_question_8645829225",
+      "type": "EntryAnswer",
+      "value": "1"
+    }]
   },
   "category": {
     "actionType": "questionnaire",
-    "answers": [
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "0"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "1"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "2"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "3"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "4"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "38"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "61"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:25Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "0"
-      }
-    ],
+    "answers": [{
+      "activityCategoryKey": "activity_category_2292027234",
+      "answeredAt": "2017-01-18T09:51:33Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "order_question_8645829225",
+      "type": "EntryAnswer",
+      "value": "0"
+    },
+    {
+      "activityCategoryKey": "activity_category_2292027234",
+      "answeredAt": "2017-01-18T09:51:33Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "order_question_8645829225",
+      "type": "EntryAnswer",
+      "value": "1"
+    }],
     "key": "activity_category_2292027234"
   },
   "question": {
-    "answers": [],
-    "key": "scale_question_1172846547",
-    "type": "ScaleQuestion"
-  },
-  "section": {
-    "answers": [],
-    "key": "choice_set_section_4038520581",
-    "required": false
-  },
-  "visit": {
     "answers": [
       {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
+        "activityCategoryKey": "activity_category_Z/HoK4MD",
+        "answeredAt": "2017-01-18T09:34:58Z",
         "choiceKey": null,
         "choiceSetSectionKey": null,
         "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
+        "questionKey": "single_entry_question_877244225",
         "type": "EntryAnswer",
-        "value": "0"
+        "value": "gyub"
       },
       {
         "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "1"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "2"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "3"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:19Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "order_question_8645829225",
-        "type": "EntryAnswer",
-        "value": "4"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
+        "answeredAt": "2017-01-18T09:51:41Z",
         "choiceKey": null,
         "choiceSetSectionKey": null,
         "comboItemKey": null,
         "questionKey": "ratio_question_8476053142",
         "type": "EntryAnswer",
-        "value": "38"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:23Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "61"
-      },
-      {
-        "activityCategoryKey": "activity_category_2292027234",
-        "answeredAt": "2017-01-10T14:09:25Z",
-        "choiceKey": null,
-        "choiceSetSectionKey": null,
-        "comboItemKey": null,
-        "questionKey": "ratio_question_8476053142",
-        "type": "EntryAnswer",
-        "value": "0"
+        "value": "44"
       }
     ],
+    "key": "order_question_8645829225",
+    "type": "OrderQuestion"
+  },
+  "route": {
+    "title": "rtu"
+  },
+  "section": {
+    "answers": [
+      {
+        "activityCategoryKey": "activity_category_Z/HoK4MD",
+        "answeredAt": "2017-01-18T09:34:58Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "single_entry_question_877244225",
+        "type": "EntryAnswer",
+        "value": "gyub"
+      },
+      {
+        "activityCategoryKey": "activity_category_2292027234",
+        "answeredAt": "2017-01-18T09:51:41Z",
+        "choiceKey": null,
+        "choiceSetSectionKey": null,
+        "comboItemKey": null,
+        "questionKey": "ratio_question_8476053142",
+        "type": "EntryAnswer",
+        "value": "44"
+      }
+    ],
+    "key": "choice_set_section_1812539428",
+    "required": false
+  },
+  "store": {
+    "address": "address",
+    "city": "Istanbul",
+    "code": "8373517",
+    "country": "Turkey",
+    "district": "Besiktas",
+    "hint": "8373517 BERKA--INONU 1 address, Besiktas, Istanbul, state, Turkey",
+    "latitude": 41.390248,
+    "longitude": 28.588807,
+    "name": "BERKA--INONU 1",
+    "state": "state",
+    "storeType": "",
+    "properties": {
+      "kemal": "oo",
+      "key_123": "kkk"
+    }
+  },
+  "visit": {
+    "answers": [{
+      "activityCategoryKey": "activity_category_Z/HoK4MD",
+      "answeredAt": "2017-01-18T09:34:58Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "single_entry_question_877244225",
+      "type": "EntryAnswer",
+      "value": "gyub"
+    },
+    {
+      "activityCategoryKey": "activity_category_2292027234",
+      "answeredAt": "2017-01-18T09:51:41Z",
+      "choiceKey": null,
+      "choiceSetSectionKey": null,
+      "comboItemKey": null,
+      "questionKey": "ratio_question_8476053142",
+      "type": "EntryAnswer",
+      "value": "44"
+    }],
     "auditorId": "mehmet",
     "sealed": false,
     "status": 0,
-    "store": {
-      "address": "address",
-      "city": "Istanbul",
-      "code": "8373517",
-      "country": "Turkey",
-      "district": "Besiktas",
-      "hint": "8373517 BERKA--INONU 1 address, Besiktas, Istanbul, state, Turkey",
-      "latitude": 41.390248,
-      "longitude": 28.588807,
-      "name": "BERKA--INONU 1",
-      "state": "state",
-      "storeType": ""
-    },
     "storeCode": "8373517",
     "visitStatus": "SUCCEEDED"
   }

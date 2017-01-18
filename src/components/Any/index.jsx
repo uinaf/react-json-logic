@@ -176,7 +176,7 @@ class Any extends Component {
     const ChildComponent = childField.default;
 
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} key={`${parent}.${index}`}>
         {isRemovable &&
           <button
             type="button"
@@ -188,7 +188,6 @@ class Any extends Component {
         }
 
         <ChildComponent
-          key={`${parent}.${index}`}
           parent={parent}
           value={childValue}
           onChange={val => this.onChildValueChange(val, index)}

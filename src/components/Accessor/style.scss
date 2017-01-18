@@ -1,0 +1,50 @@
+$selectBoxWidth: 150px;
+$selectBorder: #151515;
+
+.IteratorWrapper {
+  display: inline-block;
+}
+
+.SelectWrapper {
+  display: inline-block;
+  width: $selectBoxWidth;
+
+  .Select {
+    font-size: 13px;
+  }
+
+  .is-focused > .Select-control {
+    border-color: $selectBorder;
+    box-shadow: none;
+  }
+
+  .is-focused:not(.is-open) > .Select-control {
+    border-color: $selectBorder;
+    box-shadow: none;
+  }
+
+  .Select-placeholder {
+    line-height: 33px;
+  }
+
+  .Select-control {
+    height: 32px;
+    border-radius: 2px;
+  }
+
+  .Select-value {
+    line-height: 33px!important;
+  }
+
+  .Select-input {
+    height: 32px;
+  }
+
+  .Select-arrow-zone {
+    padding-top: 2px;
+  }
+
+  .Select-menu-outer {
+    z-index: 10;
+  }
+}
