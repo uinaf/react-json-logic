@@ -17,6 +17,7 @@ import isEqual from 'lodash.isequal';
 
 // UI
 import Any from '../Any';
+import style from './style.scss';
 
 // PropTypes
 const { func, object, string, oneOfType } = PropTypes;
@@ -61,7 +62,7 @@ class JsonLogicBuilder extends Component {
 
   render() {
     return (
-      <div>
+      <div className={style.Wrapper}>
         <Any
           parent="master"
           data={this.parseData(this.props.data)}

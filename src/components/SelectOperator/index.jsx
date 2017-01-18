@@ -1,5 +1,6 @@
 // Core
 import React, { PropTypes } from 'react';
+import Select from 'react-select';
 
 // PropTypes
 const { string, array, func } = PropTypes;
@@ -9,28 +10,20 @@ const propTypes = {
   onChange: func,
 };
 
-const Select = ({ value, options, onChange }) => (
-  <div style={{ display: 'inline' }}>
-    <select
+const SelectOperator = ({ value, options, onChange }) => (
+  <div style={{ display: 'inline', fontWeight: 'bold' }}>
+    <Select
+      clearable={false}
       value={value}
-      onChange={e => onChange(e.target.value)}
-    >
-      <option value={''} disabled>
-        Select an Operator
-      </option>
-
-      {options.map((option, index) => (
-        <option
-          key={index}
-          value={option.signature}
-        >
-          {option.label}
-        </option>
-      ))}
-    </select>
+      onChange={e => onChange(e.value)}
+      options={options.map(option => ({
+        label: option.label,
+        value: option.signature,
+      }))}
+    />
   </div>
 );
 
-Select.propTypes = propTypes;
+SelectOperator.propTypes = propTypes;
 
-export default Select;
+export default SelectOperator;

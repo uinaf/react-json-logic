@@ -216,6 +216,7 @@ class Any extends Component {
         {canAddMoreChildren &&
           <button
             type="button"
+            style={{ display: 'none' }}
             onClick={() => this.addField()}
           >
             +

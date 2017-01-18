@@ -24,8 +24,8 @@ const Editor = ({ value, onChange }) => (
       mode="json"
       theme="github"
       onChange={onChange}
-      name="UNIQUE_ID_OF_DIV"
-      editorProps={{ $blockScrolling: 'Infinite' }}
+      name={parseInt(Math.random(), 100).toString()}
+      editorProps={{ $blockScrolling: 'Infinity' }}
       value={value}
       tabSize={2}
       width="100%"

@@ -1,8 +1,6 @@
 // Core
 import React, { Component, PropTypes } from 'react';
-
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 
 // Helpers
 import isEqual from 'lodash.isequal';
@@ -32,8 +30,6 @@ class Accessor extends Component {
     const { value } = this.state;
 
     if (!isEqual(value, nextProps.value)) {
-      console.log('lel');
-
       this.setState({
         value: nextProps.value,
       });
@@ -52,14 +48,18 @@ class Accessor extends Component {
   renderSelector = (data, level) => {
     const { value } = this.state;
     const splittedValue = value.split('.');
+    const levelValue = splittedValue[level] || '';
 
     let iterator = null;
 
-    // @TODO: Parsing array fields discussion.
     if (Array.isArray(data)) {
       iterator = Object.keys(data[0]);
     } else if (data !== null && typeof data === 'object') {
       iterator = Object.keys(data);
+    }
+
+    if (levelValue !== '' && !iterator.some(item => item === levelValue)) {
+      iterator = [levelValue, ...iterator];
     }
 
     if (iterator) {
@@ -68,17 +68,17 @@ class Accessor extends Component {
           <div className={style.SelectWrapper}>
             <Select.Creatable
               clearable={false}
-              value={splittedValue[level] || ''}
+              value={levelValue}
               onChange={e => this.onChange(e.value, level)}
               options={iterator.map(item => ({
                 label: item,
                 value: item,
               }))}
-              promptTextCreator={label => label}
+              promptTextCreator={label => `Create option: ${label}`}
             />
           </div>
 
-          {this.renderSelector(data[splittedValue[level]], level + 1)}
+          {this.renderSelector(data[levelValue], level + 1)}
         </div>
       );
     }

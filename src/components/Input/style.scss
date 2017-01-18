@@ -1,0 +1,20 @@
+.SelectWrapper, .InputWrapper {
+  display: inline-block;
+}
+
+.SelectWrapper {
+  font-weight: bold;
+}
+
+.InputWrapper {
+  position: relative;
+
+  input {
+    position: absolute;
+    height: 22px;
+    border-radius: 2px;
+    top: -26px;
+    border: 1px solid #ccc;
+    padding: 1px 10px;
+  }
+}

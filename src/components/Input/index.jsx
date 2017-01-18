@@ -13,9 +13,13 @@
 
 // Core
 import React, { Component, PropTypes } from 'react';
+import Select from 'react-select';
 
 // Helpers
 import isEqual from 'lodash.isequal';
+
+// UI
+import style from './style.scss';
 
 // Constants
 const INPUT_TYPES = ['text', 'number', 'date'];
@@ -92,26 +96,26 @@ class Input extends Component {
 
     return (
       <div>
-        <select
-          value={type}
-          onChange={e => this.onTypeChange(e.target.value)}
-        >
-          {INPUT_TYPES.map((inputType, index) => (
-            <option
-              key={index}
-              value={inputType}
-            >
-              {inputType}
-            </option>
-          ))}
-        </select>
+        <div className={style.SelectWrapper}>
+          <Select
+            clearable={false}
+            value={type}
+            onChange={e => this.onTypeChange(e.value)}
+            options={INPUT_TYPES.map(inputType => ({
+              label: inputType,
+              value: inputType,
+            }))}
+          />
+        </div>
 
-        <input
-          name={name}
-          value={value}
-          type={type}
-          onChange={e => this.onValueChange(e.target.value)}
-        />
+        <div className={style.InputWrapper}>
+          <input
+            name={name}
+            value={value}
+            type={type}
+            onChange={e => this.onValueChange(e.target.value)}
+          />
+        </div>
       </div>
     );
   }
