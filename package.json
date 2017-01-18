@@ -90,7 +90,9 @@
       "global-require": 0,
       "import/no-extraneous-dependencies": 0,
       "import/imports-first": 0,
-      "no-param-reassign": 0
+      "no-param-reassign": 0,
+      "react/require-default-props": 0,
+      "react/forbid-prop-types": 0
     }
   },
   "babel": {
