@@ -14,17 +14,15 @@
 // Core
 import React, { Component, PropTypes } from 'react';
 
+// Helpers
+import isEqual from 'lodash.isequal';
+
 // Constants
 const INPUT_TYPES = ['text', 'number', 'date'];
 
 // Helpers
 const isNumeric = value => typeof value === 'number';
-// const isDate = value => Date.parse(value) !== 'Invalid Date';
 const getType = (value, defaultType) => {
-  // if (isDate(value)) {
-  //   return 'date';
-  // } else
-
   if (isNumeric(value)) {
     return 'number';
   }
@@ -53,6 +51,17 @@ class Input extends Component {
       value: props.value,
       type: getType(props.value, props.type),
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { value, type } = this.props;
+
+    if (!isEqual(value, nextProps.value) || !isEqual(type, nextProps.type)) {
+      this.setState({
+        value: nextProps.value,
+        type: getType(nextProps.value, nextProps.type),
+      });
+    }
   }
 
   onTypeChange = (type) => {

@@ -163,11 +163,11 @@ export const OPERATORS = [
     type: 'Numeric',
     signature: 'Between',
     label: 'Between',
-    fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
+    fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
     fieldCount: {
-      min: 2,
-      max: 2,
+      min: 3,
+      max: 3,
     },
   },
   {

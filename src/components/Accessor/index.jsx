@@ -1,6 +1,9 @@
 // Core
 import React, { Component, PropTypes } from 'react';
 
+// Helpers
+import isEqual from 'lodash.isequal';
+
 // PropTypes
 const { string, object, func } = PropTypes;
 const propTypes = {
@@ -19,6 +22,16 @@ class Accessor extends Component {
     this.state = {
       value: props.value,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { value } = this.props;
+
+    if (!isEqual(value, nextProps.value)) {
+      this.setState({
+        value: nextProps.value,
+      });
+    }
   }
 
   onChange = (value, level) => {
