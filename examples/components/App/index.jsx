@@ -7,7 +7,7 @@ import style from './style.scss';
 
 // Examples
 import Demo from '../Demo';
-import DemoAsync from '../DemoAsync';
+// import DemoAsync from '../DemoAsync';
 
 // Example Accessor Data
 import question from '../../constants/question.json';
@@ -38,28 +38,32 @@ const App = () => (
     </div>
 
     <div className={style.Content}>
-      <Demo
-        title="No Initial Value"
-      />
+      {/*
+        <Demo
+          title="No Initial Value"
+        />
 
-      <Demo
-        title="with Initial Value"
-        value={JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}')}
-      />
+        <Demo
+          title="with Initial Value"
+          value={JSON.parse(
+            '{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}'
+          )}
+        />
 
-      <DemoAsync
-        title="with Initial Value (Async Loaded)"
-      />
+        <DemoAsync
+          title="with Initial Value (Async Loaded)"
+        />
 
-      <Demo
-        title="with Accessor"
-        value={JSON.parse('{"===":[1,{"var":["a.b"]}]}')}
-        data={{ a: { b: 1, c: 15, d: { f: 18 } }, x: { y: 15 } }}
-      />
+        <Demo
+          title="with Accessor"
+          value={JSON.parse('{"===":[1,{"var":["a.b"]}]}')}
+          data={{ a: { b: 1, c: 15, d: { f: 18 } }, x: { y: 15 } }}
+        />
+      */}
 
       <Demo
         title="with Accessor - Complex JSON"
-        value={JSON.parse('{"<":["2017-01-09",{"var":["activity.answers.answeredAt"]}]}')}
+        value={JSON.parse('{ "or": [ { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "ICONIC ON TRADE" ] }, { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "LEADING ON TRADE" ] }, { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "PREMIUM ON TRADE" ] } ] }')}
         data={question}
       />
     </div>

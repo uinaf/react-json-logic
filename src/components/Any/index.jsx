@@ -25,6 +25,7 @@ import isEqual from 'lodash.isequal';
 
 // UI
 import SelectOperator from '../SelectOperator';
+import style from './style.scss';
 
 // Constants
 import { FIELD_TYPES, OPERATORS } from '../../options';
@@ -81,6 +82,20 @@ class Any extends Component {
 
     if (selectedOperator) {
       fields = selectedOperator.fields;
+    }
+
+    // Insert Extra Fields
+    if (
+      typeof value === 'object' &&
+      Object.keys(value).length > 0 &&
+      selectedOperator.fieldCount.min <= fields.length &&
+      selectedOperator.fieldCount.max > fields.length &&
+      value[field].length > fields.length
+    ) {
+      const extraFieldCount = value[field].length - fields.length;
+      for (let i = 1; i <= extraFieldCount; i += 1) {
+        fields = [...fields, FIELD_TYPES.ANY];
+      }
     }
 
     this.setState({ field, value, selectedOperator, fields });
@@ -180,7 +195,8 @@ class Any extends Component {
         {isRemovable &&
           <button
             type="button"
-            style={{ position: 'absolute', left: -20 }}
+            className={style.ChildrenControlButton}
+            style={{ position: 'absolute', left: -21, height: 26 }}
             onClick={() => this.removeField(index)}
           >
             x
@@ -216,7 +232,8 @@ class Any extends Component {
         {canAddMoreChildren &&
           <button
             type="button"
-            style={{ display: 'none' }}
+            className={style.ChildrenControlButton}
+            style={{ position: 'absolute', width: 26, height: 26, marginLeft: 1 }}
             onClick={() => this.addField()}
           >
             +

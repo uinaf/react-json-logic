@@ -1,0 +1,13 @@
+.ChildrenControlButton {
+  border: 1px solid #ccc;
+  background: white;
+  box-shadow: none;
+
+  &:hover {
+    background: darken(white, 10%);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
