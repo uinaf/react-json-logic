@@ -9,6 +9,7 @@ export const FIELD_TYPES = {
   ANY: require('./components/Any'),
   INPUT: require('./components/Input'),
   ACCESSOR: require('./components/Accessor'),
+  HIGHER_ORDER: require('./components/HigherOrder'),
 };
 
 /**
@@ -36,6 +37,17 @@ export const OPERATORS = [
     fieldCount: {
       min: 1,
       max: 1,
+    },
+  },
+  {
+    type: 'Higher Order',
+    signature: 'some',
+    label: 'some',
+    fields: [FIELD_TYPES.HIGHER_ORDER, FIELD_TYPES.ANY],
+    notAvailableUnder: [],
+    fieldCount: {
+      min: 1,
+      max: 10,
     },
   },
   {
@@ -162,7 +174,7 @@ export const OPERATORS = [
   {
     type: 'Numeric',
     signature: 'Between',
-    label: 'Between',
+    label: '<=',
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: [],
     fieldCount: {
@@ -177,8 +189,8 @@ export const OPERATORS = [
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
     fieldCount: {
-      min: 2,
-      max: 2,
+      min: 1,
+      max: 100,
     },
   },
   {
@@ -188,7 +200,7 @@ export const OPERATORS = [
     fields: [FIELD_TYPES.ANY, FIELD_TYPES.ANY],
     notAvailableUnder: ['master'],
     fieldCount: {
-      min: 2,
+      min: 1,
       max: 2,
     },
   },
@@ -200,7 +212,7 @@ export const OPERATORS = [
     notAvailableUnder: ['master'],
     fieldCount: {
       min: 2,
-      max: 2,
+      max: 100,
     },
   },
   {

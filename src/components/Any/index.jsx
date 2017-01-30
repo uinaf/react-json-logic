@@ -73,12 +73,17 @@ class Any extends Component {
 
     if (typeof value === 'object' && Object.keys(value).length > 0) {
       const firstElem = Object.keys(value)[0];
-      field = OPERATORS.some(operator => operator.signature === firstElem) ? firstElem : 'value';
+
+      field = OPERATORS.some(operator =>
+        operator.signature === firstElem || operator.label === firstElem,
+      ) ? firstElem : 'value';
     } else if (typeof value === 'object') {
       field = '';
     }
 
-    selectedOperator = OPERATORS.find(operator => operator.signature === field);
+    selectedOperator = OPERATORS.find(operator =>
+      operator.signature === field || operator.label === field,
+    );
 
     if (selectedOperator) {
       fields = selectedOperator.fields;
@@ -105,7 +110,10 @@ class Any extends Component {
    * Resets the content and type of its children.
    */
   onFieldChange = (field) => {
-    const selectedOperator = OPERATORS.find(operator => operator.signature === field);
+    const selectedOperator = OPERATORS.find(operator =>
+      operator.signature === field || operator.label === field,
+    );
+
     let value = {};
 
     if (field === 'value') {

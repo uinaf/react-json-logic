@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import 'brace';
 import AceEditor from 'react-ace';
 
+import 'brace/mode/javascript';
 import 'brace/mode/json';
 import 'brace/theme/github';
 
