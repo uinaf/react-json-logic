@@ -1,4 +1,6 @@
-# React JsonLogic 
+# React Json Logic 
+
+[![NPM](https://nodei.co/npm/react-json-logic.png?downloads=true)](https://nodei.co/npm/react-json-logic/)
 
 Build and evaluate [JsonLogic](http://jsonlogic.com/) rules with React Components.
 
