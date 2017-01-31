@@ -14,8 +14,8 @@ import style from './style.scss';
 // PropTypes
 const { string, func } = PropTypes;
 const propTypes = {
-  value: string,
-  onChange: func,
+  value: string.isRequired,
+  onChange: func.isRequired,
 };
 
 const Editor = ({ value, onChange }) => (

@@ -7,7 +7,6 @@ import style from './style.scss';
 
 // Examples
 import Demo from '../Demo';
-// import DemoAsync from '../DemoAsync';
 
 // Predefined Rules & Accessor Data
 import accessor from '../../constants/accessor.json';
@@ -39,31 +38,30 @@ const App = () => (
     </div>
 
     <div className={style.Content}>
-      {/*
-        <Demo
-          title="No Initial Value"
-        />
-
-        <Demo
-          title="with Initial Value"
-          value={JSON.parse(
-            '{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}'
-          )}
-        />
-
-        <DemoAsync
-          title="with Initial Value (Async Loaded)"
-        />
-
-        <Demo
-          title="with Accessor"
-          value={JSON.parse('{"===":[1,{"var":["a.b"]}]}')}
-          data={{ a: { b: 1, c: 15, d: { f: 18 } }, x: { y: 15 } }}
-        />
-      */}
+      <Demo
+        title="No Initial Value"
+      />
 
       <Demo
-        title="with Accessor - Complex JSON"
+        title="with Initial Value"
+        value={JSON.parse(
+          '{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]},{"==":["1","1"]}]},"1"]}',
+        )}
+      />
+
+      <Demo
+        title="with Initial Value (Async Loaded)"
+        async
+      />
+
+      <Demo
+        title="with Accessor"
+        value={JSON.parse('{"===":[1,{"var":["a.b"]}]}')}
+        data={{ a: { b: 1, c: 15, d: { f: 18 } }, x: { y: 15 } }}
+      />
+
+      <Demo
+        title="with Accessor - Complex JSON and Higher Order Operators"
         value={higherOrderRule}
         data={accessor}
       />

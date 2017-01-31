@@ -22,7 +22,7 @@ import style from './style.scss';
 // PropTypes
 const { func, object, string, oneOfType } = PropTypes;
 const propTypes = {
-  onChange: func,
+  onChange: func.isRequired,
   value: object,
   data: oneOfType([object, string]),
 };

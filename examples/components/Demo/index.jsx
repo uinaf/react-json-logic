@@ -6,19 +6,21 @@ import Editor from '../Editor';
 import style from './style.scss';
 
 // PropTypes
-const { string, object, oneOfType } = PropTypes;
+const { bool, string, object, oneOfType } = PropTypes;
 const propTypes = {
-  title: string,
+  title: string.isRequired,
   value: oneOfType([object, string]),
   data: object,
+  async: bool,
 };
 
 const defaultProps = {
   value: {},
   data: {},
+  async: false,
 };
 
-class App extends Component {
+class Demo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +28,11 @@ class App extends Component {
       data: JSON.stringify(props.data, null, '\t'),
       result: 'Not Evaluated',
     };
+  }
+
+  onLoad = () => {
+    const value = JSON.parse('{"==":[{"and":[{"==":["1","1"]},{"===":["0","0"]}]},"1"]}');
+    this.setState({ value });
   }
 
   onFieldValueChange = value => this.setState({ value })
@@ -37,7 +44,7 @@ class App extends Component {
   })
 
   render() {
-    const { title } = this.props;
+    const { async, title } = this.props;
     const { value, data, result } = this.state;
 
     return (
@@ -45,6 +52,15 @@ class App extends Component {
         <h3>
           {title}
         </h3>
+
+        {async &&
+          <button
+            style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', marginBottom: 25 }}
+            onClick={() => this.onLoad()}
+          >
+            Load Values
+          </button>
+        }
 
         <ReactJsonLogic
           data={data}
@@ -73,12 +89,12 @@ class App extends Component {
 
         <Editor
           value={data}
-          onChange={e => this.onAccessorDataChange(e)}
+          onChange={this.onAccessorDataChange}
         />
 
         <button
           disabled={Object.keys(value).length === 0}
-          onClick={() => this.onEvaluate()}
+          onClick={this.onEvaluate}
         >
           Evaluate
         </button>
@@ -92,7 +108,7 @@ class App extends Component {
   }
 }
 
-App.propTypes = propTypes;
-App.defaultProps = defaultProps;
+Demo.propTypes = propTypes;
+Demo.defaultProps = defaultProps;
 
-export default App;
+export default Demo;

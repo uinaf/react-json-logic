@@ -6,8 +6,12 @@ import Select from 'react-select';
 const { string, array, func } = PropTypes;
 const propTypes = {
   value: string,
-  options: array,
-  onChange: func,
+  options: array.isRequired,
+  onChange: func.isRequired,
+};
+
+const defaultProps = {
+  value: '',
 };
 
 const SelectOperator = ({ value, options, onChange }) => (
@@ -25,5 +29,6 @@ const SelectOperator = ({ value, options, onChange }) => (
 );
 
 SelectOperator.propTypes = propTypes;
+SelectOperator.defaultProps = defaultProps;
 
 export default SelectOperator;
