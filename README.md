@@ -19,7 +19,7 @@ There is a basic example on [examples folder](/examples/components/App.jsx), whi
 
 | Prop | Type | Default Value | Description |
 | :----: |:-------------:|:-----:| :------- |
-| **onChange** | func | undefined | Onchange event, returns the latest structure of built json logic. |
+| **onChange*** | func | - | Onchange event, returns the latest structure of built json logic. |
 | **value** | object | { } | Initial value of the json logic expresison. |
 | **data** | object | { } | Data available for accessor fields. |
 

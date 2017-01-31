@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "brace": "0.9.1",
-    "json-logic-js": "1.0.9",
-    "react-select": "1.0.0-rc.2",
-    "react-ace": "4.1.1"
+    "json-logic-js-enhanced": "1.1.0",
+    "react-ace": "4.1.1",
+    "react-select": "1.0.0-rc.2"
   },
   "devDependencies": {
     "autoprefixer": "6.7.1",
