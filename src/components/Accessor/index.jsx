@@ -9,13 +9,14 @@ import style from './style.scss';
 // PropTypes
 const { string, object, func } = PropTypes;
 const propTypes = {
-  onChange: func,
+  onChange: func.isRequired,
   value: string,
-  data: object,
+  data: object, // @TODO: make this required and check presence on mount, throw error if empty
 };
 
 const defaultProps = {
   value: '',
+  data: {},
 };
 
 class Accessor extends Component {
@@ -42,7 +43,7 @@ class Accessor extends Component {
     values[level] = value;
     values = values.join('.');
 
-    this.setState({ value: values }, () => this.props.onChange(values));
+    this.props.onChange(values);
   }
 
   renderSelector = (data, level) => {

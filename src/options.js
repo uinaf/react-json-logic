@@ -51,6 +51,39 @@ export const OPERATORS = [
     },
   },
   {
+    type: 'Higher Order',
+    signature: 'any',
+    label: 'any',
+    fields: [FIELD_TYPES.HIGHER_ORDER, FIELD_TYPES.ANY],
+    notAvailableUnder: [],
+    fieldCount: {
+      min: 1,
+      max: 10,
+    },
+  },
+  {
+    type: 'Higher Order',
+    signature: 'map',
+    label: 'map',
+    fields: [FIELD_TYPES.HIGHER_ORDER, FIELD_TYPES.ANY],
+    notAvailableUnder: [],
+    fieldCount: {
+      min: 1,
+      max: 10,
+    },
+  },
+  {
+    type: 'Higher Order',
+    signature: 'filter',
+    label: 'filter',
+    fields: [FIELD_TYPES.HIGHER_ORDER, FIELD_TYPES.ANY],
+    notAvailableUnder: [],
+    fieldCount: {
+      min: 1,
+      max: 10,
+    },
+  },
+  {
     type: 'Accessor',
     signature: 'var',
     label: 'accessor',
@@ -125,6 +158,17 @@ export const OPERATORS = [
     fieldCount: {
       min: 2,
       max: 2,
+    },
+  },
+  {
+    type: 'Logical',
+    signature: '!',
+    label: '!',
+    fields: [FIELD_TYPES.ANY],
+    notAvailableUnder: [],
+    fieldCount: {
+      min: 1,
+      max: 1,
     },
   },
   {

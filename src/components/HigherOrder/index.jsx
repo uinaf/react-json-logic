@@ -6,30 +6,34 @@ import isEqual from 'lodash.isequal';
 
 // UI
 import Any from '../Any';
+import style from './style.scss';
 
 // PropTypes
 const { any, func, object, string } = PropTypes;
 const propTypes = {
   data: object,
-  parent: string,
+  parent: string.isRequired,
   value: any,
-  onChange: func,
+  onChange: func.isRequired,
+};
+
+const defaultProps = {
+  data: {},
+  value: '',
 };
 
 class HigherOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: { '=>': [props.value] },
+      value: props.value,
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-
     if (!isEqual(this.props.value, nextProps.value)) {
       this.setState({
-        value: { '=>': [nextProps.value] },
+        value: nextProps.value,
       });
     }
   }
@@ -45,23 +49,28 @@ class HigherOrder extends Component {
   render() {
     const { parent, data } = this.props;
     const { value } = this.state;
-    const firstElemOfValue = value['=>'][0];
+    const firstElemOfValue = value['=>'] ? value['=>'][0] : {};
 
     return (
-      <div>
-        {`=>`}
+      <div className={style.Wrapper}>
+        <div className={style.FatArrow}>
+          {'=>'}
+        </div>
 
-        <Any
-          onChange={this.onChange}
-          parent={parent}
-          data={data}
-          value={firstElemOfValue}
-        />
+        <div className={style.Child}>
+          <Any
+            onChange={this.onChange}
+            parent={parent}
+            data={data}
+            value={firstElemOfValue}
+          />
+        </div>
       </div>
     );
   }
 }
 
 HigherOrder.propTypes = propTypes;
+HigherOrder.defaultProps = defaultProps;
 
 export default HigherOrder;

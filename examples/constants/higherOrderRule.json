@@ -1,0 +1,55 @@
+{
+  "!": [
+    {
+      "!": [
+        {
+          "some": [
+            {
+              "=>": [
+                {
+                  "and": [
+                    {
+                      "==": [
+                        "activity_category_597958312",
+                        {
+                          "var": [
+                            "activityCategoryKey"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "==": [
+                        "single_choice_question_551228875",
+                        {
+                          "var": [
+                            "questionKey"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "==": [
+                        "choice_825813027",
+                        {
+                          "var": [
+                            "choiceKey"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "var": [
+                "visit.answers.value"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

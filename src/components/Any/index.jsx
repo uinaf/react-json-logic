@@ -33,29 +33,26 @@ import { FIELD_TYPES, OPERATORS } from '../../options';
 // PropTypes
 const { string, any, object, func } = PropTypes;
 const propTypes = {
-  onChange: func,
-  parent: string,
+  onChange: func.isRequired,
+  parent: string.isRequired,
   value: any,
   data: object,
 };
 
 const defaultProps = {
   value: {},
+  data: {},
 };
 
 class Any extends Component {
-  constructor() {
-    super();
-    this.state = { selectedOperator: null, fields: [] };
-  }
-
-  componentDidMount() {
-    this.onInitializeState(this.props);
+  constructor(props) {
+    super(props);
+    this.state = this.onInitializeState(props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.value, nextProps.value)) {
-      this.onInitializeState(nextProps);
+      this.setState(this.onInitializeState(nextProps));
     }
   }
 
@@ -63,7 +60,7 @@ class Any extends Component {
    * Initializes component state with respect to props.
    *
    * This method will be called on initial render (from constructor) and cases like async loading,
-   * which may end up with change in props.
+   * which may end up with change in value prop.
    */
   onInitializeState = (props) => {
     const value = props.value;
@@ -103,17 +100,13 @@ class Any extends Component {
       }
     }
 
-    this.setState({ field, value, selectedOperator, fields });
+    return { field, value, selectedOperator, fields };
   }
 
   /**
    * Resets the content and type of its children.
    */
   onFieldChange = (field) => {
-    const selectedOperator = OPERATORS.find(operator =>
-      operator.signature === field || operator.label === field,
-    );
-
     let value = {};
 
     if (field === 'value') {
@@ -122,12 +115,7 @@ class Any extends Component {
       value[field] = [];
     }
 
-    this.setState({
-      field,
-      value,
-      selectedOperator,
-      fields: selectedOperator.fields,
-    }, () => this.props.onChange(value));
+    this.props.onChange(value);
   };
 
   /**
@@ -143,7 +131,7 @@ class Any extends Component {
       value[field][index] = childValue;
     }
 
-    this.setState({ value }, () => this.props.onChange(value));
+    this.props.onChange(value);
   }
 
   /**

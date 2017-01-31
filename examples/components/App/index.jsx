@@ -9,8 +9,9 @@ import style from './style.scss';
 import Demo from '../Demo';
 // import DemoAsync from '../DemoAsync';
 
-// Example Accessor Data
-import question from '../../constants/question.json';
+// Predefined Rules & Accessor Data
+import accessor from '../../constants/accessor.json';
+import higherOrderRule from '../../constants/higherOrderRule.json';
 
 const App = () => (
   <div className={style.App}>
@@ -26,7 +27,7 @@ const App = () => (
     <div className={style.Header}>
       <img
         className={style.ReactLogo}
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/React.js_logo.svg/2000px-React.js_logo.svg.png"
+        src="https://facebook.github.io/react/img/logo.svg"
         alt="react"
       />
 
@@ -63,8 +64,8 @@ const App = () => (
 
       <Demo
         title="with Accessor - Complex JSON"
-        value={JSON.parse('{ "or": [ { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "ICONIC ON TRADE" ] }, { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "LEADING ON TRADE" ] }, { "!=": [ { "var": [ "store.properties.ATTRIB01" ] }, "PREMIUM ON TRADE" ] } ] }')}
-        data={question}
+        value={higherOrderRule}
+        data={accessor}
       />
     </div>
   </div>

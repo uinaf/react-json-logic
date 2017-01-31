@@ -22,7 +22,7 @@ import isEqual from 'lodash.isequal';
 import style from './style.scss';
 
 // Constants
-const INPUT_TYPES = ['text', 'number', 'date'];
+const INPUT_TYPES = ['text', 'number']; // @TODO: Add Date!
 
 // Helpers
 const isNumeric = value => typeof value === 'number';
@@ -38,12 +38,13 @@ const getType = (value, defaultType) => {
 const { any, string, func } = PropTypes;
 const propTypes = {
   name: string,
-  onChange: func,
+  onChange: func.isRequired,
   value: any,
   type: string,
 };
 
 const defaultProps = {
+  name: '',
   type: INPUT_TYPES[0],
   value: '',
 };
@@ -68,7 +69,8 @@ class Input extends Component {
     }
   }
 
-  onTypeChange = (type) => {
+  onTypeChange = (e) => {
+    const type = e.value;
     let { value } = this.state;
 
     if (type === 'number') {
@@ -80,14 +82,15 @@ class Input extends Component {
     this.setState({ type }, () => this.props.onChange(value));
   }
 
-  onValueChange = (value) => {
+  onValueChange = (e) => {
     const { type } = this.state;
+    let value = e.target.value;
 
     if (type === 'number') {
       value = parseFloat(value);
     }
 
-    this.setState({ value }, () => this.props.onChange(value));
+    this.props.onChange(value);
   }
 
   render() {
@@ -100,7 +103,7 @@ class Input extends Component {
           <Select
             clearable={false}
             value={type}
-            onChange={e => this.onTypeChange(e.value)}
+            onChange={this.onTypeChange}
             options={INPUT_TYPES.map(inputType => ({
               label: inputType,
               value: inputType,
@@ -113,7 +116,7 @@ class Input extends Component {
             name={name}
             value={value}
             type={type}
-            onChange={e => this.onValueChange(e.target.value)}
+            onChange={this.onValueChange}
           />
         </div>
       </div>
