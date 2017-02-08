@@ -52,8 +52,8 @@ export const OPERATORS = [
   },
   {
     type: 'Higher Order',
-    signature: 'any',
-    label: 'any',
+    signature: 'every',
+    label: 'every',
     fields: [FIELD_TYPES.HIGHER_ORDER, FIELD_TYPES.ANY],
     notAvailableUnder: [],
     fieldCount: {
