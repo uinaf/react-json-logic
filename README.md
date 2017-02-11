@@ -15,7 +15,7 @@ $ npm install react-json-logic --save
 ```
 
 ## Usage
-There is a basic example on [examples folder](/examples/components/App.jsx), which is also live [here](http://altayaydemir.com/react-json-logic).
+There is a basic example on [examples folder](/examples/components/App.jsx), which is also live [here](https://altayaydemir.github.io/react-json-logic/).
 
 | Prop | Type | Default Value | Description |
 | :----: |:-------------:|:-----:| :------- |
