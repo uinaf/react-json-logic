@@ -26,6 +26,13 @@ export const rule = {
   or: (...args: JsonLogicValue[]): JsonLogicValue => ({ or: args }),
   not: (x: JsonLogicValue): JsonLogicValue => ({ "!": [x] }),
 
+  /**
+   * `if(cond, then, else)` for the simple case;
+   * `if(cond1, then1, cond2, then2, ..., else)` for elseif chains.
+   * Mirrors json-logic-js' variadic-odd-args `if` operator.
+   */
+  if: (...args: JsonLogicValue[]): JsonLogicValue => ({ if: args }),
+
   // -- Comparison
   lt: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "<": [a, b] }),
   lte: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "<=": [a, b] }),
@@ -39,11 +46,29 @@ export const rule = {
   mul: (...args: JsonLogicValue[]): JsonLogicValue => ({ "*": args }),
   div: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "/": [a, b] }),
   mod: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "%": [a, b] }),
+  min: (...args: JsonLogicValue[]): JsonLogicValue => ({ min: args }),
+  max: (...args: JsonLogicValue[]): JsonLogicValue => ({ max: args }),
 
-  // -- Accessor
+  // -- Accessor / data presence
   /** Read a value from the data object by dotted path. */
   var: (path: string, fallback?: JsonLogicValue): JsonLogicValue =>
     fallback !== undefined ? { var: [path, fallback] } : { var: [path] },
+  /** Returns the keys (from the given list) that are missing from the data. */
+  missing: (...keys: string[]): JsonLogicValue => ({ missing: keys }),
+  /** `missing_some(min, keys)` — returns missing keys only if fewer than `min` are present. */
+  missingSome: (min: number, keys: string[]): JsonLogicValue => ({
+    missing_some: [min, keys],
+  }),
+
+  // -- String / Array
+  /** Substring or array containment check. `in("foo", "foobar")` → true. */
+  in: (needle: JsonLogicValue, haystack: JsonLogicValue): JsonLogicValue => ({
+    in: [needle, haystack],
+  }),
+  /** Concatenate strings or coerce-to-string arguments. */
+  cat: (...args: JsonLogicValue[]): JsonLogicValue => ({ cat: args }),
+  /** Flatten a list of arrays into one array. */
+  merge: (...args: JsonLogicValue[]): JsonLogicValue => ({ merge: args }),
 
   // -- Higher-order
   some: (collection: JsonLogicValue, predicate: JsonLogicValue): JsonLogicValue => ({

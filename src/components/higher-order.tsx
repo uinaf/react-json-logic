@@ -4,26 +4,25 @@ interface Props {
   parent: string;
   data?: Record<string, unknown>;
   value?: unknown;
-  onChange: (value: { "=>": unknown[] }) => void;
+  onChange: (value: unknown) => void;
 }
 
+/**
+ * Visual wrapper for the predicate of a higher-order operator (`some`, `all`,
+ * `none`, `map`, `filter`). Renders an `Any` directly — value flows through
+ * untouched, so the surrounding rule keeps its canonical JsonLogic shape:
+ *
+ *   {some: [<collection>, <predicate>]}
+ *
+ * The `=>` glyph is a pure UX cue, surfaced via the `data-rjl-higher-order-arrow`
+ * attribute for consumers to style. It does NOT appear in the emitted JSON.
+ */
 export function HigherOrder({ parent, data = {}, value, onChange }: Props) {
-  const wrapped =
-    value && typeof value === "object" && "=>" in value
-      ? (value as { "=>": unknown[] })
-      : { "=>": [] as unknown[] };
-
-  const inner = wrapped["=>"][0] ?? {};
-
-  const handleChange = (next: unknown) => {
-    onChange({ "=>": [next] });
-  };
-
   return (
     <span data-rjl-higher-order>
       <span data-rjl-higher-order-arrow>=&gt;</span>
       <span data-rjl-higher-order-child>
-        <Any parent={parent} data={data} value={inner} onChange={handleChange} />
+        <Any parent={parent} data={data} value={value} onChange={onChange} />
       </span>
     </span>
   );

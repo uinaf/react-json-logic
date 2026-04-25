@@ -63,6 +63,45 @@ describe("rule builder", () => {
     expect(applyLogic(rule.filter(rule.var("items"), positive), items)).toEqual([1, 2, 3]);
   });
 
+  test("if / cond chain", () => {
+    expect(rule.if(true, 1, 0)).toEqual({ if: [true, 1, 0] });
+    expect(applyLogic(rule.if(true, "yes", "no"), {})).toBe("yes");
+    expect(applyLogic(rule.if(false, "yes", "no"), {})).toBe("no");
+    // elseif chain
+    const r = rule.if(rule.eq(rule.var("x"), 1), "one", rule.eq(rule.var("x"), 2), "two", "many");
+    expect(applyLogic(r, { x: 2 })).toBe("two");
+    expect(applyLogic(r, { x: 99 })).toBe("many");
+  });
+
+  test("min / max", () => {
+    expect(rule.min(3, 1, 2)).toEqual({ min: [3, 1, 2] });
+    expect(applyLogic(rule.min(3, 1, 2), {})).toBe(1);
+    expect(rule.max(3, 1, 2)).toEqual({ max: [3, 1, 2] });
+    expect(applyLogic(rule.max(3, 1, 2), {})).toBe(3);
+  });
+
+  test("in / cat / merge", () => {
+    expect(rule.in("foo", "foobar")).toEqual({ in: ["foo", "foobar"] });
+    expect(applyLogic(rule.in("foo", "foobar"), {})).toBe(true);
+    expect(applyLogic(rule.in("x", ["a", "b"]), {})).toBe(false);
+
+    expect(rule.cat("a", "b", "c")).toEqual({ cat: ["a", "b", "c"] });
+    expect(applyLogic(rule.cat("a", "b", "c"), {})).toBe("abc");
+
+    expect(rule.merge([1, 2], [3])).toEqual({ merge: [[1, 2], [3]] });
+    expect(applyLogic(rule.merge([1, 2], [3]), {})).toEqual([1, 2, 3]);
+  });
+
+  test("missing / missingSome", () => {
+    expect(rule.missing("x", "y")).toEqual({ missing: ["x", "y"] });
+    expect(applyLogic(rule.missing("x", "y"), { x: 1 })).toEqual(["y"]);
+
+    expect(rule.missingSome(2, ["x", "y", "z"])).toEqual({
+      missing_some: [2, ["x", "y", "z"]],
+    });
+    expect(applyLogic(rule.missingSome(2, ["x", "y", "z"]), { x: 1 })).toEqual(["y", "z"]);
+  });
+
   test("composes deep rules", () => {
     const r = rule.and(rule.eq(rule.var("user.age"), 21), rule.gt(rule.var("score"), 100));
     expect(applyLogic(r, { user: { age: 21 }, score: 150 })).toBe(true);

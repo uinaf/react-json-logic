@@ -47,10 +47,7 @@ Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, typ
 ```ts
 import { applyLogic, rule, validate } from "react-json-logic";
 
-const r = rule.and(
-  rule.eq(rule.var("user.age"), 21),
-  rule.gt(rule.var("score"), 100),
-);
+const r = rule.and(rule.eq(rule.var("user.age"), 21), rule.gt(rule.var("score"), 100));
 
 applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
 validate(r); // → { ok: true }
@@ -58,14 +55,15 @@ validate(r); // → { ok: true }
 
 Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec — the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Arity is enforced at the function signature level (no runtime schema overhead).
 
-| Group        | Factories                                                        |
-| ------------ | ---------------------------------------------------------------- |
-| Equality     | `eq`, `looseEq`, `notEq`, `looseNotEq`                           |
-| Logical      | `and`, `or`, `not`                                               |
-| Comparison   | `lt`, `lte`, `gt`, `gte`                                         |
-| Arithmetic   | `add`, `sub`, `mul`, `div`, `mod`                                |
-| Accessor     | `var(path, fallback?)`                                           |
-| Higher-order | `some`, `all`, `none`, `map`, `filter`                           |
+| Group        | Factories                                                            |
+| ------------ | -------------------------------------------------------------------- |
+| Equality     | `eq`, `looseEq`, `notEq`, `looseNotEq`                               |
+| Logical      | `and`, `or`, `not`, `if(...args)`                                    |
+| Comparison   | `lt`, `lte`, `gt`, `gte`                                             |
+| Arithmetic   | `add`, `sub`, `mul`, `div`, `mod`, `min`, `max`                      |
+| Accessor     | `var(path, fallback?)`, `missing(...keys)`, `missingSome(min, keys)` |
+| String/Array | `in(needle, haystack)`, `cat(...args)`, `merge(...args)`             |
+| Higher-order | `some`, `all`, `none`, `map`, `filter`                               |
 
 `validate(rule)` walks a rule against the operator table and reports structural problems (multi-key operator objects, arity violations, etc.) as `{ ok: false, errors: [{ path, message }] }`. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated — only known operators get arity-checked.
 

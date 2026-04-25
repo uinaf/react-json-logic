@@ -25,6 +25,7 @@ export type JsonLogicValue =
   | { [key: string]: JsonLogicValue };
 
 export const OPERATORS: Operator[] = [
+  // ── Value field ────────────────────────────────────────────────────────
   {
     type: "Value Field",
     signature: "value",
@@ -33,61 +34,41 @@ export const OPERATORS: Operator[] = [
     notAvailableUnder: ["master", "or", "and"],
     fieldCount: { min: 1, max: 1 },
   },
-  {
-    type: "Higher Order",
-    signature: "some",
-    label: "some",
-    fields: ["higher-order", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 1, max: 10 },
-  },
-  {
-    type: "Higher Order",
-    signature: "all",
-    label: "all",
-    fields: ["higher-order", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 1, max: 10 },
-  },
-  {
-    type: "Higher Order",
-    signature: "none",
-    label: "none",
-    fields: ["higher-order", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 1, max: 10 },
-  },
-  {
-    type: "Higher Order",
-    signature: "map",
-    label: "map",
-    fields: ["higher-order", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 1, max: 10 },
-  },
-  {
-    type: "Higher Order",
-    signature: "filter",
-    label: "filter",
-    fields: ["higher-order", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 1, max: 10 },
-  },
+
+  // ── Accessor ───────────────────────────────────────────────────────────
   {
     type: "Accessor",
     signature: "var",
     label: "accessor",
     fields: ["accessor"],
     notAvailableUnder: ["master"],
-    fieldCount: { min: 1, max: 1 },
+    fieldCount: { min: 1, max: 2 },
   },
+  {
+    type: "Accessor",
+    signature: "missing",
+    label: "missing",
+    fields: ["any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 1, max: 100 },
+  },
+  {
+    type: "Accessor",
+    signature: "missing_some",
+    label: "missing_some",
+    fields: ["any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+
+  // ── Logical ────────────────────────────────────────────────────────────
   {
     type: "Statement",
     signature: "or",
     label: "or",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 10 },
+    fieldCount: { min: 2, max: 100 },
   },
   {
     type: "Statement",
@@ -95,7 +76,15 @@ export const OPERATORS: Operator[] = [
     label: "and",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 10 },
+    fieldCount: { min: 2, max: 100 },
+  },
+  {
+    type: "Statement",
+    signature: "if",
+    label: "if",
+    fields: ["any", "any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 3, max: 99 },
   },
   {
     type: "Logical",
@@ -137,6 +126,8 @@ export const OPERATORS: Operator[] = [
     notAvailableUnder: [],
     fieldCount: { min: 1, max: 1 },
   },
+
+  // ── Numeric comparison ────────────────────────────────────────────────
   {
     type: "Numeric",
     signature: "<=",
@@ -169,6 +160,8 @@ export const OPERATORS: Operator[] = [
     notAvailableUnder: [],
     fieldCount: { min: 2, max: 2 },
   },
+
+  // ── Arithmetic ────────────────────────────────────────────────────────
   {
     type: "Arithmetic",
     signature: "+",
@@ -207,6 +200,91 @@ export const OPERATORS: Operator[] = [
     label: "%",
     fields: ["any", "any"],
     notAvailableUnder: ["master"],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "Arithmetic",
+    signature: "min",
+    label: "min",
+    fields: ["any", "any"],
+    notAvailableUnder: ["master"],
+    fieldCount: { min: 1, max: 100 },
+  },
+  {
+    type: "Arithmetic",
+    signature: "max",
+    label: "max",
+    fields: ["any", "any"],
+    notAvailableUnder: ["master"],
+    fieldCount: { min: 1, max: 100 },
+  },
+
+  // ── String / Array ────────────────────────────────────────────────────
+  {
+    type: "String",
+    signature: "in",
+    label: "in",
+    fields: ["any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "String",
+    signature: "cat",
+    label: "cat",
+    fields: ["any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 1, max: 100 },
+  },
+  {
+    type: "Array",
+    signature: "merge",
+    label: "merge",
+    fields: ["any", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 0, max: 100 },
+  },
+
+  // ── Higher-order ──────────────────────────────────────────────────────
+  // Field shape: [collection, predicate]. Predicate gets a visual `=>` cue.
+  {
+    type: "Higher Order",
+    signature: "some",
+    label: "some",
+    fields: ["any", "higher-order"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "Higher Order",
+    signature: "all",
+    label: "all",
+    fields: ["any", "higher-order"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "Higher Order",
+    signature: "none",
+    label: "none",
+    fields: ["any", "higher-order"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "Higher Order",
+    signature: "map",
+    label: "map",
+    fields: ["any", "higher-order"],
+    notAvailableUnder: [],
+    fieldCount: { min: 2, max: 2 },
+  },
+  {
+    type: "Higher Order",
+    signature: "filter",
+    label: "filter",
+    fields: ["any", "higher-order"],
+    notAvailableUnder: [],
     fieldCount: { min: 2, max: 2 },
   },
 ];
