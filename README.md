@@ -1,27 +1,55 @@
-# React Json Logic 
+# react-json-logic
 
-[![NPM](https://nodei.co/npm/react-json-logic.png?downloads=true)](https://nodei.co/npm/react-json-logic/)
+Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components.
 
-Build and evaluate [JsonLogic](http://jsonlogic.com/) rules with React Components.
+> **Heads up — v3 is in active rewrite.** The v2 line targeted React 15 and is no longer maintained. v3 targets React 19 and uses a different toolchain (Vite+, TypeScript). API surface is preserved; styling and demo site are being rebuilt.
 
-## Installation
+## Install
 
 ```bash
-# Yarn
-$ yarn add react-json-logic
-
-# NPM
-$ npm install react-json-logic --save
+pnpm add react-json-logic react react-dom
 ```
 
 ## Usage
-There is a basic example on [examples folder](/examples/components/App.jsx), which is also live [here](https://altayaydemir.github.io/react-json-logic/).
 
-| Prop | Type | Default Value | Description |
-| :----: |:-------------:|:-----:| :------- |
-| **onChange*** | func | - | Onchange event, returns the latest structure of built json logic. |
-| **value** | object | { } | Initial value of the json logic expresison. |
-| **data** | object | { } | Data available for accessor fields. |
+```tsx
+import JsonLogicBuilder, { applyLogic } from "react-json-logic";
+import "react-json-logic/style.css";
 
-## Contribution
-This project has initialized from [react-component-starter](https://github.com/altayaydemir/react-component-starter), which contains detailed documentation about installation, development and build flow of the package.
+function Example() {
+  const [rule, setRule] = useState({});
+  const data = { user: { age: 21 } };
+
+  return (
+    <>
+      <JsonLogicBuilder value={rule} data={data} onChange={setRule} />
+      <p>Result: {String(applyLogic(rule, data))}</p>
+    </>
+  );
+}
+```
+
+## Props
+
+| Prop       | Type               | Default | Description                                                    |
+| ---------- | ------------------ | ------- | -------------------------------------------------------------- |
+| `onChange` | `(value) => void`  | —       | Called with the updated rule whenever the builder changes      |
+| `value`    | `JsonLogicValue`   | `{}`    | Current rule (controlled).                                     |
+| `data`     | `object \| string` | `{}`    | Sample data — used by accessor (`var`) fields and `applyLogic` |
+
+## Development
+
+This repo runs on [Vite+](https://viteplus.dev). All workflows go through `vp`:
+
+```bash
+vp install        # install deps
+vp check          # format + lint + typecheck
+vp test           # run tests
+vp pack           # build the library
+```
+
+See [AGENTS.md](AGENTS.md) for project layout and contributor notes.
+
+## License
+
+MIT
