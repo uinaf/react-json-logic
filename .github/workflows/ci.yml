@@ -48,6 +48,9 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      # Required for npm Trusted Publishing (OIDC) — no NPM_TOKEN needed.
+      # The OIDC token is also used to attach provenance to the published artifact.
+      id-token: write
 
     steps:
       - name: Check out repository
@@ -80,7 +83,6 @@ jobs:
             conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GIT_AUTHOR_NAME: uinafdev
           GIT_AUTHOR_EMAIL: dev@uinaf.dev
           GIT_COMMITTER_NAME: uinafdev

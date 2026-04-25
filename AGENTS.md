@@ -44,7 +44,9 @@ For per-package work, `cd` into the package dir and run `vp <command>` directly.
 
 Conventional commits drive the version: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major. Skip a release with `[skip ci]` in the commit message.
 
-Required secret: `NPM_TOKEN` on the repo (publishes to the unscoped `react-json-logic` package).
+**Auth uses npm Trusted Publishing (OIDC) — no `NPM_TOKEN` secret needed.** The release job carries `id-token: write`; npm validates the OIDC token against the package's [Trusted Publisher](https://docs.npmjs.com/trusted-publishers/) entry. `publishConfig.provenance: true` adds a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every release.
+
+To enable: on npmjs.com, open the `react-json-logic` package settings → Trusted Publishers → Add → provider GitHub Actions, repository `uinaf/react-json-logic`, workflow filename `ci.yml`. (No environment.) Once configured, every push to `main` that warrants a release publishes automatically with provenance.
 
 Node version is locked in `.node-version` at the workspace root — both CI and the Cloudflare Pages demo deploy read it.
 

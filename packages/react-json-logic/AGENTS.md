@@ -47,12 +47,14 @@ All filenames are kebab-case.
 Auto-published to npm by `.github/workflows/ci.yml` on every push to `main`:
 
 - Verify gate (`pnpm verify`) runs first; release job runs only on green.
-- `cycjimmy/semantic-release-action@v4` with conventional-commits picks the next version from commit messages: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major.
+- `cycjimmy/semantic-release-action@v6` with conventional-commits picks the next version from commit messages: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major.
 - Releases tag the repo (`vN.N.N`), publish to npm (`react-json-logic`), open a GitHub Release with the conventional changelog, and commit the version bump back as `chore(release): N.N.N [skip ci]`.
 - semantic-release reads `.releaserc.json` from this directory and runs from here via `working_directory: packages/react-json-logic` in the workflow.
 - Skip a release on a given push by including `[skip ci]` in the commit message.
 
-`.node-version` at the workspace root locks the runner Node version so CI and the Cloudflare Pages demo (`react-json-logic.uinaf.dev`) agree.
+**Auth: npm Trusted Publishing (OIDC).** No `NPM_TOKEN` secret. The release job has `id-token: write` permission, GitHub Actions mints a short-lived OIDC token, and npm verifies it against the package's [Trusted Publisher](https://docs.npmjs.com/trusted-publishers/) config. `publishConfig.provenance: true` in `package.json` attaches a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every published version, so npm shows a "Built and signed on GitHub Actions" badge with a link to the build.
+
+`.node-version` at the workspace root locks the runner Node version so CI and the Cloudflare Pages demo (`react-json-logic.uinaf.dev`) agree. Trusted publishing requires npm 11.5.1+, which Node 24.14.0 ships with.
 
 ## Notes for Future Work
 
