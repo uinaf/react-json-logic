@@ -42,8 +42,20 @@ All filenames are kebab-case.
 - **`onChange` is the source of truth.** Components are controlled — every state change emits through `props.onChange` and the parent re-renders us with the new value. No prop-mirror, no internal `useState` for value.
 - **Coverage gate** is enforced in `vite.config.ts` at **97/95/90/97** (lines/functions/branches/statements). Run `vp test --coverage` (or `pnpm verify` from the workspace root) to evaluate.
 
+## Release flow
+
+Auto-published to npm by `.github/workflows/ci.yml` on every push to `main`:
+
+- Verify gate (`pnpm verify`) runs first; release job runs only on green.
+- `cycjimmy/semantic-release-action@v4` with conventional-commits picks the next version from commit messages: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major.
+- Releases tag the repo (`vN.N.N`), publish to npm (`react-json-logic`), open a GitHub Release with the conventional changelog, and commit the version bump back as `chore(release): N.N.N [skip ci]`.
+- semantic-release reads `.releaserc.json` from this directory and runs from here via `working_directory: packages/react-json-logic` in the workflow.
+- Skip a release on a given push by including `[skip ci]` in the commit message.
+
+`.node-version` at the workspace root locks the runner Node version so CI and the Cloudflare Pages demo (`react-json-logic.uinaf.dev`) agree.
+
 ## Notes for Future Work
 
-- Demo site was removed during the v3 migration. Rebuild target: Cloudflare Pages, ideally as interactive OSS docs (story-style).
-- Coverage today: **98%+ lines/statements**, **100% functions**, **91%+ branches**. The two remaining uncovered branches are `next == null` defensive guards on Base UI Select callbacks (Base UI never emits null in practice; the guards stay as belt-and-suspenders).
+- Coverage today: **99%+ lines**, **100% functions**, **91%+ branches**, **98%+ statements**. The two remaining uncovered branches are `next == null` defensive guards on Base UI Select callbacks (Base UI never emits null in practice; the guards stay as belt-and-suspenders).
 - Builder API + `validate()` shipped — `rule.eq(rule.var("a"), 1)`, `validate(rule)` walks against `OPERATORS`. A tighter discriminated-union `JsonLogicRule` type is still on the queue if we want full arity-checked autocomplete on the public surface (currently `value`/`onChange` are typed as `JsonLogicValue`, the recursive any-shape type).
+- `accessor.tsx` walks `data[0]` only when descending into arrays. Heterogeneous-shape arrays surface keys from the first element; deeper-but-only-on-later-elements paths are invisible. Worth a redesign pass.

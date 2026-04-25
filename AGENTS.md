@@ -34,3 +34,25 @@ For per-package work, `cd` into the package dir and run `vp <command>` directly.
 2. Add a `package.json` with `name`, `private` (for apps), and the standard scripts (`build`, `test`, `check`, `verify`).
 3. Run `vp install` from the root.
 4. Add it to the relevant root scripts if it should run as part of `pnpm test`/`pnpm verify`.
+
+## CI / release
+
+`.github/workflows/ci.yml` runs on every PR and push to `main`:
+
+- **verify** job — `pnpm verify` across the workspace. Enforces the 97/95/90/97 coverage gate and both packages' build steps.
+- **release** job — only on push to `main`, only after verify passes. Uses [`cycjimmy/semantic-release-action@v4`](https://github.com/cycjimmy/semantic-release-action) with conventional-commits to publish the lib to npm, tag the repo, and open a GitHub Release.
+
+Conventional commits drive the version: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major. Skip a release with `[skip ci]` in the commit message.
+
+Required secret: `NPM_TOKEN` on the repo (publishes to the unscoped `react-json-logic` package).
+
+Node version is locked in `.node-version` at the workspace root — both CI and the Cloudflare Pages demo deploy read it.
+
+## Demo deploy
+
+`apps/example` deploys to Cloudflare Pages at `react-json-logic.uinaf.dev` via the **dashboard git integration** (no GitHub Actions). CF clones, runs the build command, deploys the output:
+
+- Production branch: `main`
+- Build command: `pnpm install --frozen-lockfile && pnpm build:example`
+- Build output: `apps/example/dist`
+- Env: `NODE_VERSION=24.14.0` (or read from `.node-version`)
