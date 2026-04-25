@@ -11,6 +11,46 @@ overrides:
 importers:
 
   .:
+    devDependencies:
+      '@typescript/native-preview':
+        specifier: 7.0.0-dev.20260328.1
+        version: 7.0.0-dev.20260328.1
+      vite-plus:
+        specifier: ^0.1.18
+        version: 0.1.19(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jiti@2.6.1)(jsdom@28.1.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(yaml@2.8.3))(yaml@2.8.3)
+
+  apps/example:
+    dependencies:
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
+      react-json-logic:
+        specifier: workspace:*
+        version: link:../../packages/react-json-logic
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      '@typescript/native-preview':
+        specifier: 7.0.0-dev.20260328.1
+        version: 7.0.0-dev.20260328.1
+      '@vitejs/plugin-react':
+        specifier: ^5.0.4
+        version: 5.2.0(vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(yaml@2.8.3))
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.3
+      vite-plus:
+        specifier: ^0.1.18
+        version: 0.1.19(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jiti@2.6.1)(jsdom@28.1.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(yaml@2.8.3))(yaml@2.8.3)
+
+  packages/react-json-logic:
     dependencies:
       '@base-ui/react':
         specifier: ^1.4.1

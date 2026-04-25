@@ -1,0 +1,26 @@
+{
+  "name": "@react-json-logic/example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "check": "vp check",
+    "verify": "vp check && vp build"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-json-logic": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260328.1",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^6.0.2",
+    "vite-plus": "^0.1.18"
+  }
+}

@@ -1,0 +1,216 @@
+/* tiny opinionated styling for the demo — replace freely. */
+:root {
+  --fg: #1a1a1a;
+  --bg: #fafafa;
+  --muted: #6b7280;
+  --border: #d4d4d4;
+  --accent: #0a66c2;
+  --error: #b91c1c;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.samples button,
+button {
+  font: inherit;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+}
+
+.samples button:hover,
+button:hover {
+  background: #f0f0f0;
+}
+
+.builder {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* react-json-logic data-* style hooks */
+[data-rjl-operator-trigger],
+[data-rjl-input-type-trigger] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+[data-rjl-operator-popup],
+[data-rjl-input-type-popup],
+[data-rjl-accessor-popup] {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 0.25rem;
+  min-width: 8rem;
+}
+
+[data-rjl-operator-popup] [role="option"],
+[data-rjl-input-type-popup] [role="option"],
+[data-rjl-accessor-popup] [role="option"] {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+[data-rjl-operator-popup] [role="option"][data-highlighted],
+[data-rjl-input-type-popup] [role="option"][data-highlighted],
+[data-rjl-accessor-popup] [role="option"][data-highlighted] {
+  background: #eff6ff;
+  color: var(--accent);
+}
+
+[data-rjl-input-value],
+[data-rjl-accessor-input] {
+  font: inherit;
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+[data-rjl-add],
+[data-rjl-remove] {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+[data-rjl-children] {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid #e5e7eb;
+}
+
+[data-rjl-field] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+[data-rjl-higher-order] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+[data-rjl-higher-order-arrow] {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 720px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+pre,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  font:
+    13px/1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  margin: 0;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.error {
+  color: var(--error);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
+}
+
+footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: var(--accent);
+}
