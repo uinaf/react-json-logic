@@ -1,8 +1,0 @@
-.IteratorWrapper,
-.SelectWrapper {
-  display: inline-block;
-}
-
-.SelectWrapper {
-  width: 150px;
-}

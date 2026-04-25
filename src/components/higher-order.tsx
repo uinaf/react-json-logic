@@ -1,5 +1,4 @@
-import Any from "./Any.tsx";
-import styles from "./HigherOrder.module.css";
+import Any from "./any.tsx";
 
 interface Props {
   parent: string;
@@ -21,13 +20,12 @@ export function HigherOrder({ parent, data = {}, value, onChange }: Props) {
   };
 
   return (
-    <div className={styles.Wrapper}>
-      <div className={styles.FatArrow}>{"=>"}</div>
-
-      <div className={styles.Child}>
+    <span data-rjl-higher-order>
+      <span data-rjl-higher-order-arrow>=&gt;</span>
+      <span data-rjl-higher-order-child>
         <Any parent={parent} data={data} value={inner} onChange={handleChange} />
-      </div>
-    </div>
+      </span>
+    </span>
   );
 }
 

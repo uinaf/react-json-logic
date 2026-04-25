@@ -1,6 +1,6 @@
 # react-json-logic — Agent Guide
 
-A React component library for visually building [JsonLogic](http://jsonlogic.com) rules.
+A headless React component library for visually building [JsonLogic](http://jsonlogic.com) rules.
 
 ## Toolchain
 
@@ -9,30 +9,41 @@ This repo runs on [Vite+](https://viteplus.dev). Drive everything through `vp`:
 - `vp install` — install deps after pulling
 - `vp check` — format, lint, typecheck (the gate before commit)
 - `vp test` — run vitest
+- `vp test --coverage` — with v8 coverage report
 - `vp pack` — build the library (entry `src/index.ts` → `dist/`)
 - `vp dev` — `vp pack --watch` for library-mode dev
+- `pnpm verify` — the full gate: `vp check && vp test --coverage && vp pack`
 
-Do not invoke `pnpm`, `vite`, or `vitest` directly. Do not install `vitest` — import test utilities from `vite-plus/test`.
+Do not invoke `pnpm`, `vite`, or `vitest` directly. Do not install `vitest` — import test utilities from `vite-plus/test`. The repo intentionally has no `lint`/`fmt`/`tsc` scripts; `vp check` is the unified gate.
 
 ## Layout
 
 ```
 src/
-  index.ts                    # public exports
-  operators.ts                # OPERATORS + FIELD_TYPES table
+  index.ts                       # public exports
+  operators.ts                   # OPERATORS + FIELD_TYPES table
   components/
-    JsonLogicBuilder.tsx      # default export, top-level controlled wrapper
-    Any.tsx                   # recursive operator dispatcher
-    Input.tsx                 # value field
-    Accessor.tsx              # var/accessor field
-    HigherOrder.tsx           # some/every/map/filter wrapper
-    SelectOperator.tsx        # dropdown
-    *.module.css
+    json-logic-builder.tsx       # default export — top-level controlled wrapper
+    any.tsx                      # recursive operator dispatcher
+    input.tsx                    # value field (uses Base UI Select for type chooser)
+    accessor.tsx                 # var/accessor field (uses Base UI Autocomplete)
+    higher-order.tsx             # some/all/none/map/filter wrapper
+    select-operator.tsx          # operator dropdown (uses Base UI Select)
 tests/
+  json-logic-builder.test.tsx    # vitest + @testing-library/react
 ```
+
+All filenames are kebab-case.
+
+## Conventions
+
+- **No CSS shipped.** The library is headless. We do not import or emit CSS modules. Consumers style via `data-rjl-*` attributes (documented in README) or by wrapping the components.
+- **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
+- **`onChange` is the source of truth.** Components are controlled — every state change emits through `props.onChange` and the parent re-renders us with the new value. No prop-mirror, no internal `useState` for value.
+- **Coverage gate** is set in `vite.config.ts` (currently 85% lines/functions/statements, 75% branches). Push higher when more interaction tests land.
 
 ## Notes for Future Work
 
-- Demo site (`examples/`) was removed during the v3 migration. Rebuild target: Cloudflare Pages, ideally as interactive OSS docs.
-- Several class-era patterns survived the modernization (prop-mirror via `useEffect`, mutating-state writes in `Any`). Step 3 of the cleanup roadmap fixes these.
-- Operator table at `src/operators.ts` still uses string keys like `"Between"` that aren't real JSON Logic operators. Audit before assuming any entry is canonical.
+- Demo site was removed during the v3 migration. Rebuild target: Cloudflare Pages, ideally as interactive OSS docs (story-style).
+- Coverage gap is mostly in code paths that need to open a Base UI portal (operator/type select). Add `@testing-library/user-event` flows that open the popup and click items to push lines coverage to 90%+.
+- Builder API + tighter `JsonLogicRule` types are queued — typed factories like `rule.eq(rule.var("a"), 1)` so users get autocomplete + arity checks at compile time. Consider Valibot for an optional `validate(rule)` runtime check.

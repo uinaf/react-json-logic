@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import Any from "./Any.tsx";
-import styles from "./JsonLogicBuilder.module.css";
+import Any from "./any.tsx";
 
 interface Props {
   onChange: (value: unknown) => void;
@@ -27,13 +26,13 @@ function parseData(
   }
 }
 
-export function JsonLogicBuilder({ onChange, value = {}, data = {}, onDataError }: Props) {
+export function JsonLogicBuilder({ onChange, value = "", data = {}, onDataError }: Props) {
   const parsedData = useMemo(() => parseData(data, onDataError), [data, onDataError]);
 
   return (
-    <div className={styles.Wrapper}>
+    <span data-rjl-builder>
       <Any parent="master" data={parsedData} value={value} onChange={onChange} />
-    </div>
+    </span>
   );
 }
 

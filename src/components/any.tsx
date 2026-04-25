@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { FIELD_TYPES, OPERATORS, type FieldType, type Operator } from "../operators.ts";
-import Accessor from "./Accessor.tsx";
-import HigherOrder from "./HigherOrder.tsx";
-import Input from "./Input.tsx";
-import SelectOperator from "./SelectOperator.tsx";
-import styles from "./Any.module.css";
+import Accessor from "./accessor.tsx";
+import HigherOrder from "./higher-order.tsx";
+import Input from "./input.tsx";
+import SelectOperator from "./select-operator.tsx";
 
 interface Props {
   parent: string;
@@ -39,7 +38,7 @@ function deriveState(value: unknown): DerivedState {
 
   const selectedOperator = OPERATORS.find((op) => op.signature === field || op.label === field);
 
-  let fields: FieldType[] = selectedOperator ? [...selectedOperator.fields] : [];
+  const fields: FieldType[] = selectedOperator ? [...selectedOperator.fields] : [];
 
   if (selectedOperator && isPlainObject(value)) {
     const valueAtField = value[field];
@@ -145,20 +144,19 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     }
 
     return (
-      <div style={{ position: "relative" }} key={`${field}.${index}`}>
+      <span data-rjl-field key={`${field}.${index}`}>
         {isRemovable && (
           <button
             type="button"
             aria-label={`Remove field ${index + 1}`}
-            className={styles.ChildrenControlButton}
-            style={{ position: "absolute", left: -21, height: 26 }}
+            data-rjl-remove
             onClick={() => removeField(index)}
           >
             x
           </button>
         )}
         {element}
-      </div>
+      </span>
     );
   };
 
@@ -167,32 +165,17 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     : false;
 
   return (
-    <div>
+    <span data-rjl-any>
       <SelectOperator value={field} options={availableOperators} onChange={onFieldChange} />
 
       {canAddMoreChildren && (
-        <button
-          type="button"
-          aria-label="Add field"
-          className={styles.ChildrenControlButton}
-          style={{
-            position: "absolute",
-            width: 26,
-            height: 26,
-            marginLeft: 1,
-          }}
-          onClick={addField}
-        >
+        <button type="button" aria-label="Add field" data-rjl-add onClick={addField}>
           +
         </button>
       )}
 
-      {selectedOperator && (
-        <div style={{ marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
-          {fields.map(renderChild)}
-        </div>
-      )}
-    </div>
+      {selectedOperator && <span data-rjl-children>{fields.map(renderChild)}</span>}
+    </span>
   );
 }
 

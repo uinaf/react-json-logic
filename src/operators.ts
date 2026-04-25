@@ -43,8 +43,16 @@ export const OPERATORS: Operator[] = [
   },
   {
     type: "Higher Order",
-    signature: "every",
-    label: "every",
+    signature: "all",
+    label: "all",
+    fields: ["higher-order", "any"],
+    notAvailableUnder: [],
+    fieldCount: { min: 1, max: 10 },
+  },
+  {
+    type: "Higher Order",
+    signature: "none",
+    label: "none",
     fields: ["higher-order", "any"],
     notAvailableUnder: [],
     fieldCount: { min: 1, max: 10 },

@@ -1,8 +1,9 @@
 {
   "name": "react-json-logic",
   "version": "3.0.0-0",
-  "description": "Build and evaluate JsonLogic rules with React Components.",
+  "description": "Build and evaluate JsonLogic rules with React components.",
   "keywords": [
+    "headless",
     "json-logic",
     "json-logic-builder",
     "json-logic-js",
@@ -26,8 +27,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
-    "./package.json": "./package.json",
-    "./style.css": "./dist/style.css"
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
@@ -36,23 +36,25 @@
     "build": "vp pack",
     "dev": "vp pack --watch",
     "test": "vp test",
+    "test:coverage": "vp test --coverage",
     "check": "vp check",
+    "verify": "vp check && vp test --coverage && vp pack",
     "prepublishOnly": "vp run build"
   },
   "dependencies": {
-    "json-logic-js": "^2.0.5",
-    "react-select": "^5.10.0"
+    "@base-ui/react": "^1.4.1",
+    "json-logic-js": "^2.0.5"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@tsdown/css": "^0.21.10",
     "@types/json-logic-js": "^2.0.8",
     "@types/node": "^25.5.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@typescript/native-preview": "7.0.0-dev.20260328.1",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/coverage-v8": "^4.1.0",
     "bumpp": "^11.0.1",
     "jsdom": "^28.0.0",
     "react": "^19.0.0",
