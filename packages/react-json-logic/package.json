@@ -39,7 +39,7 @@
     "test": "vp test",
     "test:coverage": "vp test --coverage",
     "check": "vp check",
-    "verify": "vp check && vp test --coverage && vp pack",
+    "verify": "vp check && vp pack && vp test --coverage",
     "prepublishOnly": "vp run build"
   },
   "dependencies": {

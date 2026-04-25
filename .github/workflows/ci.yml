@@ -31,14 +31,16 @@ jobs:
           node-version-file: ".node-version"
           cache: true
 
-      - name: Enable pnpm via corepack
-        run: corepack enable pnpm
-
       - name: Install dependencies
         run: vp install
 
-      - name: Verify workspace (lib + example)
-        run: pnpm verify
+      - name: Verify library
+        working-directory: packages/react-json-logic
+        run: vp run verify
+
+      - name: Verify example app
+        working-directory: apps/example
+        run: vp run verify
 
   # Release job is staged but DISABLED until we're ready to ship to npm.
   # When ready, flip the `if:` predicate below to:
@@ -73,14 +75,12 @@ jobs:
           node-version-file: ".node-version"
           cache: true
 
-      - name: Enable pnpm via corepack
-        run: corepack enable pnpm
-
       - name: Install dependencies
         run: vp install
 
       - name: Build library
-        run: pnpm build
+        working-directory: packages/react-json-logic
+        run: vp pack
 
       - name: Release package
         uses: cycjimmy/semantic-release-action@v6
