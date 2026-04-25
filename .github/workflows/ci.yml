@@ -42,13 +42,11 @@ jobs:
         working-directory: apps/example
         run: vp run verify
 
-  # Release job is staged but DISABLED until we're ready to ship to npm.
-  # When ready, flip the `if:` predicate below to:
-  #   github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
-  # The supporting config (`packages/react-json-logic/.releaserc.json`,
-  # `publishConfig.provenance: true`, `NPM_TOKEN` secret) is already in place.
+  # Publishes the library to npm on push to `main` (after `verify` passes).
+  # Requires the `NPM_TOKEN` repository secret. Skip with `[skip ci]` in the
+  # release commit; config: `packages/react-json-logic/.releaserc.json`.
   release:
-    if: false
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
     name: Release react-json-logic
     needs:
       - verify

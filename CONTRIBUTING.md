@@ -44,5 +44,5 @@ vp run verify
 
 ## Release and Deployment Notes
 
-- The library release pipeline is configured but currently disabled
+- On every push to `main` that is not tagged `[skip ci]`, CI runs `verify` and then [semantic-release](https://github.com/semantic-release/semantic-release) for `packages/react-json-logic` (Conventional Commits → version bump and npm publish, when applicable). The `NPM_TOKEN` secret must be set on the repository.
 - The demo app deploy is configured through the repository host dashboard
