@@ -35,10 +35,15 @@ jobs:
         run: vp install
 
       - name: Verify workspace (lib + example)
-        run: pnpm verify
+        run: vp run -r verify
 
+  # Release job is staged but DISABLED until we're ready to ship to npm.
+  # When ready, flip the `if:` predicate below to:
+  #   github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
+  # The supporting config (`packages/react-json-logic/.releaserc.json`,
+  # `publishConfig.provenance: true`, `NPM_TOKEN` secret) is already in place.
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
+    if: false
     name: Release react-json-logic
     needs:
       - verify
@@ -50,9 +55,7 @@ jobs:
       pull-requests: write
       # OIDC is used only for npm provenance attestation
       # ("Built and signed on GitHub Actions" badge on the npm package page).
-      # Auth uses NPM_TOKEN (granular access token). Trusted publishing was
-      # considered but rejected — the per-package npm UI setup doesn't scale
-      # across many packages.
+      # Auth uses NPM_TOKEN (granular access token).
       id-token: write
 
     steps:
@@ -71,7 +74,7 @@ jobs:
         run: vp install
 
       - name: Build library
-        run: pnpm build
+        run: vp run --filter react-json-logic build
 
       - name: Release package
         uses: cycjimmy/semantic-release-action@v6

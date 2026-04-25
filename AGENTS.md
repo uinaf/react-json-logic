@@ -39,14 +39,15 @@ For per-package work, `cd` into the package dir and run `vp <command>` directly.
 
 `.github/workflows/ci.yml` runs on every PR and push to `main`:
 
-- **verify** job — `pnpm verify` across the workspace. Enforces the 97/95/90/97 coverage gate and both packages' build steps.
-- **release** job — only on push to `main`, only after verify passes. Uses [`cycjimmy/semantic-release-action@v4`](https://github.com/cycjimmy/semantic-release-action) with conventional-commits to publish the lib to npm, tag the repo, and open a GitHub Release.
+- **verify** job — `vp run -r verify` across the workspace. Enforces the 97/95/90/97 coverage gate and both packages' build steps.
+- **release** job — staged but **disabled** (`if: false`). When ready to start publishing to npm, flip the `if:` predicate to the standard `push to main && !skip ci` form. All supporting config is already in place:
+  - [`cycjimmy/semantic-release-action@v6`](https://github.com/cycjimmy/semantic-release-action) with conventional-commits drives the version (`feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major)
+  - `packages/react-json-logic/.releaserc.json` for the plugin chain
+  - `publishConfig.provenance: true` for the [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) badge on npm
+  - `NPM_TOKEN` granular access token in repo secrets
+  - `glitch418x` as the release-commit author
 
-Conventional commits drive the version: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major. Skip a release with `[skip ci]` in the commit message.
-
-**Auth uses a granular npm access token** stored as `NPM_TOKEN` in the GH repo (or as an org-level secret, shared across uinaf repos). `publishConfig.provenance: true` adds a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every release via OIDC — the "Built and signed on GitHub Actions" badge on the npm package page links back to the workflow run.
-
-Trusted publishing (OIDC-only auth, no token) is the more secure option but requires per-package UI setup on npmjs.com, which doesn't scale across many packages. Granular tokens are the pragmatic middle ground.
+Skip a release with `[skip ci]` in the commit message once enabled.
 
 Node version is locked in `.node-version` at the workspace root — both CI and the Cloudflare Pages demo deploy read it.
 
