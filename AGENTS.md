@@ -1,61 +1,69 @@
-# Workspace — Agent Guide
+# AGENTS.md
 
-This is a pnpm + Vite+ monorepo with two workspace packages:
+Guide for working on `react-json-logic`, a headless React component library for visually building [JsonLogic](http://jsonlogic.com) rules.
 
-- [`packages/react-json-logic`](packages/react-json-logic) — the published headless React library. See its [AGENTS.md](packages/react-json-logic/AGENTS.md) for package-level conventions.
-- [`apps/example`](apps/example) — interactive demo app. Consumes `react-json-logic` via `workspace:*`. Built to `apps/example/dist` for deploy to Cloudflare Pages.
+## What this repo is
+
+- One publishable package: `packages/react-json-logic` (the library on npm)
+- One demo app: `apps/example` (consumes the library via `workspace:*`)
+
+All meaningful work happens in `packages/react-json-logic`. The demo exists to exercise the library locally.
 
 ## Toolchain
 
-Run everything through `vp` and `pnpm` from the **workspace root**:
+This repo runs on [Vite+](https://viteplus.dev). Drive everything through `vp` (per package) and `pnpm` (workspace-wide):
 
 ```bash
-vp install          # bootstrap, workspace-aware
-pnpm verify         # full gate: pnpm -r run verify (check + test --coverage + pack per pkg)
-pnpm test           # pnpm -r run test
-pnpm check          # pnpm -r run check
-pnpm build          # build the library
-pnpm dev:example    # run the demo app locally
-pnpm build:example  # build the demo for deploy
+vp install           # install deps
+pnpm verify          # full gate: check + tests (with coverage) + build
+pnpm test            # tests across packages
+pnpm check           # format + lint + typecheck
+pnpm build           # build the library
+pnpm dev:example     # run the demo locally
+pnpm build:example   # build the demo
 ```
 
-For per-package work, `cd` into the package dir and run `vp <command>` directly.
+Per-package work (recommended for library development):
 
-## Conventions
+```bash
+cd packages/react-json-logic
+vp check
+vp test
+vp test --coverage
+vp pack
+```
 
-- **Scripts that span packages** live in the root `package.json` and use `pnpm --filter <name>` or `pnpm -r run <task>`. Don't add custom workspace task wrappers.
-- **The library is the only publishable package.** `apps/example` is `private: true`.
-- **Coverage gate** is enforced inside `packages/react-json-logic/vite.config.ts` (currently 97/95/90/97 lines/functions/branches/statements). Run `pnpm verify` before commit.
-- **`workspace:*`** is how the demo references the library. Don't pin a version — workspace resolution will fail.
+Do not invoke `vite` or `vitest` directly. Do not install `vitest` separately — import test utilities from `vite-plus/test`.
 
-## Adding a new package
+## Library layout
 
-1. Create the directory under `packages/` or `apps/`.
-2. Add a `package.json` with `name`, `private` (for apps), and the standard scripts (`build`, `test`, `check`, `verify`).
-3. Run `vp install` from the root.
-4. Add it to the relevant root scripts if it should run as part of `pnpm test`/`pnpm verify`.
+```
+packages/react-json-logic/
+  src/
+    index.ts                       # public exports
+    operators.ts                   # OPERATORS + FIELD_TYPES table
+    builder.ts                     # typed `rule` factory
+    validator.ts                   # `validate()`
+    components/
+      json-logic-builder.tsx       # default export — top-level controlled wrapper
+      any.tsx                      # recursive operator dispatcher
+      input.tsx                    # value field (Base UI Select for type chooser)
+      accessor.tsx                 # var/accessor field (Base UI Autocomplete)
+      higher-order.tsx             # some/all/none/map/filter wrapper
+      select-operator.tsx          # operator dropdown (Base UI Select)
+  tests/                           # vitest + @testing-library/react
+```
 
-## CI / release
+All filenames are kebab-case.
 
-`.github/workflows/ci.yml` runs on every PR and push to `main`:
+## Development conventions
 
-- **verify** job — runs `vp run verify` per package via `working-directory:` blocks (matches the putio CI pattern). Enforces the 97/95/90/97 coverage gate and both packages' build steps.
-- **release** job — staged but **disabled** (`if: false`). When ready to start publishing to npm, flip the `if:` predicate to the standard `push to main && !skip ci` form. All supporting config is already in place:
-  - [`cycjimmy/semantic-release-action@v6`](https://github.com/cycjimmy/semantic-release-action) with conventional-commits drives the version (`feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major)
-  - `packages/react-json-logic/.releaserc.json` for the plugin chain
-  - `NPM_TOKEN` granular access token in repo secrets
-  - `glitch418x` as the release-commit author
-  - npm provenance is opt-in (see below) — not enabled by default
+- **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Do not import or emit CSS modules from the library.
+- **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
+- **Controlled components.** `props.onChange` is the source of truth — no internal `useState` mirror for `value`.
+- **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `vp test --coverage` (or `pnpm verify`) to evaluate.
+- **Public API is small on purpose.** Default export `JsonLogicBuilder`, plus `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, and the core types. Adding a new public export is an API decision, not a casual change.
 
-Skip a release with `[skip ci]` in the commit message once enabled.
+## Commit style
 
-Node version is locked in `.node-version` at the workspace root — both CI and the Cloudflare Pages demo deploy read it.
-
-## Demo deploy
-
-`apps/example` deploys to Cloudflare Pages at `react-json-logic.uinaf.dev` via the **dashboard git integration** (no GitHub Actions). CF clones, runs the build command, deploys the output:
-
-- Production branch: `main`
-- Build command: `pnpm install --frozen-lockfile && pnpm build:example`
-- Build output: `apps/example/dist`
-- Env: `NODE_VERSION=24.14.0` (or read from `.node-version`)
+Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`). Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.

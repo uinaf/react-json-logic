@@ -1,38 +1,99 @@
-# react-json-logic — workspace
+# react-json-logic
 
-This is the monorepo for [`react-json-logic`](packages/react-json-logic), a headless React component library for building [JsonLogic](http://jsonlogic.com) rules visually.
+Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components.
 
-## Layout
+`react-json-logic` is headless. No CSS is shipped. You style it however you want.
 
-```
-.
-├── packages/
-│   └── react-json-logic/        # the published library — see its README
-└── apps/
-    └── example/                 # interactive demo, deployed to Cloudflare Pages
-```
-
-## Toolchain
-
-[Vite+](https://viteplus.dev) drives everything. From the workspace root:
+## Installation
 
 ```bash
-vp install          # bootstrap (workspace-aware)
-pnpm verify         # run check + test --coverage + pack across every package
-pnpm test           # tests in every package
-pnpm check          # format + lint + typecheck across every package
-pnpm build          # build the library
-pnpm dev:example    # run the demo app locally
-pnpm build:example  # build the demo for deploy
+pnpm add react-json-logic react react-dom
 ```
 
-## Library
+## Basic Usage
 
-The published artifact lives in [`packages/react-json-logic`](packages/react-json-logic). See that directory's [README](packages/react-json-logic/README.md) for usage, props, the styling-hooks contract, and the `rule` builder API.
+```tsx
+import { useState } from "react";
+import JsonLogicBuilder, { applyLogic, type JsonLogicValue } from "react-json-logic";
 
-## Demo
+function Example() {
+  const [rule, setRule] = useState<JsonLogicValue>("");
+  const data = { user: { age: 21 } };
 
-The interactive demo lives in [`apps/example`](apps/example). It consumes the local library via `workspace:*`, so changes flow through immediately during development.
+  return (
+    <>
+      <JsonLogicBuilder value={rule} data={data} onChange={setRule} />
+      <p>Result: {String(applyLogic(rule, data))}</p>
+    </>
+  );
+}
+```
+
+## API Overview
+
+- Default export: `JsonLogicBuilder`
+- Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`
+- Core types: `JsonLogicValue`, `JsonLogicData`, `ValidationResult`, `ValidationError`
+
+### Component Props
+
+- `value: JsonLogicValue` - controlled current rule
+- `onChange: (value: JsonLogicValue) => void` - called whenever the rule changes
+- `data?: JsonLogicData | string` - sample data for accessor suggestions (`var`)
+- `onDataError?: (err: unknown, raw: string) => void` - parse error hook when `data` is a string
+
+## Styling
+
+Use stable `data-rjl-*` attributes to style the rendered DOM (for example with Tailwind, CSS Modules, or vanilla CSS).
+
+Common hooks include:
+
+- `data-rjl-builder`
+- `data-rjl-any`
+- `data-rjl-field`
+- `data-rjl-add`
+- `data-rjl-remove`
+- `data-rjl-operator-trigger`
+- `data-rjl-operator-popup`
+- `data-rjl-input-value`
+- `data-rjl-accessor-input`
+- `data-rjl-higher-order`
+
+## Building Rules in Code
+
+Use the typed `rule` factory to construct rules without hand-writing JSON:
+
+```ts
+import { applyLogic, rule, validate } from "react-json-logic";
+
+const r = rule.and(rule.eq(rule.var("user.age"), 21), rule.gt(rule.var("score"), 100));
+
+applyLogic(r, { user: { age: 21 }, score: 150 }); // true
+validate(r); // { ok: true }
+```
+
+## Repo and Development
+
+This repository is a workspace with:
+
+- `packages/react-json-logic` (publishable npm package)
+- `apps/example` (demo app)
+
+From the workspace root:
+
+```bash
+vp install
+pnpm verify
+pnpm dev:example
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
 
 ## License
 
