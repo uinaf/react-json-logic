@@ -58,10 +58,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-      # OIDC is used only for npm provenance attestation
-      # ("Built and signed on GitHub Actions" badge on the npm package page).
-      # Auth uses NPM_TOKEN (granular access token).
-      id-token: write
 
     steps:
       - name: Check out repository

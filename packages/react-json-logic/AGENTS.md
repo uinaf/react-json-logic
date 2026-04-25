@@ -54,7 +54,9 @@ When enabled, the flow is:
 - semantic-release reads `.releaserc.json` from this directory and runs from here via `working_directory: packages/react-json-logic` in the workflow.
 - Skip a release on a given push by including `[skip ci]` in the commit message.
 
-**Auth: granular npm access token** (`NPM_TOKEN` repo secret). `publishConfig.provenance: true` in `package.json` attaches a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every published version via OIDC — `id-token: write` is on the release job so npm shows a "Built and signed on GitHub Actions" badge linking back to the build.
+**Auth: granular npm access token** (`NPM_TOKEN` repo secret).
+
+To opt into npm [provenance attestations](https://docs.npmjs.com/generating-provenance-statements/) later (a "Built and signed on GitHub Actions" badge on the npm page that links back to the build), add `id-token: write` to the release job permissions in `.github/workflows/ci.yml` and `publishConfig.provenance: true` to `package.json`. Not enabled now.
 
 `.node-version` at the workspace root locks the runner Node version so CI and the Cloudflare Pages demo (`react-json-logic.uinaf.dev`) agree.
 
