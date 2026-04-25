@@ -9,15 +9,15 @@ type ParseResult = { ok: true; data: JsonLogicData } | { ok: false; error: unkno
 
 interface Props {
   onChange: (value: JsonLogicValue) => void;
-  value?: JsonLogicValue;
-  data?: JsonLogicData | string;
+  value?: JsonLogicValue | undefined;
+  data?: JsonLogicData | string | undefined;
   /**
    * Called once whenever `data` is a string and `JSON.parse` fails. The
    * callback is de-duplicated by raw value, so it fires exactly once per
    * malformed `data` value even under React's StrictMode double-mount.
    * If omitted, the parse error is reported via `console.warn`.
    */
-  onDataError?: (error: unknown, raw: string) => void;
+  onDataError?: ((error: unknown, raw: string) => void) | undefined;
 }
 
 export function JsonLogicBuilder({ onChange, value = "", data = {}, onDataError }: Props) {

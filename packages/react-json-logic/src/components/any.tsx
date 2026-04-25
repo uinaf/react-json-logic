@@ -15,8 +15,8 @@ type DataObject = Record<string, unknown> | unknown[];
 
 interface Props {
   parent: string;
-  value?: JsonLogicValue;
-  data?: DataObject;
+  value?: JsonLogicValue | undefined;
+  data?: DataObject | undefined;
   onChange: (value: JsonLogicValue) => void;
 }
 
