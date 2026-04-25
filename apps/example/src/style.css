@@ -1,173 +1,215 @@
-/* tiny opinionated styling for the demo — replace freely. */
+/* ====================================================================
+   uinaf — colors & type (verbatim from the design system,
+   trimmed to what this demo actually consumes)
+   ==================================================================== */
+
+@import url("https://cdn.uinaf.dev/fonts/berkeley-mono/variable/font.css");
+
 :root {
-  --fg: #1a1a1a;
-  --bg: #fafafa;
-  --muted: #6b7280;
-  --border: #d4d4d4;
-  --accent: #0a66c2;
-  --error: #b91c1c;
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-  color: var(--fg);
-  background: var(--bg);
+  --font-mono:
+    "Berkeley Mono", ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --neutral-950: rgb(10, 10, 10);
+  --neutral-925: rgb(16, 16, 16);
+  --neutral-900: rgb(23, 23, 23);
+  --neutral-850: rgb(32, 32, 32);
+  --neutral-800: rgb(38, 38, 38);
+  --neutral-700: rgb(64, 64, 64);
+  --neutral-600: rgb(82, 82, 82);
+  --neutral-500: rgb(115, 115, 115);
+  --neutral-400: rgb(163, 163, 163);
+  --neutral-300: rgb(212, 212, 212);
+  --neutral-200: rgb(229, 229, 229);
+  --neutral-100: rgb(245, 245, 245);
+
+  --bg: var(--neutral-950);
+  --bg-card: rgba(10, 10, 10, 0.4);
+  --fg: var(--neutral-200);
+  --fg-strong: var(--neutral-100);
+  --fg-muted: var(--neutral-400);
+  --fg-subtle: var(--neutral-600);
+  --border: var(--neutral-800);
+  --border-hover: var(--neutral-500);
+
+  --slime-cyan: #3fffe6;
+  --slime-green: #6bffb0;
+  --error: #ff5c7c;
+
+  --radius-xs: 2px;
+  --ease-snappy: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-base: 220ms;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  isolation: isolate;
+}
+
+html,
 body {
   margin: 0;
   padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+body {
+  background:
+    radial-gradient(1200px 600px at 30% -10%, rgba(63, 255, 230, 0.04), transparent 60%),
+    linear-gradient(180deg, var(--neutral-950) 0%, var(--neutral-900) 100%);
+  min-height: 100dvh;
+}
+
+/* ====================================================================
+   Page shell — single column, narrow-ish, framed logo top-left
+   ==================================================================== */
 
 .page {
-  max-width: 64rem;
+  max-width: 56rem;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px 24px 64px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 32px;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 1.75rem;
+.logo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--neutral-900);
+  background: black;
+  transition:
+    transform var(--duration-fast) var(--ease-snappy),
+    border-color var(--duration-fast) var(--ease-snappy);
+}
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--duration-fast) var(--ease-snappy);
+}
+.logo:hover {
+  transform: translateY(-2px);
+  border-color: var(--neutral-700);
+}
+.logo:hover img {
+  transform: scale(1.015);
 }
 
-header p {
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.head h1 {
+  font-size: 20px;
+  font-weight: 400;
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
+  letter-spacing: 0;
+}
+.head p {
+  margin: 0;
+  color: var(--fg-muted);
+}
+.head .meta {
+  color: var(--fg-subtle);
+  font-size: 12px;
+}
+
+hr.rule {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ====================================================================
+   Sections + small headings
+   ==================================================================== */
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 h2 {
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  margin: 0 0 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--fg-subtle);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
 }
+
+/* ====================================================================
+   Sample buttons — secondary style (hairline, no fill)
+   ==================================================================== */
 
 .samples {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-.samples button,
-button {
+.samples button {
   font: inherit;
-  background: white;
+  font-size: 13px;
+  background: transparent;
+  color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  padding: 0.4rem 0.75rem;
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-snappy),
+    background-color var(--duration-fast) var(--ease-snappy),
+    transform var(--duration-fast) var(--ease-snappy);
+}
+.samples button:hover {
+  border-color: var(--border-hover);
+  background: rgba(23, 23, 23, 0.4);
+}
+.samples button:active {
+  transform: scale(0.97);
+}
+.samples button[aria-pressed="true"] {
+  border-color: var(--neutral-500);
+  background: rgba(23, 23, 23, 0.6);
+  color: var(--fg-strong);
 }
 
-.samples button:hover,
-button:hover {
-  background: #f0f0f0;
-}
+/* ====================================================================
+   Builder card — wraps the headless component
+   ==================================================================== */
 
 .builder {
-  background: white;
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background: var(--bg-card);
+  padding: 16px;
+  border-radius: var(--radius-xs);
+  overflow-x: auto;
 }
 
-/* react-json-logic data-* style hooks */
-[data-rjl-operator-trigger],
-[data-rjl-input-type-trigger] {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  height: 1.75rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  background: white;
-  font: inherit;
-  cursor: pointer;
-}
-
-[data-rjl-operator-popup],
-[data-rjl-input-type-popup],
-[data-rjl-accessor-popup] {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 0.25rem;
-  min-width: 8rem;
-}
-
-[data-rjl-operator-popup] [role="option"],
-[data-rjl-input-type-popup] [role="option"],
-[data-rjl-accessor-popup] [role="option"] {
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-[data-rjl-operator-popup] [role="option"][data-highlighted],
-[data-rjl-input-type-popup] [role="option"][data-highlighted],
-[data-rjl-accessor-popup] [role="option"][data-highlighted] {
-  background: #eff6ff;
-  color: var(--accent);
-}
-
-[data-rjl-input-value],
-[data-rjl-accessor-input] {
-  font: inherit;
-  height: 1.75rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  margin-left: 0.5rem;
-}
-
-[data-rjl-add],
-[data-rjl-remove] {
-  width: 1.5rem;
-  height: 1.5rem;
-  padding: 0;
-  margin-left: 0.25rem;
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
-[data-rjl-children] {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-left: 0.5rem;
-  padding-left: 0.5rem;
-  border-left: 2px solid #e5e7eb;
-}
-
-[data-rjl-field] {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-[data-rjl-higher-order] {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-[data-rjl-higher-order-arrow] {
-  color: var(--muted);
-  font-weight: 600;
-}
+/* ====================================================================
+   Two-column row for rule json + data
+   ==================================================================== */
 
 .cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 24px;
 }
 
 @media (max-width: 720px) {
@@ -176,41 +218,294 @@ button:hover {
   }
 }
 
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
 pre,
 textarea {
   width: 100%;
   box-sizing: border-box;
-  background: white;
+  background: var(--neutral-925);
+  color: var(--fg-strong);
   border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  padding: 0.75rem;
-  font:
-    13px/1.45 ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    monospace;
+  border-radius: var(--radius-xs);
+  padding: 12px;
+  font: 13px / 1.5 var(--font-mono);
+  font-variant-numeric: tabular-nums;
   margin: 0;
+  overflow: auto;
 }
 
 textarea {
+  min-height: 12rem;
   resize: vertical;
-  min-height: 8rem;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-snappy);
+}
+textarea:focus {
+  border-color: var(--border-hover);
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .error {
   color: var(--error);
-  font-size: 0.85rem;
-  margin: 0.25rem 0 0;
+  font-size: 12px;
+  margin: 0;
 }
 
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg-subtle);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+.status .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--slime-green);
+}
+.status .dot.err {
+  background: var(--error);
+}
+.col-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* ====================================================================
+   Footer
+   ==================================================================== */
+
 footer {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg-subtle);
 }
 
 footer a {
-  color: var(--accent);
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--duration-fast) var(--ease-snappy);
+}
+footer a:hover {
+  opacity: 0.8;
+}
+
+footer .sep {
+  color: var(--neutral-700);
+  margin: 0 6px;
+}
+
+/* ====================================================================
+   <a> defaults — prose link pattern (cyan accent on hover)
+   ==================================================================== */
+
+a {
+  color: inherit;
+  text-decoration-color: var(--neutral-700);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition:
+    color var(--duration-fast) var(--ease-snappy),
+    text-decoration-color var(--duration-fast) var(--ease-snappy);
+}
+
+/* ====================================================================
+   react-json-logic data-* hooks — restyled into the uinaf vocabulary
+   ==================================================================== */
+
+[data-rjl-builder] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+[data-rjl-any] {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+[data-rjl-children] {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border);
+}
+
+[data-rjl-field] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-rjl-operator-trigger],
+[data-rjl-input-type-trigger] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  background: var(--neutral-900);
+  color: var(--fg-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-snappy),
+    background-color var(--duration-fast) var(--ease-snappy);
+}
+[data-rjl-operator-trigger]:hover,
+[data-rjl-input-type-trigger]:hover {
+  border-color: var(--border-hover);
+  background: var(--neutral-850);
+}
+
+[data-rjl-operator-popup],
+[data-rjl-input-type-popup],
+[data-rjl-accessor-popup] {
+  background: var(--neutral-925);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 4px;
+  min-width: 8rem;
+  font: 12px / 1.4 var(--font-mono);
+}
+
+[data-rjl-operator-popup] [role="option"],
+[data-rjl-input-type-popup] [role="option"],
+[data-rjl-accessor-popup] [role="option"] {
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  color: var(--fg);
+}
+
+[data-rjl-operator-popup] [role="option"][data-highlighted],
+[data-rjl-input-type-popup] [role="option"][data-highlighted],
+[data-rjl-accessor-popup] [role="option"][data-highlighted] {
+  background: var(--neutral-850);
+  color: var(--slime-cyan);
+}
+
+[data-rjl-input-value],
+[data-rjl-accessor-input] {
+  font: inherit;
+  font-size: 12px;
+  height: 26px;
+  padding: 0 8px;
+  background: var(--neutral-900);
+  color: var(--fg-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-snappy);
+}
+[data-rjl-input-value]:focus,
+[data-rjl-accessor-input]:focus {
+  border-color: var(--border-hover);
+}
+
+[data-rjl-add],
+[data-rjl-remove] {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  background: transparent;
+  color: var(--fg-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-snappy),
+    color var(--duration-fast) var(--ease-snappy);
+}
+[data-rjl-add]:hover,
+[data-rjl-remove]:hover {
+  border-color: var(--border-hover);
+  color: var(--fg-strong);
+}
+
+[data-rjl-higher-order] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-rjl-higher-order-arrow] {
+  color: var(--fg-subtle);
+  font-weight: 400;
+}
+
+[data-rjl-accessor] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+[data-rjl-accessor-level] {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ====================================================================
+   Entry motion — fade-up-in, staggered, gated by sessionStorage
+   (per the uinaf design system spec)
+   ==================================================================== */
+
+.motion-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-up-in var(--duration-base) var(--ease-snappy) forwards;
+  animation-delay: calc(var(--stagger-index, 0) * 45ms);
+}
+@keyframes fade-up-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-enter {
+    transform: none;
+    animation: fade-in var(--duration-base) var(--ease-snappy) forwards;
+  }
+  @keyframes fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+}
+.motion-skip .motion-enter {
+  opacity: 1;
+  transform: none;
+  animation: none;
 }

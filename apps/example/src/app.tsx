@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import JsonLogicBuilder, {
   applyLogic,
   type JsonLogicData,
@@ -17,18 +17,18 @@ const SAMPLE_DATA = {
 };
 
 const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
-  { title: "empty (start typing)", rule: "" },
+  { title: "empty", rule: "" },
   { title: "simple comparison", rule: rule.eq(rule.var("user.age"), 21) },
   {
-    title: "and / or composition",
+    title: "and / or",
     rule: rule.and(rule.eq(rule.var("user.age"), 21), rule.gt(rule.var("user.age"), 18)),
   },
   {
-    title: "higher-order: items where score > 70",
+    title: "filter items, score > 70",
     rule: rule.filter(rule.var("items"), rule.gt(rule.var("score"), 70)),
   },
   {
-    title: "if-elseif chain",
+    title: "if / elseif chain",
     rule: rule.if(
       rule.gt(rule.var("user.age"), 65),
       "senior",
@@ -39,20 +39,36 @@ const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
   },
 ];
 
+const MOTION_KEY = "uinaf-entry-motion-seen";
+
 export default function App() {
+  const [activeSample, setActiveSample] = useState(0);
   const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
+  const [skipMotion] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem(MOTION_KEY) === "1";
+  });
 
-  let data: JsonLogicData = {};
-  let dataError: string | null = null;
-  try {
-    const parsed: unknown = JSON.parse(dataText);
-    if (parsed !== null && typeof parsed === "object") {
-      data = parsed as JsonLogicData;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    sessionStorage.setItem(MOTION_KEY, "1");
+  }, []);
+
+  const { data, dataError } = useMemo(() => {
+    try {
+      const parsed: unknown = JSON.parse(dataText);
+      if (parsed !== null && typeof parsed === "object") {
+        return { data: parsed as JsonLogicData, dataError: null as string | null };
+      }
+      return { data: {} as JsonLogicData, dataError: "data must be an object or array" };
+    } catch (err) {
+      return {
+        data: {} as JsonLogicData,
+        dataError: err instanceof Error ? err.message : String(err),
+      };
     }
-  } catch (err) {
-    dataError = err instanceof Error ? err.message : String(err);
-  }
+  }, [dataText]);
 
   let evaluated: unknown = "—";
   let evalError: string | null = null;
@@ -63,54 +79,115 @@ export default function App() {
   }
 
   return (
-    <main className="page">
-      <header>
-        <h1>react-json-logic</h1>
-        <p>headless · React 19 · Base UI · {`${process.env.NODE_ENV ?? ""}`.trim()}</p>
+    <main className={`page${skipMotion ? " motion-skip" : ""}`}>
+      <a
+        href="https://uinaf.dev"
+        className="logo motion-enter"
+        style={{ ["--stagger-index" as never]: 0 }}
+        aria-label="uinaf"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img src="https://cdn.uinaf.dev/images/uinaf-computer.png" alt="uinaf" />
+      </a>
+
+      <header className="head">
+        <h1 className="motion-enter" style={{ ["--stagger-index" as never]: 1 }}>
+          react-json-logic
+        </h1>
+        <p className="motion-enter" style={{ ["--stagger-index" as never]: 2 }}>
+          headless react component for editing jsonlogic rules visually.
+        </p>
+        <p className="meta motion-enter" style={{ ["--stagger-index" as never]: 3 }}>
+          no css shipped. style with data-rjl-* hooks. base ui under the hood.
+        </p>
       </header>
 
-      <section>
-        <h2>Try a sample</h2>
+      <hr className="rule motion-enter" style={{ ["--stagger-index" as never]: 4 }} />
+
+      <section className="motion-enter" style={{ ["--stagger-index" as never]: 5 }}>
+        <h2>samples</h2>
         <div className="samples">
           {SAMPLES.map((s, i) => (
-            <button key={i} type="button" onClick={() => setR(s.rule)}>
+            <button
+              key={i}
+              type="button"
+              aria-pressed={activeSample === i}
+              onClick={() => {
+                setActiveSample(i);
+                setR(s.rule);
+              }}
+            >
               {s.title}
             </button>
           ))}
         </div>
       </section>
 
-      <section>
-        <h2>Builder</h2>
+      <hr className="rule" />
+
+      <section className="motion-enter" style={{ ["--stagger-index" as never]: 6 }}>
+        <h2>builder</h2>
         <div className="builder">
           <JsonLogicBuilder value={r} data={data} onChange={setR} />
         </div>
       </section>
 
-      <section className="cols">
-        <div>
-          <h2>Rule (JSON)</h2>
+      <hr className="rule" />
+
+      <section className="cols motion-enter" style={{ ["--stagger-index" as never]: 7 }}>
+        <div className="col">
+          <div className="col-head">
+            <h2>rule (json)</h2>
+          </div>
           <pre>{JSON.stringify(r, null, 2)}</pre>
         </div>
 
-        <div>
-          <h2>Data (editable)</h2>
-          <textarea value={dataText} onChange={(e) => setDataText(e.target.value)} rows={12} />
-          {dataError && <p className="error">JSON parse error: {dataError}</p>}
+        <div className="col">
+          <div className="col-head">
+            <h2>data</h2>
+            <span className="status">
+              <span className={`dot${dataError ? " err" : ""}`} aria-hidden="true" />
+              {dataError ? "invalid" : "valid"}
+            </span>
+          </div>
+          <textarea
+            value={dataText}
+            onChange={(e) => setDataText(e.target.value)}
+            rows={12}
+            spellCheck={false}
+          />
+          {dataError && <p className="error">json parse error: {dataError}</p>}
         </div>
       </section>
 
-      <section>
-        <h2>Evaluation</h2>
+      <hr className="rule" />
+
+      <section className="motion-enter" style={{ ["--stagger-index" as never]: 8 }}>
+        <div className="col-head">
+          <h2>evaluation</h2>
+          <span className="status">
+            <span className={`dot${evalError ? " err" : ""}`} aria-hidden="true" />
+            {evalError ? "error" : "ok"}
+          </span>
+        </div>
         <pre>{evalError ?? JSON.stringify(evaluated, null, 2)}</pre>
-        {evalError && <p className="error">applyLogic threw: {evalError}</p>}
+        {evalError && <p className="error">applylogic threw: {evalError}</p>}
       </section>
 
+      <hr className="rule" />
+
       <footer>
-        <p>
-          <a href="https://github.com/uinaf/react-json-logic">github</a> ·{" "}
-          <a href="https://npmjs.com/package/react-json-logic">npm</a>
-        </p>
+        <div>
+          <a href="https://github.com/uinaf/react-json-logic">github ↗</a>
+          <span className="sep">·</span>
+          <a href="https://npmjs.com/package/react-json-logic">npm ↗</a>
+        </div>
+        <div>
+          <a href="mailto:dev@uinaf.dev">dev@uinaf.dev</a>
+          <span className="sep">·</span>
+          <a href="https://uinaf.dev">uinaf ↗</a>
+        </div>
       </footer>
     </main>
   );
