@@ -39,13 +39,13 @@ For per-package work, `cd` into the package dir and run `vp <command>` directly.
 
 `.github/workflows/ci.yml` runs on every PR and push to `main`:
 
-- **verify** job — `vp run -r verify` across the workspace. Enforces the 97/95/90/97 coverage gate and both packages' build steps.
+- **verify** job — runs `vp run verify` per package via `working-directory:` blocks (matches the putio CI pattern). Enforces the 97/95/90/97 coverage gate and both packages' build steps.
 - **release** job — staged but **disabled** (`if: false`). When ready to start publishing to npm, flip the `if:` predicate to the standard `push to main && !skip ci` form. All supporting config is already in place:
   - [`cycjimmy/semantic-release-action@v6`](https://github.com/cycjimmy/semantic-release-action) with conventional-commits drives the version (`feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major)
   - `packages/react-json-logic/.releaserc.json` for the plugin chain
-  - `publishConfig.provenance: true` for the [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) badge on npm
   - `NPM_TOKEN` granular access token in repo secrets
   - `glitch418x` as the release-commit author
+  - npm provenance is opt-in (see below) — not enabled by default
 
 Skip a release with `[skip ci]` in the commit message once enabled.
 
