@@ -40,11 +40,12 @@
     "prepublishOnly": "vp run build"
   },
   "dependencies": {
-    "dequal": "^2.0.3",
     "json-logic-js": "^2.0.5",
     "react-select": "^5.10.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@tsdown/css": "^0.21.10",
     "@types/json-logic-js": "^2.0.8",
     "@types/node": "^25.5.0",

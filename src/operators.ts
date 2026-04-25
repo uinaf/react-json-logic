@@ -162,14 +162,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 2, max: 2 },
   },
   {
-    type: "Numeric",
-    signature: "Between",
-    label: "<=",
-    fields: ["any", "any", "any"],
-    notAvailableUnder: [],
-    fieldCount: { min: 3, max: 3 },
-  },
-  {
     type: "Arithmetic",
     signature: "+",
     label: "+",
