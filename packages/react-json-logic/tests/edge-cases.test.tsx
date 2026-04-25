@@ -9,7 +9,13 @@ import { cleanup, render as rtlRender } from "@testing-library/react";
 import { StrictMode, type ReactElement } from "react";
 import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
 
-const render = (ui: ReactElement) => rtlRender(<StrictMode>{ui}</StrictMode>);
+const render = (ui: ReactElement) => {
+  const result = rtlRender(<StrictMode>{ui}</StrictMode>);
+  return {
+    ...result,
+    rerender: (nextUi: ReactElement) => result.rerender(<StrictMode>{nextUi}</StrictMode>),
+  };
+};
 
 afterEach(() => cleanup());
 

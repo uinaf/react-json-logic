@@ -1,5 +1,10 @@
 import { useState } from "react";
-import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule } from "react-json-logic";
+import JsonLogicBuilder, {
+  applyLogic,
+  type JsonLogicData,
+  type JsonLogicValue,
+  rule,
+} from "react-json-logic";
 
 const SAMPLE_DATA = {
   user: { age: 21, name: "Ada" },
@@ -38,10 +43,13 @@ export default function App() {
   const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
 
-  let data: JsonLogicValue = {};
+  let data: JsonLogicData = {};
   let dataError: string | null = null;
   try {
-    data = JSON.parse(dataText) as JsonLogicValue;
+    const parsed: unknown = JSON.parse(dataText);
+    if (parsed !== null && typeof parsed === "object") {
+      data = parsed as JsonLogicData;
+    }
   } catch (err) {
     dataError = err instanceof Error ? err.message : String(err);
   }
@@ -49,7 +57,9 @@ export default function App() {
   let evaluated: unknown = "—";
   let evalError: string | null = null;
   try {
-    evaluated = applyLogic(r, data);
+    // `data` is JsonLogicData (object|array) which is a subset of JsonLogicValue,
+    // so applyLogic accepts it without a cast.
+    evaluated = applyLogic(r, data as JsonLogicValue);
   } catch (err) {
     evalError = err instanceof Error ? err.message : String(err);
   }
@@ -75,15 +85,7 @@ export default function App() {
       <section>
         <h2>Builder</h2>
         <div className="builder">
-          <JsonLogicBuilder
-            value={r}
-            data={
-              typeof data === "object" && data !== null
-                ? (data as Record<string, unknown> | unknown[])
-                : {}
-            }
-            onChange={setR}
-          />
+          <JsonLogicBuilder value={r} data={data} onChange={setR} />
         </div>
       </section>
 

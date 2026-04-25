@@ -38,7 +38,9 @@ function walk(node: unknown, path: string, errors: ValidationError[]): void {
     return;
   }
 
-  const key = keys[0]!;
+  const [key] = keys;
+  // keys.length is exactly 1 by the guards above, so `key` is defined.
+  if (key === undefined) return;
   const op = OPERATORS.find((o) => o.signature === key);
 
   // Unknown operator keys are tolerated (custom ops registered via

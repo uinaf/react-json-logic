@@ -14,10 +14,10 @@ pnpm add react-json-logic react react-dom
 
 ```tsx
 import { useState } from "react";
-import JsonLogicBuilder, { applyLogic } from "react-json-logic";
+import JsonLogicBuilder, { applyLogic, type JsonLogicValue } from "react-json-logic";
 
 function Example() {
-  const [rule, setRule] = useState<unknown>("");
+  const [rule, setRule] = useState<JsonLogicValue>("");
   const data = { user: { age: 21 } };
 
   return (
@@ -31,14 +31,19 @@ function Example() {
 
 ## Props
 
-| Prop          | Type                       | Default        | Description                                                                 |
-| ------------- | -------------------------- | -------------- | --------------------------------------------------------------------------- |
-| `onChange`    | `(value: unknown) => void` | —              | Called with the updated rule whenever the builder changes.                  |
-| `value`       | `JsonLogicValue`           | `""`           | Current rule (controlled).                                                  |
-| `data`        | `object \| string`         | `{}`           | Sample data — used by accessor (`var`) fields and `applyLogic`.             |
-| `onDataError` | `(err, raw) => void`       | `console.warn` | Called when `data` is a string and `JSON.parse` fails (instead of warning). |
+| Prop          | Type                                  | Default        | Description                                                                                                                |
+| ------------- | ------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`    | `(value: JsonLogicValue) => void`     | —              | Called with the updated rule whenever the builder changes.                                                                 |
+| `value`       | `JsonLogicValue`                      | `""`           | Current rule (controlled).                                                                                                 |
+| `data`        | `JsonLogicData \| string`             | `{}`           | Sample data — used by accessor (`var`) field suggestions. Pass an object/array directly or a JSON string (parsed for you). |
+| `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.         |
 
-Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `FieldType`, `Operator`, `JsonLogicValue`, `ValidationError`, `ValidationResult`.
+`JsonLogicValue` is the recursive any-shape type for rules and primitive
+values. `JsonLogicData = Record<string, unknown> | unknown[]` is the
+narrower shape the `data` prop accepts (objects or arrays — primitives
+make no sense as accessor data).
+
+Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `FieldType`, `Operator`, `JsonLogicValue`, `JsonLogicData`, `ValidationError`, `ValidationResult`.
 
 ## Building rules in code
 

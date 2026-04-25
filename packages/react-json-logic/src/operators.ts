@@ -24,6 +24,14 @@ export type JsonLogicValue =
   | JsonLogicValue[]
   | { [key: string]: JsonLogicValue };
 
+/**
+ * Soft cap on variadic-operator argument count (`+`, `*`, `min`, `max`,
+ * `cat`, `merge`, `if`, `or`, `and`, `missing`). Picked large enough that
+ * real-world rules never hit it; serves to keep the UI's "add field"
+ * affordance from spinning a list to infinity.
+ */
+const MAX_VARIADIC = 100;
+
 export const OPERATORS: Operator[] = [
   // ── Value field ────────────────────────────────────────────────────────
   {
@@ -50,7 +58,7 @@ export const OPERATORS: Operator[] = [
     label: "missing",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 1, max: 100 },
+    fieldCount: { min: 1, max: MAX_VARIADIC },
   },
   {
     type: "Accessor",
@@ -68,7 +76,7 @@ export const OPERATORS: Operator[] = [
     label: "or",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 100 },
+    fieldCount: { min: 2, max: MAX_VARIADIC },
   },
   {
     type: "Statement",
@@ -76,7 +84,7 @@ export const OPERATORS: Operator[] = [
     label: "and",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 100 },
+    fieldCount: { min: 2, max: MAX_VARIADIC },
   },
   {
     type: "Statement",
@@ -84,7 +92,7 @@ export const OPERATORS: Operator[] = [
     label: "if",
     fields: ["any", "any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 3, max: 99 },
+    fieldCount: { min: 3, max: MAX_VARIADIC - 1 },
   },
   {
     type: "Logical",
@@ -168,7 +176,7 @@ export const OPERATORS: Operator[] = [
     label: "+",
     fields: ["any", "any"],
     notAvailableUnder: ["master"],
-    fieldCount: { min: 1, max: 100 },
+    fieldCount: { min: 1, max: MAX_VARIADIC },
   },
   {
     type: "Arithmetic",
@@ -184,7 +192,7 @@ export const OPERATORS: Operator[] = [
     label: "*",
     fields: ["any", "any"],
     notAvailableUnder: ["master"],
-    fieldCount: { min: 2, max: 100 },
+    fieldCount: { min: 2, max: MAX_VARIADIC },
   },
   {
     type: "Arithmetic",
@@ -208,7 +216,7 @@ export const OPERATORS: Operator[] = [
     label: "min",
     fields: ["any", "any"],
     notAvailableUnder: ["master"],
-    fieldCount: { min: 1, max: 100 },
+    fieldCount: { min: 1, max: MAX_VARIADIC },
   },
   {
     type: "Arithmetic",
@@ -216,7 +224,7 @@ export const OPERATORS: Operator[] = [
     label: "max",
     fields: ["any", "any"],
     notAvailableUnder: ["master"],
-    fieldCount: { min: 1, max: 100 },
+    fieldCount: { min: 1, max: MAX_VARIADIC },
   },
 
   // ── String / Array ────────────────────────────────────────────────────
@@ -234,7 +242,7 @@ export const OPERATORS: Operator[] = [
     label: "cat",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 1, max: 100 },
+    fieldCount: { min: 1, max: MAX_VARIADIC },
   },
   {
     type: "Array",
@@ -242,7 +250,7 @@ export const OPERATORS: Operator[] = [
     label: "merge",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 0, max: 100 },
+    fieldCount: { min: 0, max: MAX_VARIADIC },
   },
 
   // ── Higher-order ──────────────────────────────────────────────────────

@@ -9,6 +9,13 @@ interface Props {
   value?: string | number;
   /** Initial type fallback if `value` is a string. Ignored if `value` is a number. */
   type?: InputType;
+  /**
+   * Called with the next value. Note: when the input type is `"number"` and
+   * the user types something unparseable (rare — the browser usually filters
+   * non-numeric input), the raw string is emitted unchanged rather than
+   * `NaN`. Consumers that store the result into a numeric field should
+   * coerce or validate at the boundary.
+   */
   onChange: (value: string | number) => void;
 }
 

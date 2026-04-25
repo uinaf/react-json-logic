@@ -34,13 +34,12 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
   let field = "value";
 
   if (isPlainObject(value)) {
-    const keys = Object.keys(value);
-    if (keys.length > 0) {
-      const [first] = keys;
-      const matches = OPERATORS.some((op) => op.signature === first || op.label === first);
-      field = matches ? first! : "value";
-    } else {
+    const [first] = Object.keys(value);
+    if (first === undefined) {
       field = "";
+    } else {
+      const matches = OPERATORS.some((op) => op.signature === first || op.label === first);
+      field = matches ? first : "value";
     }
   }
 
@@ -96,7 +95,8 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
   // always a known operator key, never the "value" pseudo-op.
   const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
-    const arr = Array.isArray(current[field]) ? [...(current[field] as JsonLogicValue[])] : [];
+    const slot = current[field];
+    const arr = Array.isArray(slot) ? [...slot] : [];
     onChange({ ...current, [field]: update(arr) });
   };
 

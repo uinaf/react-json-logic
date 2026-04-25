@@ -39,20 +39,25 @@ export function JsonLogicBuilder({ onChange, value = "", data = {}, onDataError 
 
   // Side effect lives in useEffect with a ref-guarded dedupe so it fires
   // once per (failed) raw value across the StrictMode mount → cleanup → mount
-  // cycle. Reset the dedupe whenever the parse succeeds so a later failure
-  // can re-fire.
+  // cycle. Keying the effect on `failedRaw` (vs the whole parseResult) makes
+  // the effect a no-op when nothing relevant changed.
   const lastReportedRaw = useRef<string | null>(null);
+  const failedRaw: string | null = parseResult.ok ? null : parseResult.raw;
   useEffect(() => {
-    if (parseResult.ok) {
+    if (failedRaw === null) {
       lastReportedRaw.current = null;
       return;
     }
-    if (lastReportedRaw.current === parseResult.raw) return;
-    lastReportedRaw.current = parseResult.raw;
+    if (lastReportedRaw.current === failedRaw) return;
+    lastReportedRaw.current = failedRaw;
     const cb = onDataErrorRef.current;
+    // parseResult is captured fresh from the closure since it's recomputed
+    // alongside failedRaw whenever `data` changes.
+    if (parseResult.ok) return;
     if (cb) cb(parseResult.error, parseResult.raw);
     else console.warn("[react-json-logic] data prop is not valid JSON:", parseResult.error);
-  }, [parseResult]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- parseResult is keyed via failedRaw
+  }, [failedRaw]);
 
   const parsedData: JsonLogicData = parseResult.ok ? parseResult.data : {};
 

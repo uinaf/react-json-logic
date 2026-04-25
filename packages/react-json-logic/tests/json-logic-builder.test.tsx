@@ -11,7 +11,16 @@ import JsonLogicBuilder, {
 
 // All component renders go through StrictMode so React 19's double-invoke
 // of effects + memo getters surfaces any unstable behavior in the suite.
-const render = (ui: ReactElement) => rtlRender(<StrictMode>{ui}</StrictMode>);
+// `rerender` is wrapped too — RTL's default `rerender` would otherwise drop
+// the StrictMode parent and unmount/remount the subtree, breaking ref-based
+// dedupe assertions across re-renders.
+const render = (ui: ReactElement) => {
+  const result = rtlRender(<StrictMode>{ui}</StrictMode>);
+  return {
+    ...result,
+    rerender: (nextUi: ReactElement) => result.rerender(<StrictMode>{nextUi}</StrictMode>),
+  };
+};
 
 /**
  * Stateful host that mirrors what a real consumer does — wires the builder
@@ -432,6 +441,39 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     expect(onChange.mock.calls.at(-1)?.[0]).toBe(42);
   });
 
+  test("switching from number back to text coerces the value to a string", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={42} />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    const textOption = within(popup).getByRole("option", { name: "text" });
+    await user.click(textOption);
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe("42");
+  });
+
+  test("switching to number with non-numeric value emits 0 (NaN guard)", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="hello" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "number" }));
+    // parseFloat("hello") → NaN → guarded to 0
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe(0);
+  });
+
+  test("clearing a number-typed input emits empty string instead of NaN", () => {
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={42} />);
+    const input = container.querySelector("input[data-rjl-input-value]") as HTMLInputElement;
+    expect(input.type).toBe("number");
+    fireEvent.change(input, { target: { value: "" } });
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe("");
+  });
+
   test("typing into the accessor input accumulates into the var path", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
@@ -467,5 +509,42 @@ describe("<JsonLogicBuilder /> — error surfacing", () => {
     render(<JsonLogicBuilder onChange={onChange} data={"{nope"} />);
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
+  });
+
+  test("re-fires onDataError after a recovery (invalid → valid → invalid)", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { rerender } = render(
+      <JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1);
+    expect(onDataError.mock.calls[0]?.[1]).toBe("{bad");
+
+    // valid data — dedupe ref must reset so the same raw can re-fire later
+    rerender(
+      <JsonLogicBuilder
+        onChange={onChange}
+        data={JSON.stringify({ a: 1 })}
+        onDataError={onDataError}
+      />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1); // still 1; valid parse doesn't fire
+
+    // back to the same malformed string — should fire again
+    rerender(<JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />);
+    expect(onDataError).toHaveBeenCalledTimes(2);
+    expect(onDataError.mock.calls[1]?.[1]).toBe("{bad");
+  });
+
+  test("does not fire onDataError twice for the same persistent malformed data", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { rerender } = render(
+      <JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1);
+    // Re-render with the same data — must stay at 1 call
+    rerender(<JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />);
+    expect(onDataError).toHaveBeenCalledTimes(1);
   });
 });
