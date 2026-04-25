@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter react-json-logic run build",
+    "build": "vp run react-json-logic#build",
     "build:example": "vp run -t @react-json-logic/example#build",
-    "dev:example": "pnpm --filter @react-json-logic/example run dev",
-    "preview:example": "pnpm --filter @react-json-logic/example run preview",
+    "dev:example": "vp run react-json-logic#build && vp run -r --parallel dev",
+    "preview:example": "vp run @react-json-logic/example#preview",
     "test": "pnpm -r run test",
     "check": "pnpm -r run check",
     "verify": "pnpm -r run verify"
