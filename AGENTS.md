@@ -44,9 +44,9 @@ For per-package work, `cd` into the package dir and run `vp <command>` directly.
 
 Conventional commits drive the version: `feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major. Skip a release with `[skip ci]` in the commit message.
 
-**Auth uses npm Trusted Publishing (OIDC) — no `NPM_TOKEN` secret needed.** The release job carries `id-token: write`; npm validates the OIDC token against the package's [Trusted Publisher](https://docs.npmjs.com/trusted-publishers/) entry. `publishConfig.provenance: true` adds a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every release.
+**Auth uses a granular npm access token** stored as `NPM_TOKEN` in the GH repo (or as an org-level secret, shared across uinaf repos). `publishConfig.provenance: true` adds a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) to every release via OIDC — the "Built and signed on GitHub Actions" badge on the npm package page links back to the workflow run.
 
-To enable: on npmjs.com, open the `react-json-logic` package settings → Trusted Publishers → Add → provider GitHub Actions, repository `uinaf/react-json-logic`, workflow filename `ci.yml`. (No environment.) Once configured, every push to `main` that warrants a release publishes automatically with provenance.
+Trusted publishing (OIDC-only auth, no token) is the more secure option but requires per-package UI setup on npmjs.com, which doesn't scale across many packages. Granular tokens are the pragmatic middle ground.
 
 Node version is locked in `.node-version` at the workspace root — both CI and the Cloudflare Pages demo deploy read it.
 
