@@ -1,5 +1,5 @@
 import { Select } from "@base-ui/react/select";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 const INPUT_TYPES = ["text", "number"] as const;
 type InputType = (typeof INPUT_TYPES)[number];
@@ -7,6 +7,7 @@ type InputType = (typeof INPUT_TYPES)[number];
 interface Props {
   name?: string;
   value?: string | number;
+  /** Initial type fallback if `value` is a string. Ignored if `value` is a number. */
   type?: InputType;
   onChange: (value: string | number) => void;
 }
@@ -17,17 +18,19 @@ const getType = (value: unknown, fallback: InputType): InputType =>
   isNumeric(value) ? "number" : fallback;
 
 export function Input({ name = "", value = "", type: typeProp = "text", onChange }: Props) {
-  const [type, setType] = useState<InputType>(() => getType(value, typeProp));
-
-  useEffect(() => {
-    setType(getType(value, typeProp));
-  }, [value, typeProp]);
+  // Type is a pure derivation of (value, typeProp) — no useState/useEffect
+  // mirror. When the user picks a different type from the dropdown, we emit
+  // a re-typed value via `onChange`; the next render derives the new type
+  // from the new value prop.
+  const type = useMemo<InputType>(() => getType(value, typeProp), [value, typeProp]);
 
   const onTypeChange = (next: InputType | null) => {
     if (!next) return;
-    setType(next);
     if (next === "number") {
-      onChange(parseFloat(String(value)));
+      const n = parseFloat(String(value));
+      // Guard against `NaN` flowing back through the controlled input —
+      // unparseable input becomes 0 rather than the literal string "NaN".
+      onChange(Number.isFinite(n) ? n : 0);
     } else {
       onChange(String(value));
     }
@@ -35,10 +38,19 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
 
   const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
-    onChange(type === "number" ? parseFloat(raw) : raw);
+    if (type !== "number") {
+      onChange(raw);
+      return;
+    }
+    if (raw === "") {
+      onChange("");
+      return;
+    }
+    const n = parseFloat(raw);
+    onChange(Number.isFinite(n) ? n : raw);
   };
 
-  const items = INPUT_TYPES.map((t) => ({ label: t, value: t }));
+  const items = useMemo(() => INPUT_TYPES.map((t) => ({ label: t, value: t })), []);
 
   return (
     <span data-rjl-input>

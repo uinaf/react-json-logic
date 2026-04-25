@@ -1,15 +1,23 @@
 import { useMemo } from "react";
-import { FIELD_TYPES, OPERATORS, type FieldType, type Operator } from "../operators.ts";
+import {
+  FIELD_TYPES,
+  OPERATORS,
+  type FieldType,
+  type JsonLogicValue,
+  type Operator,
+} from "../operators.ts";
 import Accessor from "./accessor.tsx";
 import HigherOrder from "./higher-order.tsx";
 import Input from "./input.tsx";
 import SelectOperator from "./select-operator.tsx";
 
+type DataObject = Record<string, unknown> | unknown[];
+
 interface Props {
   parent: string;
-  value?: unknown;
-  data?: Record<string, unknown>;
-  onChange: (value: unknown) => void;
+  value?: JsonLogicValue;
+  data?: DataObject;
+  onChange: (value: JsonLogicValue) => void;
 }
 
 interface DerivedState {
@@ -18,19 +26,19 @@ interface DerivedState {
   fields: FieldType[];
 }
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+function isPlainObject(value: unknown): value is Record<string, JsonLogicValue> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function deriveState(value: unknown): DerivedState {
+function deriveState(value: JsonLogicValue | undefined): DerivedState {
   let field = "value";
 
   if (isPlainObject(value)) {
     const keys = Object.keys(value);
     if (keys.length > 0) {
-      const firstElem = keys[0]!;
-      const matches = OPERATORS.some((op) => op.signature === firstElem || op.label === firstElem);
-      field = matches ? firstElem : "value";
+      const [first] = keys;
+      const matches = OPERATORS.some((op) => op.signature === first || op.label === first);
+      field = matches ? first! : "value";
     } else {
       field = "";
     }
@@ -38,17 +46,23 @@ function deriveState(value: unknown): DerivedState {
 
   const selectedOperator = OPERATORS.find((op) => op.signature === field || op.label === field);
 
+  // Start from the operator's declared field shape, then grow if `value`
+  // already carries more args than the default. Variadic operators like `+`
+  // can carry up to `fieldCount.max` args; we cap growth at `max` to stay
+  // within the operator's declared bounds.
   const fields: FieldType[] = selectedOperator ? [...selectedOperator.fields] : [];
 
   if (selectedOperator && isPlainObject(value)) {
     const valueAtField = value[field];
     if (
       Array.isArray(valueAtField) &&
-      selectedOperator.fieldCount.min <= fields.length &&
-      selectedOperator.fieldCount.max > fields.length &&
-      valueAtField.length > fields.length
+      valueAtField.length > fields.length &&
+      fields.length < selectedOperator.fieldCount.max
     ) {
-      const extra = valueAtField.length - fields.length;
+      const extra = Math.min(
+        valueAtField.length - fields.length,
+        selectedOperator.fieldCount.max - fields.length,
+      );
       for (let i = 0; i < extra; i += 1) {
         fields.push(FIELD_TYPES.ANY);
       }
@@ -77,14 +91,16 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     }
   };
 
-  const updateChildArray = (update: (arr: unknown[]) => unknown[]) => {
-    if (field === "value") return;
+  // Add/remove are gated by the UI on `canAddMoreChildren` / `isRemovable`,
+  // both of which require a real `selectedOperator`. So `field` here is
+  // always a known operator key, never the "value" pseudo-op.
+  const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
-    const arr = Array.isArray(current[field]) ? [...(current[field] as unknown[])] : [];
+    const arr = Array.isArray(current[field]) ? [...(current[field] as JsonLogicValue[])] : [];
     onChange({ ...current, [field]: update(arr) });
   };
 
-  const onChildValueChange = (childValue: unknown, index: number) => {
+  const onChildValueChange = (childValue: JsonLogicValue, index: number) => {
     if (field === "value") {
       onChange(childValue);
       return;
@@ -107,15 +123,15 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
   const renderChild = (childField: FieldType, index: number) => {
     const isRemovable = selectedOperator ? fields.length > selectedOperator.fieldCount.min : false;
 
-    let childValue: unknown = "";
+    let childValue: JsonLogicValue = "";
     if (field === "value") {
-      childValue = value;
+      childValue = value ?? "";
     } else if (isPlainObject(value)) {
       const arr = value[field];
-      if (Array.isArray(arr)) childValue = arr[index];
+      if (Array.isArray(arr)) childValue = arr[index] ?? "";
     }
 
-    const childOnChange = (val: unknown) => onChildValueChange(val, index);
+    const childOnChange = (val: JsonLogicValue) => onChildValueChange(val, index);
 
     let element: React.ReactNode;
     switch (childField) {
@@ -124,7 +140,12 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
         break;
       case "input":
         element = (
-          <Input value={childValue as string | number | undefined} onChange={childOnChange} />
+          <Input
+            value={
+              typeof childValue === "string" || typeof childValue === "number" ? childValue : ""
+            }
+            onChange={childOnChange}
+          />
         );
         break;
       case "accessor":

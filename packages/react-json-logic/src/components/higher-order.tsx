@@ -1,10 +1,11 @@
+import type { JsonLogicValue } from "../operators.ts";
 import Any from "./any.tsx";
 
 interface Props {
   parent: string;
-  data?: Record<string, unknown>;
-  value?: unknown;
-  onChange: (value: unknown) => void;
+  data?: Record<string, unknown> | unknown[];
+  value?: JsonLogicValue;
+  onChange: (value: JsonLogicValue) => void;
 }
 
 /**

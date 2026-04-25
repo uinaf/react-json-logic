@@ -40,10 +40,10 @@ All filenames are kebab-case.
 - **No CSS shipped.** The library is headless. We do not import or emit CSS modules. Consumers style via `data-rjl-*` attributes (documented in README) or by wrapping the components.
 - **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
 - **`onChange` is the source of truth.** Components are controlled — every state change emits through `props.onChange` and the parent re-renders us with the new value. No prop-mirror, no internal `useState` for value.
-- **Coverage gate** is set in `vite.config.ts` (currently 85% lines/functions/statements, 75% branches). Push higher when more interaction tests land.
+- **Coverage gate** is enforced in `vite.config.ts` at **97/95/90/97** (lines/functions/branches/statements). Run `vp test --coverage` (or `pnpm verify` from the workspace root) to evaluate.
 
 ## Notes for Future Work
 
 - Demo site was removed during the v3 migration. Rebuild target: Cloudflare Pages, ideally as interactive OSS docs (story-style).
-- Coverage gap is mostly in code paths that need to open a Base UI portal (operator/type select). Add `@testing-library/user-event` flows that open the popup and click items to push lines coverage to 90%+.
-- Builder API + tighter `JsonLogicRule` types are queued — typed factories like `rule.eq(rule.var("a"), 1)` so users get autocomplete + arity checks at compile time. Consider Valibot for an optional `validate(rule)` runtime check.
+- Coverage today: **98%+ lines/statements**, **100% functions**, **91%+ branches**. The two remaining uncovered branches are `next == null` defensive guards on Base UI Select callbacks (Base UI never emits null in practice; the guards stay as belt-and-suspenders).
+- Builder API + `validate()` shipped — `rule.eq(rule.var("a"), 1)`, `validate(rule)` walks against `OPERATORS`. A tighter discriminated-union `JsonLogicRule` type is still on the queue if we want full arity-checked autocomplete on the public surface (currently `value`/`onChange` are typed as `JsonLogicValue`, the recursive any-shape type).

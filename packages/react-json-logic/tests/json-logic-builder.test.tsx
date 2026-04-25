@@ -1,7 +1,40 @@
 import { afterEach, describe, expect, test, vi } from "vite-plus/test";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render as rtlRender, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import JsonLogicBuilder, { applyLogic, FIELD_TYPES, OPERATORS } from "../src/index.ts";
+import { StrictMode, useState, type ReactElement } from "react";
+import JsonLogicBuilder, {
+  applyLogic,
+  FIELD_TYPES,
+  OPERATORS,
+  type JsonLogicValue,
+} from "../src/index.ts";
+
+// All component renders go through StrictMode so React 19's double-invoke
+// of effects + memo getters surfaces any unstable behavior in the suite.
+const render = (ui: ReactElement) => rtlRender(<StrictMode>{ui}</StrictMode>);
+
+/**
+ * Stateful host that mirrors what a real consumer does — wires the builder
+ * to local React state via onChange. Use when a test needs to observe the
+ * accumulated rule across multiple interactions, not just the first emit.
+ */
+function StatefulHost(props: {
+  initial?: JsonLogicValue;
+  data?: Parameters<typeof JsonLogicBuilder>[0]["data"];
+  onChange?: (next: JsonLogicValue) => void;
+}) {
+  const [value, setValue] = useState<JsonLogicValue>(props.initial ?? "");
+  return (
+    <JsonLogicBuilder
+      value={value}
+      data={props.data}
+      onChange={(next) => {
+        setValue(next);
+        props.onChange?.(next);
+      }}
+    />
+  );
+}
 
 afterEach(() => cleanup());
 
@@ -269,7 +302,7 @@ describe("<JsonLogicBuilder /> — render paths", () => {
 
   test("renders the new canonical operators", () => {
     const onChange = vi.fn();
-    const cases: Array<{ rule: Record<string, unknown>; label: string }> = [
+    const cases: Array<{ rule: JsonLogicValue; label: string }> = [
       { rule: { if: [true, 1, 0] }, label: "if" },
       { rule: { min: [1, 2] }, label: "min" },
       { rule: { max: [1, 2] }, label: "max" },
@@ -293,7 +326,7 @@ describe("<JsonLogicBuilder /> — render paths", () => {
     const { container } = render(
       <JsonLogicBuilder
         onChange={onChange}
-        value={{ unknownOp: [1, 2] } as unknown as Record<string, unknown>}
+        value={{ unknownOp: [1, 2] } satisfies JsonLogicValue}
       />,
     );
     expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
@@ -399,21 +432,23 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     expect(onChange.mock.calls.at(-1)?.[0]).toBe(42);
   });
 
-  test("typing into the accessor input emits the path string", async () => {
+  test("typing into the accessor input accumulates into the var path", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
+    // Use the StatefulHost so the rule actually accumulates across keystrokes
+    // (StrictMode + a stateless test would reset per-char and we'd only see
+    // the most recent character — that was the previous bug in this test).
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ var: [""] }} data={{ alpha: 1, beta: 2 }} />,
+      <StatefulHost initial={{ var: [""] }} data={{ alpha: 1, beta: 2 }} onChange={onChange} />,
     );
     const accessorInput = container.querySelector("[data-rjl-accessor-input]") as HTMLInputElement;
     expect(accessorInput).not.toBeNull();
     await user.click(accessorInput);
     await user.keyboard("alp");
     expect(onChange).toHaveBeenCalled();
-    // After typing "alp", the var path is updated. Multiple onChange calls may
-    // fire (per character). Just confirm at least one is a non-empty path.
-    const last = onChange.mock.calls.at(-1)?.[0] as Record<string, unknown>;
-    expect(last.var).toBeTruthy();
+    const last = onChange.mock.calls.at(-1)?.[0] as Record<string, JsonLogicValue>;
+    // the var operator carries an array of [path] (or [path, fallback])
+    expect(last.var).toEqual(["alp"]);
   });
 });
 

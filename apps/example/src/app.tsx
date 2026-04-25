@@ -1,5 +1,5 @@
 import { useState } from "react";
-import JsonLogicBuilder, { applyLogic, rule } from "react-json-logic";
+import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule } from "react-json-logic";
 
 const SAMPLE_DATA = {
   user: { age: 21, name: "Ada" },
@@ -11,7 +11,7 @@ const SAMPLE_DATA = {
   flag: true,
 };
 
-const SAMPLES: Array<{ title: string; rule: unknown }> = [
+const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
   { title: "empty (start typing)", rule: "" },
   { title: "simple comparison", rule: rule.eq(rule.var("user.age"), 21) },
   {
@@ -35,13 +35,13 @@ const SAMPLES: Array<{ title: string; rule: unknown }> = [
 ];
 
 export default function App() {
-  const [r, setR] = useState<unknown>(SAMPLES[0]!.rule);
+  const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
 
-  let data: Record<string, unknown> = {};
+  let data: JsonLogicValue = {};
   let dataError: string | null = null;
   try {
-    data = JSON.parse(dataText) as Record<string, unknown>;
+    data = JSON.parse(dataText) as JsonLogicValue;
   } catch (err) {
     dataError = err instanceof Error ? err.message : String(err);
   }
@@ -49,7 +49,7 @@ export default function App() {
   let evaluated: unknown = "—";
   let evalError: string | null = null;
   try {
-    evaluated = applyLogic(r as never, data as never);
+    evaluated = applyLogic(r, data);
   } catch (err) {
     evalError = err instanceof Error ? err.message : String(err);
   }
@@ -75,7 +75,15 @@ export default function App() {
       <section>
         <h2>Builder</h2>
         <div className="builder">
-          <JsonLogicBuilder value={r} data={data} onChange={setR} />
+          <JsonLogicBuilder
+            value={r}
+            data={
+              typeof data === "object" && data !== null
+                ? (data as Record<string, unknown> | unknown[])
+                : {}
+            }
+            onChange={setR}
+          />
         </div>
       </section>
 

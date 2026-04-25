@@ -41,9 +41,11 @@ function walk(node: unknown, path: string, errors: ValidationError[]): void {
   const key = keys[0]!;
   const op = OPERATORS.find((o) => o.signature === key);
 
-  // The "=>" key is a UI-internal wrapper for higher-order predicates; tolerate it.
-  // Unknown operators may be custom; tolerate them too. Their args are still
-  // walked for nested errors.
+  // Unknown operator keys are tolerated (custom ops registered via
+  // json-logic-js's `add_operation`, plus legacy shapes that may still be
+  // floating around). Their args are still walked for nested errors. The
+  // permissive default is intentional — see the validator.test.ts case for
+  // unknown operators. A future strict mode could opt callers into rejection.
   const args = obj[key];
 
   if (Array.isArray(args)) {

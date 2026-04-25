@@ -5,8 +5,11 @@
  * but legal inputs — not just the happy path.
  */
 import { afterEach, describe, expect, test, vi } from "vite-plus/test";
-import { cleanup, render } from "@testing-library/react";
-import JsonLogicBuilder, { applyLogic, rule, validate } from "../src/index.ts";
+import { cleanup, render as rtlRender } from "@testing-library/react";
+import { StrictMode, type ReactElement } from "react";
+import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
+
+const render = (ui: ReactElement) => rtlRender(<StrictMode>{ui}</StrictMode>);
 
 afterEach(() => cleanup());
 
@@ -42,19 +45,14 @@ describe("edge cases — value shapes", () => {
 
   test("array-shaped value falls through to the value field", () => {
     const onChange = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder
-        onChange={onChange}
-        value={[1, 2, 3] as unknown as Record<string, unknown>}
-      />,
-    );
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1, 2, 3]} />);
     expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
   });
 
   test("renders a deeply nested rule (10+ levels)", () => {
     const onChange = vi.fn();
-    let r: unknown = 1;
-    for (let i = 0; i < 12; i += 1) r = rule.add(r as never, 1);
+    let r: JsonLogicValue = 1;
+    for (let i = 0; i < 12; i += 1) r = rule.add(r, 1);
     const { container } = render(<JsonLogicBuilder onChange={onChange} value={r} />);
     // 12 nested + operators each rendered via SelectOperator
     expect(container.querySelectorAll("[data-rjl-operator-trigger]").length).toBeGreaterThanOrEqual(
