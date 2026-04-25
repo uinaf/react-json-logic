@@ -87,7 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GIT_AUTHOR_NAME: uinafdev
-          GIT_AUTHOR_EMAIL: dev@uinaf.dev
-          GIT_COMMITTER_NAME: uinafdev
-          GIT_COMMITTER_EMAIL: dev@uinaf.dev
+          GIT_AUTHOR_NAME: glitch418x
+          GIT_AUTHOR_EMAIL: 189487110+glitch418x@users.noreply.github.com
+          GIT_COMMITTER_NAME: glitch418x
+          GIT_COMMITTER_EMAIL: 189487110+glitch418x@users.noreply.github.com
