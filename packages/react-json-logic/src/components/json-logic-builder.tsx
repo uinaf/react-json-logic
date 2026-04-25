@@ -7,7 +7,7 @@ export type JsonLogicData = Record<string, unknown> | unknown[];
 
 type ParseResult = { ok: true; data: JsonLogicData } | { ok: false; error: unknown; raw: string };
 
-interface Props {
+export interface JsonLogicBuilderProps {
   onChange: (value: JsonLogicValue) => void;
   value?: JsonLogicValue | undefined;
   data?: JsonLogicData | string | undefined;
@@ -20,7 +20,12 @@ interface Props {
   onDataError?: ((error: unknown, raw: string) => void) | undefined;
 }
 
-export function JsonLogicBuilder({ onChange, value = "", data = {}, onDataError }: Props) {
+export function JsonLogicBuilder({
+  onChange,
+  value = "",
+  data = {},
+  onDataError,
+}: JsonLogicBuilderProps) {
   // Keep `onDataError` in a ref so we don't re-fire the side-effect just
   // because the consumer passed a fresh callback closure on render.
   const onDataErrorRef = useRef(onDataError);
@@ -50,10 +55,9 @@ export function JsonLogicBuilder({ onChange, value = "", data = {}, onDataError 
     }
     if (lastReportedRaw.current === failedRaw) return;
     lastReportedRaw.current = failedRaw;
-    const cb = onDataErrorRef.current;
-    // parseResult is captured fresh from the closure since it's recomputed
-    // alongside failedRaw whenever `data` changes.
+    // failedRaw being non-null implies parseResult is the error variant.
     if (parseResult.ok) return;
+    const cb = onDataErrorRef.current;
     if (cb) cb(parseResult.error, parseResult.raw);
     else console.warn("[react-json-logic] data prop is not valid JSON:", parseResult.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- parseResult is keyed via failedRaw

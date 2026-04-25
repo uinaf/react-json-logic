@@ -57,9 +57,7 @@ export default function App() {
   let evaluated: unknown = "—";
   let evalError: string | null = null;
   try {
-    // `data` is JsonLogicData (object|array) which is a subset of JsonLogicValue,
-    // so applyLogic accepts it without a cast.
-    evaluated = applyLogic(r, data as JsonLogicValue);
+    evaluated = applyLogic(r, data);
   } catch (err) {
     evalError = err instanceof Error ? err.message : String(err);
   }
