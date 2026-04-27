@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import JsonLogicBuilder, {
   applyLogic,
   type JsonLogicData,
@@ -39,21 +39,10 @@ const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
   },
 ];
 
-const MOTION_KEY = "uinaf-entry-motion-seen";
-
 export default function App() {
   const [activeSample, setActiveSample] = useState(0);
   const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
-  const [skipMotion] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem(MOTION_KEY) === "1";
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    sessionStorage.setItem(MOTION_KEY, "1");
-  }, []);
 
   const { data, dataError } = useMemo(() => {
     try {
@@ -79,33 +68,13 @@ export default function App() {
   }
 
   return (
-    <main className={`page${skipMotion ? " motion-skip" : ""}`}>
-      <a
-        href="https://uinaf.dev"
-        className="logo motion-enter"
-        style={{ ["--stagger-index" as never]: 0 }}
-        aria-label="uinaf"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <img src="https://cdn.uinaf.dev/images/uinaf-computer.png" alt="uinaf" />
-      </a>
-
+    <main className="page">
       <header className="head">
-        <h1 className="motion-enter" style={{ ["--stagger-index" as never]: 1 }}>
-          react-json-logic
-        </h1>
-        <p className="motion-enter" style={{ ["--stagger-index" as never]: 2 }}>
-          headless react component for editing jsonlogic rules visually.
-        </p>
-        <p className="meta motion-enter" style={{ ["--stagger-index" as never]: 3 }}>
-          no css shipped. style with data-rjl-* hooks. base ui under the hood.
-        </p>
+        <h1>react-json-logic</h1>
+        <p className="meta">local dev harness</p>
       </header>
 
-      <hr className="rule motion-enter" style={{ ["--stagger-index" as never]: 4 }} />
-
-      <section className="motion-enter" style={{ ["--stagger-index" as never]: 5 }}>
+      <section>
         <h2>samples</h2>
         <div className="samples">
           {SAMPLES.map((s, i) => (
@@ -124,18 +93,14 @@ export default function App() {
         </div>
       </section>
 
-      <hr className="rule" />
-
-      <section className="motion-enter" style={{ ["--stagger-index" as never]: 6 }}>
+      <section>
         <h2>builder</h2>
         <div className="builder">
           <JsonLogicBuilder value={r} data={data} onChange={setR} />
         </div>
       </section>
 
-      <hr className="rule" />
-
-      <section className="cols motion-enter" style={{ ["--stagger-index" as never]: 7 }}>
+      <section className="cols">
         <div className="col">
           <div className="col-head">
             <h2>rule (json)</h2>
@@ -161,9 +126,7 @@ export default function App() {
         </div>
       </section>
 
-      <hr className="rule" />
-
-      <section className="motion-enter" style={{ ["--stagger-index" as never]: 8 }}>
+      <section>
         <div className="col-head">
           <h2>evaluation</h2>
           <span className="status">
@@ -174,21 +137,6 @@ export default function App() {
         <pre>{evalError ?? JSON.stringify(evaluated, null, 2)}</pre>
         {evalError && <p className="error">applylogic threw: {evalError}</p>}
       </section>
-
-      <hr className="rule" />
-
-      <footer>
-        <div>
-          <a href="https://github.com/uinaf/react-json-logic">github ↗</a>
-          <span className="sep">·</span>
-          <a href="https://npmjs.com/package/react-json-logic">npm ↗</a>
-        </div>
-        <div>
-          <a href="mailto:dev@uinaf.dev">dev@uinaf.dev</a>
-          <span className="sep">·</span>
-          <a href="https://uinaf.dev">uinaf ↗</a>
-        </div>
-      </footer>
     </main>
   );
 }

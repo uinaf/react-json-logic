@@ -1,6 +1,9 @@
 /* ====================================================================
-   uinaf — colors & type (verbatim from the design system,
-   trimmed to what this demo actually consumes)
+   Local dev harness for `react-json-logic`.
+   This is not a public-facing site. It exists so library devs can
+   exercise the headless component while iterating on the package.
+   The data-rjl-* block at the bottom doubles as a styling reference
+   for library consumers.
    ==================================================================== */
 
 @import url("https://cdn.uinaf.dev/fonts/berkeley-mono/variable/font.css");
@@ -23,7 +26,6 @@
   --neutral-100: rgb(245, 245, 245);
 
   --bg: var(--neutral-950);
-  --bg-card: rgba(10, 10, 10, 0.4);
   --fg: var(--neutral-200);
   --fg-strong: var(--neutral-100);
   --fg-muted: var(--neutral-400);
@@ -38,15 +40,10 @@
   --radius-xs: 2px;
   --ease-snappy: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
-  --duration-base: 220ms;
 }
 
 * {
   box-sizing: border-box;
-}
-
-#root {
-  isolation: isolate;
 }
 
 html,
@@ -63,15 +60,8 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 30% -10%, rgba(63, 255, 230, 0.04), transparent 60%),
-    linear-gradient(180deg, var(--neutral-950) 0%, var(--neutral-900) 100%);
   min-height: 100dvh;
 }
-
-/* ====================================================================
-   Page shell — single column, narrow-ish, framed logo top-left
-   ==================================================================== */
 
 .page {
   max-width: 56rem;
@@ -82,66 +72,26 @@ body {
   gap: 32px;
 }
 
-.logo {
-  display: block;
-  width: 96px;
-  height: 96px;
-  border: 1px solid var(--neutral-900);
-  background: black;
-  transition:
-    transform var(--duration-fast) var(--ease-snappy),
-    border-color var(--duration-fast) var(--ease-snappy);
-}
-.logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform var(--duration-fast) var(--ease-snappy);
-}
-.logo:hover {
-  transform: translateY(-2px);
-  border-color: var(--neutral-700);
-}
-.logo:hover img {
-  transform: scale(1.015);
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .head {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 .head h1 {
   font-size: 20px;
   font-weight: 400;
   margin: 0;
-  letter-spacing: 0;
-}
-.head p {
-  margin: 0;
-  color: var(--fg-muted);
 }
 .head .meta {
+  margin: 0;
   color: var(--fg-subtle);
   font-size: 12px;
-}
-
-hr.rule {
-  border: 0;
-  height: 1px;
-  background: var(--border);
-  margin: 0;
-}
-
-/* ====================================================================
-   Sections + small headings
-   ==================================================================== */
-
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 h2 {
@@ -152,10 +102,6 @@ h2 {
   letter-spacing: 0.08em;
   text-transform: lowercase;
 }
-
-/* ====================================================================
-   Sample buttons — secondary style (hairline, no fill)
-   ==================================================================== */
 
 .samples {
   display: flex;
@@ -174,15 +120,11 @@ h2 {
   cursor: pointer;
   transition:
     border-color var(--duration-fast) var(--ease-snappy),
-    background-color var(--duration-fast) var(--ease-snappy),
-    transform var(--duration-fast) var(--ease-snappy);
+    background-color var(--duration-fast) var(--ease-snappy);
 }
 .samples button:hover {
   border-color: var(--border-hover);
   background: rgba(23, 23, 23, 0.4);
-}
-.samples button:active {
-  transform: scale(0.97);
 }
 .samples button[aria-pressed="true"] {
   border-color: var(--neutral-500);
@@ -190,28 +132,19 @@ h2 {
   color: var(--fg-strong);
 }
 
-/* ====================================================================
-   Builder card — wraps the headless component
-   ==================================================================== */
-
 .builder {
   border: 1px solid var(--border);
-  background: var(--bg-card);
+  background: rgba(10, 10, 10, 0.4);
   padding: 16px;
   border-radius: var(--radius-xs);
   overflow-x: auto;
 }
-
-/* ====================================================================
-   Two-column row for rule json + data
-   ==================================================================== */
 
 .cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
-
 @media (max-width: 720px) {
   .cols {
     grid-template-columns: 1fr;
@@ -239,7 +172,6 @@ textarea {
   margin: 0;
   overflow: auto;
 }
-
 textarea {
   min-height: 12rem;
   resize: vertical;
@@ -249,7 +181,6 @@ textarea {
 textarea:focus {
   border-color: var(--border-hover);
 }
-
 pre {
   white-space: pre-wrap;
   word-break: break-word;
@@ -287,49 +218,8 @@ pre {
 }
 
 /* ====================================================================
-   Footer
-   ==================================================================== */
-
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--fg-subtle);
-}
-
-footer a {
-  color: inherit;
-  text-decoration: none;
-  transition: opacity var(--duration-fast) var(--ease-snappy);
-}
-footer a:hover {
-  opacity: 0.8;
-}
-
-footer .sep {
-  color: var(--neutral-700);
-  margin: 0 6px;
-}
-
-/* ====================================================================
-   <a> defaults — prose link pattern (cyan accent on hover)
-   ==================================================================== */
-
-a {
-  color: inherit;
-  text-decoration-color: var(--neutral-700);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  transition:
-    color var(--duration-fast) var(--ease-snappy),
-    text-decoration-color var(--duration-fast) var(--ease-snappy);
-}
-
-/* ====================================================================
-   react-json-logic data-* hooks — restyled into the uinaf vocabulary
+   react-json-logic data-* hooks — the canonical styling reference for
+   consumers of this headless library. Mirrors the uinaf design system.
    ==================================================================== */
 
 [data-rjl-builder] {
@@ -474,38 +364,4 @@ a {
 [data-rjl-accessor-level] {
   display: inline-flex;
   align-items: center;
-}
-
-/* ====================================================================
-   Entry motion — fade-up-in, staggered, gated by sessionStorage
-   (per the uinaf design system spec)
-   ==================================================================== */
-
-.motion-enter {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fade-up-in var(--duration-base) var(--ease-snappy) forwards;
-  animation-delay: calc(var(--stagger-index, 0) * 45ms);
-}
-@keyframes fade-up-in {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .motion-enter {
-    transform: none;
-    animation: fade-in var(--duration-base) var(--ease-snappy) forwards;
-  }
-  @keyframes fade-in {
-    to {
-      opacity: 1;
-    }
-  }
-}
-.motion-skip .motion-enter {
-  opacity: 1;
-  transform: none;
-  animation: none;
 }
