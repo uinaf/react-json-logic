@@ -33,7 +33,7 @@ vp test --coverage
 vp pack
 ```
 
-Do not invoke `vite` or `vitest` directly. Do not install `vitest` separately — import test utilities from `vite-plus/test`.
+Use `vp` and import test utilities from `vite-plus/test`.
 
 ## Library layout
 
@@ -58,7 +58,7 @@ All filenames are kebab-case.
 
 ## Development conventions
 
-- **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Do not import or emit CSS modules from the library.
+- **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Keep CSS modules out of the library.
 - **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
 - **Controlled components.** `props.onChange` is the source of truth — no internal `useState` mirror for `value`.
 - **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `vp test --coverage` (or `pnpm verify`) to evaluate.

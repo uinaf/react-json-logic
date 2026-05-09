@@ -4,7 +4,7 @@
 
 Please report vulnerabilities privately by emailing `dev@uinaf.dev`.
 
-Do not open public issues for suspected security problems.
+Use private email for suspected security problems.
 
 ## What to Include
 
