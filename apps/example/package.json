@@ -11,8 +11,8 @@
     "verify": "vp check && vp build"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-json-logic": "workspace:*"
   },
   "devDependencies": {
@@ -21,6 +21,6 @@
     "@typescript/native-preview": "7.0.0-dev.20260513.1",
     "@vitejs/plugin-react": "^5.0.4",
     "typescript": "^6.0.2",
-    "vite-plus": "^0.1.18"
+    "vite-plus": "^0.1.21"
   }
 }
