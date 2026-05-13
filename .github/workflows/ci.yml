@@ -21,12 +21,12 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
       - name: Set up Vite+
-        uses: voidzero-dev/setup-vp@v1
+        uses: voidzero-dev/setup-vp@9446e853b27985e00fb1b21193be026fc09198db # v1
         with:
           node-version-file: ".node-version"
           cache: true
@@ -42,9 +42,7 @@ jobs:
         working-directory: apps/example
         run: vp run verify
 
-  # Publishes the library to npm on push to `main` (after `verify` passes).
-  # Requires the `NPM_TOKEN` repository secret. Skip with `[skip ci]` in the
-  # release commit; config: `packages/react-json-logic/.releaserc.json`.
+  # Uses `NPM_TOKEN` from the `release` GitHub Environment.
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
     name: Release react-json-logic
@@ -52,6 +50,12 @@ jobs:
       - verify
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: release
+      deployment: false
+    concurrency:
+      group: release-${{ github.repository }}-main
+      cancel-in-progress: false
     permissions:
       contents: write
       issues: write
@@ -59,15 +63,15 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
       - name: Set up Vite+
-        uses: voidzero-dev/setup-vp@v1
+        uses: voidzero-dev/setup-vp@9446e853b27985e00fb1b21193be026fc09198db # v1
         with:
           node-version-file: ".node-version"
-          cache: true
+          cache: false
 
       - name: Install dependencies
         run: vp install
@@ -77,7 +81,7 @@ jobs:
         run: vp pack
 
       - name: Release package
-        uses: cycjimmy/semantic-release-action@v6
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6
         with:
           working_directory: packages/react-json-logic
           extra_plugins: |
@@ -90,7 +94,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GIT_AUTHOR_NAME: glitch418x
-          GIT_AUTHOR_EMAIL: 189487110+glitch418x@users.noreply.github.com
-          GIT_COMMITTER_NAME: glitch418x
-          GIT_COMMITTER_EMAIL: 189487110+glitch418x@users.noreply.github.com
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
