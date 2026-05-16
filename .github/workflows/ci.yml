@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Vite+
         uses: voidzero-dev/setup-vp@9446e853b27985e00fb1b21193be026fc09198db # v1
@@ -42,7 +43,6 @@ jobs:
         working-directory: apps/example
         run: vp run verify
 
-  # Uses `NPM_TOKEN` from the `release` GitHub Environment.
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
     name: Release react-json-logic
@@ -58,6 +58,7 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: write
+      id-token: write
       issues: write
       pull-requests: write
 
@@ -66,6 +67,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Vite+
         uses: voidzero-dev/setup-vp@9446e853b27985e00fb1b21193be026fc09198db # v1
@@ -81,19 +83,18 @@ jobs:
         run: vp pack
 
       - name: Release package
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
           working_directory: packages/react-json-logic
           extra_plugins: |
-            @semantic-release/commit-analyzer
-            @semantic-release/release-notes-generator
-            @semantic-release/npm
-            @semantic-release/github
-            @semantic-release/git
-            conventional-changelog-conventionalcommits
+            @semantic-release/commit-analyzer@13.0.1
+            @semantic-release/release-notes-generator@14.1.1
+            @semantic-release/npm@13.1.5
+            @semantic-release/git@10.0.1
+            @semantic-release/github@12.0.8
+            conventional-changelog-conventionalcommits@9.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
