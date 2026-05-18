@@ -18,7 +18,7 @@
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@typescript/native-preview": "7.0.0-dev.20260513.1",
+    "@typescript/native-preview": "7.0.0-dev.20260517.1",
     "@vitejs/plugin-react": "^6.0.2",
     "typescript": "^6.0.2",
     "vite-plus": "^0.1.21"
