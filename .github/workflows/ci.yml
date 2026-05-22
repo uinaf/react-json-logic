@@ -32,9 +32,6 @@ jobs:
           node-version-file: ".node-version"
           cache: true
 
-      - name: Install dependencies
-        run: vp install
-
       - name: Verify library
         working-directory: packages/react-json-logic
         run: vp run verify
@@ -74,9 +71,6 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: false
-
-      - name: Install dependencies
-        run: vp install
 
       - name: Build library
         working-directory: packages/react-json-logic
