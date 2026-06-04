@@ -22,7 +22,7 @@ importers:
         specifier: 7.0.0-dev.20260527.2
         version: 7.0.0-dev.20260527.2
       vite-plus:
-        specifier: 0.1.24
+        specifier: 'catalog:'
         version: 0.1.24(@types/node@25.9.1)(@vitest/coverage-v8@4.1.8)(jiti@2.7.0)(jsdom@29.1.1)(typescript@6.0.3)(vite@8.0.10(@types/node@25.9.1)(jiti@2.7.0)(yaml@2.9.0))(yaml@2.9.0)
 
   apps/example:
