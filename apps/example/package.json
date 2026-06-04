@@ -11,12 +11,12 @@
     "verify": "vp check && vp build"
   },
   "dependencies": {
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "react-json-logic": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.16",
     "@types/react-dom": "^19.0.0",
     "@typescript/native-preview": "7.0.0-dev.20260527.2",
     "@vitejs/plugin-react": "^6.0.2",
