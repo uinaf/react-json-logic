@@ -42,7 +42,7 @@
     "prepublishOnly": "vp run build"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
+    "@base-ui/react": "^1.6.0",
     "json-logic-js": "^2.0.5"
   },
   "devDependencies": {
@@ -50,11 +50,11 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/json-logic-js": "^2.0.8",
     "@types/node": "^25.9.1",
-    "@types/react": "^19.2.16",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.0.0",
     "@typescript/native-preview": "7.0.0-dev.20260527.2",
-    "@vitejs/plugin-react": "^6.0.2",
-    "@vitest/coverage-v8": "4.1.8",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "4.1.9",
     "bumpp": "^11.1.0",
     "jsdom": "^29.1.1",
     "react": "^19.2.7",
