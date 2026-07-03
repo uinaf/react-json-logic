@@ -16,10 +16,9 @@
     "react-json-logic": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.2.16",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.0.0",
-    "@typescript/native-preview": "7.0.0-dev.20260527.2",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@typescript/native-preview": "7.0.0-dev.20260606.1",
     "typescript": "^6.0.2",
     "vite-plus": "catalog:"
   }

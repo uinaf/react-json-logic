@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vite-plus/test";
+import { describe, expect, test } from "vitest";
 import { applyLogic, rule } from "../src/index.ts";
 
 describe("rule builder", () => {

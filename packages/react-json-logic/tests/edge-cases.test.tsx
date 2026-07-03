@@ -4,7 +4,7 @@
  * These tests exist to lock the library against breakage on unusual
  * but legal inputs — not just the happy path.
  */
-import { afterEach, describe, expect, test, vi } from "vite-plus/test";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { cleanup, render as rtlRender } from "@testing-library/react";
 import { StrictMode, type ReactElement } from "react";
 import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
