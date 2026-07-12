@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vite-plus/test";
 import { cleanup, fireEvent, render as rtlRender, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StrictMode, useState, type ReactElement } from "react";
