@@ -12,6 +12,9 @@ updates:
         update-types: ["patch", "minor"]
       npm-major:
         update-types: ["major"]
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "deps"
 
