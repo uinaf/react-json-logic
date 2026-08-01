@@ -82,7 +82,7 @@ This repository is a workspace with:
 From the workspace root:
 
 ```bash
-vp install
+pnpm install --frozen-lockfile
 pnpm verify
 pnpm dev:example
 ```

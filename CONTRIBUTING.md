@@ -12,7 +12,7 @@ Thanks for improving this repository.
 Run from the workspace root:
 
 ```bash
-vp install
+pnpm install --frozen-lockfile
 pnpm verify
 ```
 
@@ -32,7 +32,7 @@ Per-package work is also supported:
 
 ```bash
 cd packages/react-json-logic
-vp run verify
+pnpm exec vp run verify
 ```
 
 ## Commit and Pull Request Rules

@@ -11,10 +11,11 @@ All meaningful work happens in `packages/react-json-logic`. The demo exists to e
 
 ## Toolchain
 
-This repo runs on [Vite+](https://viteplus.dev). Drive everything through `vp` (per package) and `pnpm` (workspace-wide):
+This repo runs on [Vite+](https://viteplus.dev). Bootstrap with the
+repository-pinned pnpm and invoke the repository-local Vite+ binary explicitly:
 
 ```bash
-vp install           # install deps
+pnpm install --frozen-lockfile
 pnpm verify          # full gate: check + tests (with coverage) + build
 pnpm test            # tests across packages
 pnpm check           # format + lint + typecheck
@@ -27,13 +28,14 @@ Per-package work (recommended for library development):
 
 ```bash
 cd packages/react-json-logic
-vp check
-vp test
-vp test --coverage
-vp pack
+pnpm exec vp check
+pnpm exec vp test
+pnpm exec vp test --coverage
+pnpm exec vp pack
 ```
 
-Use `vp` and import test utilities from `vite-plus/test`.
+Use `pnpm exec vp` interactively, keep bare `vp` inside package scripts, and
+import test utilities from `vite-plus/test`.
 
 ## Library layout
 
@@ -61,7 +63,7 @@ All filenames are kebab-case.
 - **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Keep CSS modules out of the library.
 - **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
 - **Controlled components.** `props.onChange` is the source of truth — no internal `useState` mirror for `value`.
-- **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `vp test --coverage` (or `pnpm verify`) to evaluate.
+- **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `pnpm exec vp test --coverage` (or `pnpm verify`) to evaluate.
 - **Public API is small on purpose.** Default export `JsonLogicBuilder`, plus `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, and the core types. Adding a new public export is an API decision, not a casual change.
 
 ## Commit style
