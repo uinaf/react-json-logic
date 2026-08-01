@@ -9,10 +9,10 @@ Thanks for improving this repository.
 
 ## Local Setup
 
-Run from the workspace root:
+Use Node 24.18 or newer with Corepack enabled, then run from the workspace root:
 
 ```bash
-vp install
+pnpm install --frozen-lockfile
 pnpm verify
 ```
 
@@ -32,7 +32,7 @@ Per-package work is also supported:
 
 ```bash
 cd packages/react-json-logic
-vp run verify
+pnpm exec vp run verify
 ```
 
 ## Commit and Pull Request Rules
