@@ -12,7 +12,6 @@
     "verify": "pnpm -r run verify"
   },
   "devDependencies": {
-    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
