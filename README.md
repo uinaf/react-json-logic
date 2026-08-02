@@ -1,3 +1,5 @@
+![react-json-logic — build and evaluate JsonLogic with React components.](https://uinaf.dev/og/banner/react-json-logic.png)
+
 # react-json-logic
 
 Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components.
