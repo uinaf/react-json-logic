@@ -46,7 +46,7 @@ jobs:
         run: vp run verify
 
   release:
-    if: github.repository == 'uinaf/react-json-logic' && github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
     name: Release react-json-logic
     needs:
       - verify
