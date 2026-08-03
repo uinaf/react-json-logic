@@ -1,4 +1,4 @@
-![react-json-logic — build and evaluate JsonLogic with React components.](https://uinaf.dev/og/banner/react-json-logic.png)
+![](https://uinaf.dev/og/banner/react-json-logic.png)
 
 # react-json-logic
 
