@@ -101,36 +101,26 @@ jobs:
           GH_TOKEN: ${{ steps.release-bot.outputs.token }}
         run: gh auth setup-git
 
-      # GitHub links bot commits when the noreply email uses `{user-id}+{slug}[bot]@…`.
-      - name: Resolve release bot identity
-        id: release-bot-identity
-        env:
-          GH_TOKEN: ${{ steps.release-bot.outputs.token }}
-          APP_SLUG: ${{ steps.release-bot.outputs.app-slug }}
-        run: |
-          set -euo pipefail
-          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
-          if [[ ! "$user_id" =~ ^[0-9]+$ ]]; then
-            echo "failed to resolve numeric bot user id for ${APP_SLUG}[bot]" >&2
-            exit 1
-          fi
-          echo "user-id=${user_id}" >> "$GITHUB_OUTPUT"
-
       - name: Release package
+        id: release
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
-          working_directory: packages/react-json-logic
+          semantic_version: 25.0.3
           extra_plugins: |
             @semantic-release/commit-analyzer@13.0.1
             @semantic-release/release-notes-generator@14.1.1
             @semantic-release/npm@13.1.5
-            @semantic-release/git@10.0.1
+            @jno21/semantic-release-github-commit@1.0.1
             @semantic-release/github@12.0.8
             conventional-changelog-conventionalcommits@9.3.1
         env:
           GITHUB_TOKEN: ${{ steps.release-bot.outputs.token }}
           GH_TOKEN: ${{ steps.release-bot.outputs.token }}
-          GIT_AUTHOR_NAME: ${{ steps.release-bot.outputs.app-slug }}[bot]
-          GIT_AUTHOR_EMAIL: ${{ steps.release-bot-identity.outputs.user-id }}+${{ steps.release-bot.outputs.app-slug }}[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: ${{ steps.release-bot.outputs.app-slug }}[bot]
-          GIT_COMMITTER_EMAIL: ${{ steps.release-bot-identity.outputs.user-id }}+${{ steps.release-bot.outputs.app-slug }}[bot]@users.noreply.github.com
+
+      - name: Verify immutable release
+        if: steps.release.outputs.new_release_published == 'true'
+        env:
+          GH_TOKEN: ${{ steps.release-bot.outputs.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.new_release_git_tag }}
+        run: |
+          test "$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq .immutable)" = true

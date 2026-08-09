@@ -1,5 +1,6 @@
 {
   "branches": ["main"],
+  "repositoryUrl": "https://github.com/uinaf/react-json-logic.git",
   "tagFormat": "v${version}",
   "plugins": [
     [
@@ -17,14 +18,15 @@
     [
       "@semantic-release/npm",
       {
+        "pkgRoot": "packages/react-json-logic",
         "npmPublish": true
       }
     ],
     [
-      "@semantic-release/git",
+      "@jno21/semantic-release-github-commit",
       {
-        "assets": ["package.json"],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "files": ["packages/react-json-logic/package.json"],
+        "commitMessage": "chore(release): ${nextRelease.version} [skip ci]"
       }
     ],
     "@semantic-release/github"
