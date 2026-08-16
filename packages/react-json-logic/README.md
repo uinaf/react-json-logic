@@ -76,28 +76,31 @@ Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](htt
 
 Components render unstyled. Target the rendered DOM via stable `data-rjl-*` attributes:
 
-| Attribute                       | What it marks                                      |
-| ------------------------------- | -------------------------------------------------- |
-| `data-rjl-builder`              | Outermost wrapper                                  |
-| `data-rjl-any`                  | Recursive operator container                       |
-| `data-rjl-children`             | Wrapper around an operator's child fields          |
-| `data-rjl-field`                | A single child field row                           |
-| `data-rjl-add`                  | "Add field" button                                 |
-| `data-rjl-remove`               | "Remove field" button                              |
-| `data-rjl-operator-trigger`     | Operator dropdown trigger                          |
-| `data-rjl-operator-popup`       | Operator dropdown popup (portaled)                 |
-| `data-rjl-input`                | Value-input wrapper                                |
-| `data-rjl-input-type-trigger`   | Type select trigger (`text` / `number`)            |
-| `data-rjl-input-type-popup`     | Type select popup (portaled)                       |
-| `data-rjl-input-value`          | The actual `<input>` element                       |
-| `data-rjl-accessor`             | Accessor (`var`) wrapper                           |
-| `data-rjl-accessor-level`       | One level of an accessor path                      |
-| `data-rjl-accessor-level-index` | The level's index (`"0"`, `"1"`, …)                |
-| `data-rjl-accessor-input`       | Accessor input element                             |
-| `data-rjl-accessor-popup`       | Accessor suggestion popup (portaled)               |
-| `data-rjl-higher-order`         | `some` / `all` / `none` / `map` / `filter` wrapper |
-| `data-rjl-higher-order-arrow`   | The `=>` glyph                                     |
-| `data-rjl-higher-order-child`   | The inner expression of a higher-order op          |
+| Attribute                       | What it marks                                                          |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| `data-rjl-builder`              | Outermost wrapper                                                      |
+| `data-rjl-any`                  | Recursive operator container                                           |
+| `data-rjl-children`             | Wrapper around an operator's child fields                              |
+| `data-rjl-field`                | A single child field row                                               |
+| `data-rjl-add`                  | "Add field" button                                                     |
+| `data-rjl-remove`               | "Remove field" button                                                  |
+| `data-rjl-operator-trigger`     | Operator dropdown trigger                                              |
+| `data-rjl-operator-popup`       | Operator dropdown popup (portaled)                                     |
+| `data-rjl-input`                | Value-input wrapper                                                    |
+| `data-rjl-input-type-trigger`   | Type select trigger (`text` / `number` / `boolean` / `null` / `array`) |
+| `data-rjl-input-type-popup`     | Type select popup (portaled)                                           |
+| `data-rjl-input-value`          | The text/number `<input>`, or the array `<textarea>`                   |
+| `data-rjl-input-boolean`        | Boolean `true` / `false` select trigger                                |
+| `data-rjl-input-boolean-popup`  | Boolean `true` / `false` select popup (portaled)                       |
+| `data-rjl-input-array`          | Array-literal `<textarea>`                                             |
+| `data-rjl-accessor`             | Accessor (`var`) wrapper                                               |
+| `data-rjl-accessor-level`       | One level of an accessor path                                          |
+| `data-rjl-accessor-level-index` | The level's index (`"0"`, `"1"`, …)                                    |
+| `data-rjl-accessor-input`       | Accessor input element                                                 |
+| `data-rjl-accessor-popup`       | Accessor suggestion popup (portaled)                                   |
+| `data-rjl-higher-order`         | `some` / `all` / `none` / `map` / `filter` wrapper                     |
+| `data-rjl-higher-order-arrow`   | The `=>` glyph                                                         |
+| `data-rjl-higher-order-child`   | The inner expression of a higher-order op                              |
 
 Example with Tailwind:
 
