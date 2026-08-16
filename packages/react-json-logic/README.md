@@ -10,6 +10,8 @@ Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components
 pnpm add react-json-logic react react-dom
 ```
 
+Requires React 19 (`react` / `react-dom` peer `^19.0.0`).
+
 ## Usage
 
 ```tsx
@@ -43,7 +45,7 @@ values. `JsonLogicData = Record<string, unknown> | unknown[]` is the
 narrower shape the `data` prop accepts (objects or arrays — primitives
 make no sense as accessor data).
 
-Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `FieldType`, `Operator`, `JsonLogicValue`, `JsonLogicData`, `ValidationError`, `ValidationResult`.
+Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `JsonLogicBuilderProps`, `FieldType`, `Operator`, `JsonLogicValue`, `JsonLogicData`, `ValidationError`, `ValidationResult`.
 
 ## Building rules in code
 
