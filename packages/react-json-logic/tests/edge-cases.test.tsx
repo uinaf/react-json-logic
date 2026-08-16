@@ -104,6 +104,16 @@ describe("edge cases — accessor / data shape", () => {
     expect(container.querySelector("[data-rjl-accessor]")).toBeNull();
   });
 
+  test("primitive JSON data string is recovered to empty object", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value="" data={"null"} onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalled();
+    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
+  });
+
   test("invalid JSON data string is recovered to empty object", () => {
     const onChange = vi.fn();
     const onDataError = vi.fn();
