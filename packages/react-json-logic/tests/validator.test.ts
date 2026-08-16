@@ -62,4 +62,57 @@ describe("validate", () => {
   test("tolerates the => wrapper used by the higher-order UI", () => {
     expect(validate({ "=>": [{ "===": [1, 1] }] })).toEqual({ ok: true });
   });
+
+  test("walks operator objects inside array literals", () => {
+    const topLevel = validate([{ "===": [1] }]);
+    expect(topLevel.ok).toBe(false);
+    if (!topLevel.ok) {
+      expect(topLevel.errors[0]?.path).toBe("$[0].===");
+      expect(topLevel.errors[0]?.message).toMatch(/at least 2/);
+    }
+
+    const nested = validate({ in: ["x", [{ "===": [1] }]] });
+    expect(nested.ok).toBe(false);
+    if (!nested.ok) {
+      expect(nested.errors[0]?.path).toBe("$.in[1][0].===");
+      expect(nested.errors[0]?.message).toMatch(/at least 2/);
+    }
+  });
+
+  test("accepts record literals inside arrays", () => {
+    expect(validate([{ id: 1, name: "one" }])).toEqual({ ok: true });
+    expect(
+      validate({
+        map: [[{ id: 1, name: "one" }], { var: "id" }],
+      }),
+    ).toEqual({ ok: true });
+  });
+
+  test("flags non-array payloads that violate arity", () => {
+    const eq = validate({ "===": 1 });
+    expect(eq.ok).toBe(false);
+    if (!eq.ok) {
+      expect(eq.errors[0]?.message).toMatch(/at least 2/);
+    }
+
+    const and = validate({ and: true });
+    expect(and.ok).toBe(false);
+    if (!and.ok) {
+      expect(and.errors[0]?.message).toMatch(/at least 2/);
+    }
+  });
+
+  test("still accepts the var string shorthand", () => {
+    expect(validate({ var: "a" })).toEqual({ ok: true });
+  });
+
+  test("walks a nested operator inside a non-array payload", () => {
+    const result = validate({ "!": { "===": [1] } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.path).toBe("$.!.===");
+      expect(result.errors[0]?.message).toMatch(/at least 2/);
+    }
+  });
 });
