@@ -125,10 +125,10 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
 
     let childValue: JsonLogicValue = "";
     if (field === "value") {
-      childValue = value ?? "";
+      childValue = value === undefined ? "" : value;
     } else if (isPlainObject(value)) {
       const slot = value[field];
-      if (Array.isArray(slot)) childValue = slot[index] ?? "";
+      if (Array.isArray(slot)) childValue = slot[index] === undefined ? "" : slot[index];
       else if (typeof slot === "string" && index === 0) childValue = slot;
     }
 
@@ -143,7 +143,13 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
         element = (
           <Input
             value={
-              typeof childValue === "string" || typeof childValue === "number" ? childValue : ""
+              typeof childValue === "string" ||
+              typeof childValue === "number" ||
+              typeof childValue === "boolean" ||
+              childValue === null ||
+              Array.isArray(childValue)
+                ? childValue
+                : ""
             }
             onChange={childOnChange}
           />

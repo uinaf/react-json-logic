@@ -28,10 +28,12 @@ describe("edge cases — value shapes", () => {
     expect(container.querySelectorAll("[data-rjl-field]").length).toBe(0);
   });
 
-  test("null value is tolerated and renders the value field", () => {
+  test("null value is tolerated and renders the null type", () => {
     const onChange = vi.fn();
     const { container } = render(<JsonLogicBuilder onChange={onChange} value={null} />);
-    expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
+    expect(container.querySelector("[data-rjl-input-type-trigger]")).not.toBeNull();
+    expect(container.querySelector("input[data-rjl-input-value]")).toBeNull();
+    expect(container.querySelector("[data-rjl-input-array]")).toBeNull();
   });
 
   test("number-typed value renders a number input", () => {
@@ -41,18 +43,19 @@ describe("edge cases — value shapes", () => {
     expect(input.type).toBe("number");
   });
 
-  test("boolean-shaped values fall through to the value field", () => {
+  test("boolean-shaped values render a boolean control", () => {
     const onChange = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={true as unknown as string} />,
-    );
-    expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={true} />);
+    expect(container.querySelector("[data-rjl-input-boolean]")).not.toBeNull();
+    expect(container.querySelector("input[data-rjl-input-value]")).toBeNull();
   });
 
-  test("array-shaped value falls through to the value field", () => {
+  test("array-shaped values render an array editor", () => {
     const onChange = vi.fn();
     const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1, 2, 3]} />);
-    expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    expect(editor).not.toBeNull();
+    expect(JSON.parse(editor.value)).toEqual([1, 2, 3]);
   });
 
   test("renders a deeply nested rule (10+ levels)", () => {

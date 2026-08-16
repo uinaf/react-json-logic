@@ -312,6 +312,36 @@ describe("<JsonLogicBuilder /> — render paths", () => {
     expect(screen.getAllByText("or").length).toBeGreaterThan(0);
   });
 
+  test("preserves boolean literals inside and", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value={{ and: [true, false] }} />,
+    );
+    const bools = container.querySelectorAll("[data-rjl-input-boolean]");
+    expect(bools.length).toBe(2);
+    expect(container.querySelectorAll("input[data-rjl-input-value]").length).toBe(0);
+  });
+
+  test("preserves null literals inside operator arguments", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value={{ and: [null, true] }} />,
+    );
+    const inputs = container.querySelectorAll("[data-rjl-input]");
+    const nullType = inputs[0]?.querySelector("[data-rjl-input-type-trigger]");
+    expect(nullType?.textContent).toBe("null");
+  });
+
+  test("preserves an array haystack on in", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value={{ in: ["a", ["a", "b"]] }} />,
+    );
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    expect(editor).not.toBeNull();
+    expect(JSON.parse(editor.value)).toEqual(["a", "b"]);
+  });
+
   test("renders comparison operators", () => {
     const onChange = vi.fn();
     for (const op of ["<", "<=", ">", ">="] as const) {
@@ -389,6 +419,7 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const onChange = vi.fn();
     const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
     const input = container.querySelector("input[data-rjl-input-value]") as HTMLInputElement;
+    expect(input.getAttribute("aria-label")).toBe("Value");
     fireEvent.change(input, { target: { value: "hello" } });
     expect(onChange).toHaveBeenCalled();
     expect(onChange.mock.calls.at(-1)?.[0]).toBe("hello");
@@ -463,6 +494,189 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const textOption = within(popup).getByRole("option", { name: "text" });
     await user.click(textOption);
     expect(onChange.mock.calls.at(-1)?.[0]).toBe("42");
+  });
+
+  test("opening the input-type dropdown and picking 'boolean' emits false", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "boolean" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe(false);
+  });
+
+  test("picking false on a boolean value emits false", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={true} />);
+    const boolTrigger = container.querySelector("[data-rjl-input-boolean]") as HTMLElement;
+    expect(boolTrigger).not.toBeNull();
+    await user.click(boolTrigger);
+    const popup = await screen.findByRole("listbox");
+    expect(popup.closest("[data-rjl-input-boolean-popup]")).not.toBeNull();
+    expect(popup.closest("[data-rjl-input-type-popup]")).toBeNull();
+    await user.click(within(popup).getByRole("option", { name: "false" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe(false);
+  });
+
+  test("editing an array literal textarea emits the parsed array", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value={[] as JsonLogicValue} />,
+    );
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    expect(editor).not.toBeNull();
+    expect(editor.getAttribute("aria-label")).toBe("Array value");
+    fireEvent.change(editor, { target: { value: "[1,2]" } });
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([1, 2]);
+  });
+
+  test("clearing the array editor emits an empty array", () => {
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "" } });
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([]);
+  });
+
+  test("invalid JSON in the array editor does not emit", () => {
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "[1," } });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(editor.value).toBe("[1,");
+  });
+
+  test("opening the input-type dropdown and picking 'null' emits null", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "null" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toBeNull();
+  });
+
+  test("opening the input-type dropdown and picking 'array' emits []", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "array" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([]);
+  });
+
+  test("switching an array value to text stringifies it", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1, 2]} />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "text" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe("[1,2]");
+  });
+
+  test("switching a boolean value to text stringifies it", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value={true} />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "text" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toBe("true");
+  });
+
+  test("switching non-array text to array emits []", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="hello" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "array" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([]);
+  });
+
+  test("switching a JSON-array string to array parses it", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = render(<JsonLogicBuilder onChange={onChange} value="[1,2]" />);
+    const typeTrigger = container.querySelector("[data-rjl-input-type-trigger]") as HTMLElement;
+    await user.click(typeTrigger);
+    const popup = await screen.findByRole("listbox");
+    await user.click(within(popup).getByRole("option", { name: "array" }));
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([1, 2]);
+  });
+
+  test("array editor resyncs when the controlled value changes", () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    expect(JSON.parse(editor.value)).toEqual([1]);
+    rerender(<JsonLogicBuilder onChange={onChange} value={[2, 3]} />);
+    const next = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    expect(JSON.parse(next.value)).toEqual([2, 3]);
+  });
+
+  test("keeps a newer array draft when the parent acknowledges an earlier edit", () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "[1,2]" } });
+    expect(onChange.mock.calls.at(-1)?.[0]).toEqual([1, 2]);
+
+    fireEvent.change(editor, { target: { value: "[1,2," } });
+    rerender(<JsonLogicBuilder onChange={onChange} value={[1, 2]} />);
+
+    expect(editor.value).toBe("[1,2,");
+  });
+
+  test("resyncs an external array value after an equivalent local edit", () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "[ 1 ]" } });
+    fireEvent.change(editor, { target: { value: "[2]" } });
+    rerender(<JsonLogicBuilder onChange={onChange} value={[2]} />);
+
+    fireEvent.change(editor, { target: { value: "[2," } });
+    rerender(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+
+    expect(editor.value).toBe("[1]");
+  });
+
+  test("resyncs after a local edit returns to the controlled array value", () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "[2]" } });
+    fireEvent.change(editor, { target: { value: "[1]" } });
+    fireEvent.change(editor, { target: { value: "[1," } });
+
+    rerender(<JsonLogicBuilder onChange={onChange} value={[2]} />);
+
+    expect(editor.value).toBe("[2]");
+  });
+
+  test("resyncs when an external value matches a superseded local edit", () => {
+    const onChange = vi.fn();
+    const { container, rerender } = render(<JsonLogicBuilder onChange={onChange} value={[0]} />);
+    const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
+    fireEvent.change(editor, { target: { value: "[1]" } });
+    fireEvent.change(editor, { target: { value: "[2]" } });
+    fireEvent.change(editor, { target: { value: "[2," } });
+
+    rerender(<JsonLogicBuilder onChange={onChange} value={[1]} />);
+
+    expect(editor.value).toBe("[1]");
   });
 
   test("switching to number with non-numeric value emits 0 (NaN guard)", async () => {
