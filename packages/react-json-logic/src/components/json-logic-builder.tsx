@@ -36,7 +36,11 @@ export function JsonLogicBuilder({
   const parseResult = useMemo<ParseResult>(() => {
     if (typeof data !== "string") return { ok: true, data };
     try {
-      return { ok: true, data: JSON.parse(data) as JsonLogicData };
+      const parsed: unknown = JSON.parse(data);
+      if (parsed !== null && typeof parsed === "object") {
+        return { ok: true, data: parsed as JsonLogicData };
+      }
+      return { ok: false, error: new Error("data must be an object or array"), raw: data };
     } catch (error) {
       return { ok: false, error, raw: data };
     }

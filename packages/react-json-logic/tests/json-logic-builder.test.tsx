@@ -536,6 +536,48 @@ describe("<JsonLogicBuilder /> — error surfacing", () => {
     expect(onDataError.mock.calls[1]?.[1]).toBe("{bad");
   });
 
+  test("calls onDataError when data JSON parses to null", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} data="null" onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1);
+    expect(onDataError.mock.calls[0]?.[1]).toBe("null");
+    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
+  });
+
+  test("calls onDataError when data JSON parses to a number", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} data="42" onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1);
+    expect(onDataError.mock.calls[0]?.[1]).toBe("42");
+    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
+  });
+
+  test("calls onDataError when data JSON parses to a boolean", () => {
+    const onChange = vi.fn();
+    const onDataError = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} data="true" onDataError={onDataError} />,
+    );
+    expect(onDataError).toHaveBeenCalledTimes(1);
+    expect(onDataError.mock.calls[0]?.[1]).toBe("true");
+    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
+  });
+
+  test("warns to console when data JSON is a primitive and no onDataError is given", () => {
+    const onChange = vi.fn();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { container } = render(<JsonLogicBuilder onChange={onChange} data="null" />);
+    expect(warn).toHaveBeenCalled();
+    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
+    warn.mockRestore();
+  });
+
   test("does not fire onDataError twice for the same persistent malformed data", () => {
     const onChange = vi.fn();
     const onDataError = vi.fn();
