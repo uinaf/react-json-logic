@@ -96,7 +96,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
   const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
     const slot = current[field];
-    const arr = Array.isArray(slot) ? [...slot] : [];
+    const arr = Array.isArray(slot) ? [...slot] : typeof slot === "string" ? [slot] : [];
     onChange({ ...current, [field]: update(arr) });
   };
 
@@ -127,8 +127,9 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     if (field === "value") {
       childValue = value ?? "";
     } else if (isPlainObject(value)) {
-      const arr = value[field];
-      if (Array.isArray(arr)) childValue = arr[index] ?? "";
+      const slot = value[field];
+      if (Array.isArray(slot)) childValue = slot[index] ?? "";
+      else if (typeof slot === "string" && index === 0) childValue = slot;
     }
 
     const childOnChange = (val: JsonLogicValue) => onChildValueChange(val, index);

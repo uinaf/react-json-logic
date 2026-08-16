@@ -245,6 +245,18 @@ describe("<JsonLogicBuilder /> — render paths", () => {
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
   });
 
+  test("renders the var string shorthand path in the accessor", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <JsonLogicBuilder onChange={onChange} value={{ var: "a.b" }} data={{ a: { b: 1 } }} />,
+    );
+    expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
+    const inputs = container.querySelectorAll("[data-rjl-accessor-input]");
+    expect(inputs.length).toBeGreaterThanOrEqual(2);
+    expect((inputs[0] as HTMLInputElement).value).toBe("a");
+    expect((inputs[1] as HTMLInputElement).value).toBe("b");
+  });
+
   test("accepts a JSON string for data", () => {
     const onChange = vi.fn();
     const { container } = render(
@@ -491,6 +503,20 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const last = onChange.mock.calls.at(-1)?.[0] as Record<string, JsonLogicValue>;
     // the var operator carries an array of [path] (or [path, fallback])
     expect(last.var).toEqual(["alp"]);
+  });
+
+  test("editing a var string shorthand normalizes to the array form", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <StatefulHost initial={{ var: "alpha" }} data={{ alpha: 1, beta: 2 }} onChange={onChange} />,
+    );
+    const accessorInput = container.querySelector("[data-rjl-accessor-input]") as HTMLInputElement;
+    expect(accessorInput).not.toBeNull();
+    expect(accessorInput.value).toBe("alpha");
+    fireEvent.change(accessorInput, { target: { value: "beta" } });
+    expect(onChange).toHaveBeenCalled();
+    const last = onChange.mock.calls.at(-1)?.[0] as Record<string, JsonLogicValue>;
+    expect(last.var).toEqual(["beta"]);
   });
 });
 
