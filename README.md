@@ -12,6 +12,8 @@ Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components
 pnpm add react-json-logic react react-dom
 ```
 
+Requires React 19 (`react` / `react-dom` peer `^19.0.0`).
+
 ## Basic Usage
 
 ```tsx
@@ -35,7 +37,7 @@ function Example() {
 
 - Default export: `JsonLogicBuilder`
 - Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`
-- Core types: `JsonLogicValue`, `JsonLogicData`, `ValidationResult`, `ValidationError`
+- Core types: `JsonLogicBuilderProps`, `JsonLogicValue`, `JsonLogicData`, `ValidationResult`, `ValidationError`
 
 ### Component Props
 
