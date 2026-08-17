@@ -47,7 +47,7 @@ packages/react-json-logic/
     builder.ts                     # typed `rule` factory
     validator.ts                   # `validate()`
     components/
-      json-logic-builder.tsx       # default export — top-level controlled wrapper
+      json-logic-builder.tsx       # default export: top-level controlled wrapper
       any.tsx                      # recursive operator dispatcher
       input.tsx                    # value field (Base UI Select for type chooser)
       accessor.tsx                 # var/accessor field (Base UI Autocomplete)
@@ -62,7 +62,7 @@ All filenames are kebab-case.
 
 - **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Keep CSS modules out of the library.
 - **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
-- **Controlled components.** `props.onChange` is the source of truth — no internal `useState` mirror for `value`.
+- **Controlled components.** `props.onChange` is the source of truth; no internal `useState` mirror for `value`.
 - **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `pnpm exec vp test --coverage` (or `pnpm verify`) to evaluate.
 - **Public API is small on purpose.** Default export `JsonLogicBuilder`, plus `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, and the core types. Adding a new public export is an API decision, not a casual change.
 
