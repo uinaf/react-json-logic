@@ -33,12 +33,12 @@ function Example() {
 
 ## Props
 
-| Prop          | Type                                  | Default        | Description                                                                                                                |
-| ------------- | ------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`    | `(value: JsonLogicValue) => void`     | none           | Called with the updated rule whenever the builder changes.                                                                 |
-| `value`       | `JsonLogicValue`                      | `""`           | Current rule (controlled).                                                                                                 |
+| Prop          | Type                                  | Default        | Description                                                                                                               |
+| ------------- | ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`    | `(value: JsonLogicValue) => void`     | none           | Called with the updated rule whenever the builder changes.                                                                |
+| `value`       | `JsonLogicValue`                      | `""`           | Current rule (controlled).                                                                                                |
 | `data`        | `JsonLogicData \| string`             | `{}`           | Sample data, used by accessor (`var`) field suggestions. Pass an object/array directly or a JSON string (parsed for you). |
-| `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.         |
+| `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.        |
 
 `JsonLogicValue` is the recursive any-shape type for rules and primitive
 values. `JsonLogicData = Record<string, unknown> | unknown[]` is the
