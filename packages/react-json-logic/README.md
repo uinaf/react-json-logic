@@ -2,7 +2,7 @@
 
 Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components.
 
-**Headless.** No CSS shipped — bring your own. Built on [Base UI](https://base-ui.com) primitives. Style with Tailwind, CSS modules, vanilla CSS, or whatever you like.
+**Headless.** No CSS shipped; bring your own. Built on [Base UI](https://base-ui.com) primitives. Style with Tailwind, CSS modules, vanilla CSS, or whatever you like.
 
 ## Install
 
@@ -33,16 +33,16 @@ function Example() {
 
 ## Props
 
-| Prop          | Type                                  | Default        | Description                                                                                                                |
-| ------------- | ------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`    | `(value: JsonLogicValue) => void`     | —              | Called with the updated rule whenever the builder changes.                                                                 |
-| `value`       | `JsonLogicValue`                      | `""`           | Current rule (controlled).                                                                                                 |
-| `data`        | `JsonLogicData \| string`             | `{}`           | Sample data — used by accessor (`var`) field suggestions. Pass an object/array directly or a JSON string (parsed for you). |
-| `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.         |
+| Prop          | Type                                  | Default        | Description                                                                                                               |
+| ------------- | ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`    | `(value: JsonLogicValue) => void`     | none           | Called with the updated rule whenever the builder changes.                                                                |
+| `value`       | `JsonLogicValue`                      | `""`           | Current rule (controlled).                                                                                                |
+| `data`        | `JsonLogicData \| string`             | `{}`           | Sample data, used by accessor (`var`) field suggestions. Pass an object/array directly or a JSON string (parsed for you). |
+| `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.        |
 
 `JsonLogicValue` is the recursive any-shape type for rules and primitive
 values. `JsonLogicData = Record<string, unknown> | unknown[]` is the
-narrower shape the `data` prop accepts (objects or arrays — primitives
+narrower shape the `data` prop accepts (objects or arrays; primitives
 make no sense as accessor data).
 
 Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `JsonLogicBuilderProps`, `FieldType`, `Operator`, `JsonLogicValue`, `JsonLogicData`, `ValidationError`, `ValidationResult`.
@@ -60,7 +60,7 @@ applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
 validate(r); // → { ok: true }
 ```
 
-Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec — the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Arity is enforced at the function signature level (no runtime schema overhead).
+Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Arity is enforced at the function signature level (no runtime schema overhead).
 
 | Group        | Factories                                                            |
 | ------------ | -------------------------------------------------------------------- |
@@ -72,7 +72,7 @@ Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](htt
 | String/Array | `in(needle, haystack)`, `cat(...args)`, `merge(...args)`             |
 | Higher-order | `some`, `all`, `none`, `map`, `filter`                               |
 
-`validate(rule)` walks a rule against the operator table and reports structural problems (multi-key operator objects, arity violations, etc.) as `{ ok: false, errors: [{ path, message }] }`. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated — only known operators get arity-checked.
+`validate(rule)` walks a rule against the operator table and reports structural problems (multi-key operator objects, arity violations, etc.) as `{ ok: false, errors: [{ path, message }] }`. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated; only known operators get arity-checked.
 
 ## Styling
 
