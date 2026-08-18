@@ -2,9 +2,7 @@
 
 ## Reporting a Vulnerability
 
-Please report vulnerabilities privately by emailing `dev@uinaf.dev`.
-
-Use private email for suspected security problems.
+Report vulnerabilities privately by emailing `dev@uinaf.dev`. Do not disclose suspected vulnerabilities in public issues.
 
 ## What to Include
 
