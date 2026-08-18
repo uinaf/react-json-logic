@@ -1,0 +1,9 @@
+# Survey fixture data; "question_key" fields are identifiers, not credentials.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "example survey fixtures"
+paths = [
+  '''examples/constants/question.json''',
+]
