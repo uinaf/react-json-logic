@@ -1,7 +1,5 @@
 # Contributing
 
-Thanks for improving this repository.
-
 ## Scope
 
 - `packages/react-json-logic`: publishable library package
@@ -39,10 +37,13 @@ pnpm exec vp run verify
 
 - Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
 - Keep each pull request focused on one concern
-- Fill out the pull request template
+- Fill out the [pull request template](https://github.com/uinaf/.github/blob/main/PULL_REQUEST_TEMPLATE.md)
 - Include validation evidence (at minimum `pnpm verify`)
 
 ## Release and Deployment Notes
 
-- On every push to `main` that is not tagged `[skip ci]`, CI runs `verify` and then [semantic-release](https://github.com/semantic-release/semantic-release) for `packages/react-json-logic` (Conventional Commits → version bump and npm publish, when applicable). Publishing uses npm Trusted Publishing (OIDC): the release job grants `id-token: write` and does not use an `NPM_TOKEN` secret. GitHub Release and version push-back commits are authored by `uinaf-releaser[bot]` via a short-lived App installation token from the `release` Environment.
+- On every push to `main` without `[skip ci]` in the commit message, CI runs `verify`, then [semantic-release](https://github.com/semantic-release/semantic-release) for `packages/react-json-logic`
+- Conventional Commits drive the version bump and npm publish, when applicable
+- Publishing uses npm Trusted Publishing (OpenID Connect): the release job grants `id-token: write` and uses no `NPM_TOKEN` secret
+- GitHub Releases and version push-back commits are authored by `uinaf-releaser[bot]` via a short-lived App installation token from the `release` Environment
 - The demo app deploy is configured through the repository host dashboard

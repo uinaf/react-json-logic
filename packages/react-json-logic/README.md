@@ -133,7 +133,7 @@ pnpm exec vp pack               # build the library
 pnpm verify       # the full gate (check + test --coverage + pack)
 ```
 
-See [AGENTS.md](AGENTS.md) for project layout and contributor notes.
+See [AGENTS.md](https://github.com/uinaf/react-json-logic/blob/main/AGENTS.md) for project layout and contributor notes.
 
 ## License
 

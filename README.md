@@ -48,20 +48,7 @@ function Example() {
 
 ## Styling
 
-Use stable `data-rjl-*` attributes to style the rendered DOM (for example with Tailwind, CSS Modules, or vanilla CSS).
-
-Common hooks include:
-
-- `data-rjl-builder`
-- `data-rjl-any`
-- `data-rjl-field`
-- `data-rjl-add`
-- `data-rjl-remove`
-- `data-rjl-operator-trigger`
-- `data-rjl-operator-popup`
-- `data-rjl-input-value`
-- `data-rjl-accessor-input`
-- `data-rjl-higher-order`
+Use stable `data-rjl-*` attributes to style the rendered DOM (for example with Tailwind, CSS Modules, or vanilla CSS). The full attribute table is in the [package README](packages/react-json-logic/README.md#styling).
 
 ## Building Rules in Code
 
@@ -83,17 +70,9 @@ This repository is a workspace with:
 - `packages/react-json-logic` (publishable npm package)
 - `apps/example` (demo app)
 
-From the workspace root:
-
-```bash
-pnpm install --frozen-lockfile
-pnpm verify
-pnpm dev:example
-```
-
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+Setup, workflow, and release notes: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
