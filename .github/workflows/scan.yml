@@ -9,8 +9,7 @@ on:
     - cron: "23 6 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: scan-${{ github.workflow }}-${{ github.ref }}
@@ -18,4 +17,6 @@ concurrency:
 
 jobs:
   scan:
+    permissions:
+      contents: read
     uses: uinaf/.github/.github/workflows/scan.yml@main
