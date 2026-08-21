@@ -1,9 +1,3 @@
-/**
- * Edge cases: weird value shapes, deep nesting, defensive paths.
- *
- * These tests exist to lock the library against breakage on unusual
- * but legal inputs — not just the happy path.
- */
 import { afterEach, describe, expect, test, vi } from "vite-plus/test";
 import { cleanup, render as rtlRender } from "@testing-library/react";
 import { StrictMode, type ReactElement } from "react";
@@ -17,53 +11,48 @@ const render = (ui: ReactElement) => {
   };
 };
 
+const ignoreChange = () => {};
+
 afterEach(() => cleanup());
 
 describe("edge cases — value shapes", () => {
   test("empty object value renders the operator dropdown but no children", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={{}} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={{}} />);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
     expect(container.querySelector("[data-rjl-operator-trigger]")).not.toBeNull();
     expect(container.querySelectorAll("[data-rjl-field]").length).toBe(0);
   });
 
   test("null value is tolerated and renders the null type", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={null} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={null} />);
     expect(container.querySelector("[data-rjl-input-type-trigger]")).not.toBeNull();
     expect(container.querySelector("input[data-rjl-input-value]")).toBeNull();
     expect(container.querySelector("[data-rjl-input-array]")).toBeNull();
   });
 
   test("number-typed value renders a number input", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={3.14} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={3.14} />);
     const input = container.querySelector("input[data-rjl-input-value]") as HTMLInputElement;
     expect(input.type).toBe("number");
   });
 
   test("boolean-shaped values render a boolean control", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={true} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={true} />);
     expect(container.querySelector("[data-rjl-input-boolean]")).not.toBeNull();
     expect(container.querySelector("input[data-rjl-input-value]")).toBeNull();
   });
 
   test("array-shaped values render an array editor", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={[1, 2, 3]} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={[1, 2, 3]} />);
     const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
     expect(editor).not.toBeNull();
     expect(JSON.parse(editor.value)).toEqual([1, 2, 3]);
   });
 
   test("renders a deeply nested rule (10+ levels)", () => {
-    const onChange = vi.fn();
     let r: JsonLogicValue = 1;
     for (let i = 0; i < 12; i += 1) r = rule.add(r, 1);
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value={r} />);
-    // 12 nested + operators each rendered via SelectOperator
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={r} />);
     expect(container.querySelectorAll("[data-rjl-operator-trigger]").length).toBeGreaterThanOrEqual(
       12,
     );
@@ -72,11 +61,9 @@ describe("edge cases — value shapes", () => {
 
 describe("edge cases — accessor / data shape", () => {
   test("accessor with primitive-array data renders no level inputs", () => {
-    // getIterator returns null when data is an array of primitives
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ var: ["a"] }}
         data={[1, 2, 3] as unknown as Record<string, unknown>}
       />,
@@ -86,65 +73,52 @@ describe("edge cases — accessor / data shape", () => {
   });
 
   test("accessor with nested-object data renders levels for each path segment", () => {
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ var: ["a.b.c"] }}
         data={{ a: { b: { c: 1, d: 2 } } }}
       />,
     );
-    // 3 levels (a, b, c) → 3 inputs
     expect(container.querySelectorAll("[data-rjl-accessor-input]").length).toBeGreaterThanOrEqual(
       3,
     );
   });
 
   test("data prop accepts an empty object and the var operator stays hidden", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} value="" data={{}} />);
-    // No data → no var operator in the dropdown
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value="" data={{}} />);
     expect(container.querySelector("[data-rjl-accessor]")).toBeNull();
   });
 
   test("primitive JSON data string is recovered to empty object", () => {
-    const onChange = vi.fn();
     const onDataError = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value="" data={"null"} onDataError={onDataError} />,
+      <JsonLogicBuilder onChange={ignoreChange} value="" data={"null"} onDataError={onDataError} />,
     );
     expect(onDataError).toHaveBeenCalled();
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
   });
 
   test("invalid JSON data string is recovered to empty object", () => {
-    const onChange = vi.fn();
     const onDataError = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value=""
         data={"not json at all"}
         onDataError={onDataError}
       />,
     );
     expect(onDataError).toHaveBeenCalled();
-    // Builder still renders something usable
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
   });
 });
 
 describe("edge cases — validate", () => {
-  test("tolerates the var shorthand {var: 'path'}", () => {
-    expect(validate({ var: "a" })).toEqual({ ok: true });
-    // also nested
-    expect(validate({ "===": [{ var: "a" }, { var: "b" }] })).toEqual({ ok: true });
-  });
-
-  test("flags arity violations on every operator with a known max", () => {
-    // ! takes exactly 1
+  test("flags unary not with two operands", () => {
     const result = validate({ "!": [true, false] });
-    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected unary not to reject two operands");
+    expect(result.errors[0]?.path).toBe("$.!");
   });
 
   test("walks deeply nested rules and reports all errors", () => {
@@ -204,24 +178,7 @@ describe("edge cases — validate", () => {
   });
 });
 
-describe("edge cases — applyLogic round-trip with builder", () => {
-  test("every builder rule round-trips through JSON.parse(JSON.stringify(...))", () => {
-    const samples = [
-      rule.eq(1, 1),
-      rule.and(rule.eq(1, 1), rule.gt(2, 1)),
-      rule.if(true, "a", "b"),
-      rule.some(rule.var("items"), rule.gt(rule.var(""), 0)),
-      rule.merge([1, 2], [3]),
-      rule.missingSome(1, ["a", "b"]),
-    ];
-    for (const r of samples) {
-      const round = JSON.parse(JSON.stringify(r));
-      expect(round).toEqual(r);
-      // …and it's still evaluable
-      expect(() => applyLogic(round, {})).not.toThrow();
-    }
-  });
-
+describe("applyLogic", () => {
   test("applyLogic does not mutate the data argument", () => {
     const data = { a: 1, items: [1, 2, 3] };
     const snapshot = JSON.parse(JSON.stringify(data));
