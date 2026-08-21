@@ -39,13 +39,8 @@ jobs:
           node-version-file: ".node-version"
           cache: true
 
-      - name: Verify library
-        working-directory: packages/react-json-logic
-        run: vp run verify
-
-      - name: Verify example app
-        working-directory: apps/example
-        run: vp run verify
+      - name: Verify workspace
+        run: pnpm run verify
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
