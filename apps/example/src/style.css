@@ -217,10 +217,7 @@ pre {
   gap: 8px;
 }
 
-/* ====================================================================
-   react-json-logic data-* hooks — the canonical styling reference for
-   consumers of this headless library. Mirrors the uinaf design system.
-   ==================================================================== */
+/* Public data-* styling contract for the headless library. */
 
 [data-rjl-builder] {
   display: flex;

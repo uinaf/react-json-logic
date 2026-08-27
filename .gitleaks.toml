@@ -4,6 +4,4 @@ useDefault = true
 
 [allowlist]
 description = "example survey fixtures"
-paths = [
-  '''examples/constants/question.json''',
-]
+paths = ['''examples/constants/question.json''']

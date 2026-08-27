@@ -59,7 +59,7 @@ export default function App() {
     }
   }, [dataText]);
 
-  let evaluated: unknown = "—";
+  let evaluated: unknown = null;
   let evalError: string | null = null;
   try {
     evaluated = applyLogic(r, data);

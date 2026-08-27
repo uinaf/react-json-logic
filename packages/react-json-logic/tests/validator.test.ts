@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vite-plus/test";
-import { rule, validate } from "../src/index.ts";
+import { validate, type ValidationError } from "../src/index.ts";
+
+function validationErrors(value: unknown): ValidationError[] {
+  const result = validate(value);
+  if (result.ok) throw new Error(`expected validation errors for ${JSON.stringify(value)}`);
+  return result.errors;
+}
 
 describe("validate", () => {
   test("accepts primitives and bare data", () => {
@@ -10,52 +16,29 @@ describe("validate", () => {
     expect(validate({})).toEqual({ ok: true });
   });
 
-  test("accepts a well-formed builder rule", () => {
-    expect(validate(rule.eq(1, 1))).toEqual({ ok: true });
-    expect(validate(rule.and(rule.eq(1, 1), rule.gt(2, 1)))).toEqual({ ok: true });
-    expect(validate(rule.some(rule.var("items"), rule.gt(rule.var(""), 0)))).toEqual({ ok: true });
-  });
-
   test("flags an operator object with multiple keys", () => {
-    const result = validate({ "===": [1, 1], "+": [1, 2] });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors[0]?.message).toMatch(/exactly one key/);
-    }
+    const errors = validationErrors({ "===": [1, 1], "+": [1, 2] });
+    expect(errors[0]?.message).toMatch(/exactly one key/);
   });
 
   test("flags arity below minimum", () => {
-    // === expects 2 args
-    const result = validate({ "===": [1] });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors[0]?.message).toMatch(/at least 2/);
-      expect(result.errors[0]?.path).toBe("$.===");
-    }
+    const errors = validationErrors({ "===": [1] });
+    expect(errors[0]?.message).toMatch(/at least 2/);
+    expect(errors[0]?.path).toBe("$.===");
   });
 
   test("flags arity above maximum", () => {
-    // < expects exactly 2 args
-    const result = validate({ "<": [1, 2, 3] });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors[0]?.message).toMatch(/at most 2/);
-    }
+    const errors = validationErrors({ "<": [1, 2, 3] });
+    expect(errors[0]?.message).toMatch(/at most 2/);
   });
 
   test("walks nested rules and reports child errors", () => {
-    // outer is ok, inner === has only 1 arg
-    const result = validate({ and: [{ "===": [1] }, true] });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors).toHaveLength(1);
-      expect(result.errors[0]?.path).toBe("$.and[0].===");
-    }
+    const errors = validationErrors({ and: [{ "===": [1] }, true] });
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.path).toBe("$.and[0].===");
   });
 
   test("tolerates unknown operators (custom ops)", () => {
-    // json-logic-js allows registering custom operators via add_operation.
-    // The validator should not error on unknown keys, only on structural issues.
     expect(validate({ myCustomOp: [1, 2, 3] })).toEqual({ ok: true });
   });
 
@@ -64,19 +47,13 @@ describe("validate", () => {
   });
 
   test("walks operator objects inside array literals", () => {
-    const topLevel = validate([{ "===": [1] }]);
-    expect(topLevel.ok).toBe(false);
-    if (!topLevel.ok) {
-      expect(topLevel.errors[0]?.path).toBe("$[0].===");
-      expect(topLevel.errors[0]?.message).toMatch(/at least 2/);
-    }
+    const topLevelErrors = validationErrors([{ "===": [1] }]);
+    expect(topLevelErrors[0]?.path).toBe("$[0].===");
+    expect(topLevelErrors[0]?.message).toMatch(/at least 2/);
 
-    const nested = validate({ in: ["x", [{ "===": [1] }]] });
-    expect(nested.ok).toBe(false);
-    if (!nested.ok) {
-      expect(nested.errors[0]?.path).toBe("$.in[1][0].===");
-      expect(nested.errors[0]?.message).toMatch(/at least 2/);
-    }
+    const nestedErrors = validationErrors({ in: ["x", [{ "===": [1] }]] });
+    expect(nestedErrors[0]?.path).toBe("$.in[1][0].===");
+    expect(nestedErrors[0]?.message).toMatch(/at least 2/);
   });
 
   test("accepts record literals inside arrays", () => {
@@ -89,17 +66,11 @@ describe("validate", () => {
   });
 
   test("flags non-array payloads that violate arity", () => {
-    const eq = validate({ "===": 1 });
-    expect(eq.ok).toBe(false);
-    if (!eq.ok) {
-      expect(eq.errors[0]?.message).toMatch(/at least 2/);
-    }
+    const equalityErrors = validationErrors({ "===": 1 });
+    expect(equalityErrors[0]?.message).toMatch(/at least 2/);
 
-    const and = validate({ and: true });
-    expect(and.ok).toBe(false);
-    if (!and.ok) {
-      expect(and.errors[0]?.message).toMatch(/at least 2/);
-    }
+    const andErrors = validationErrors({ and: true });
+    expect(andErrors[0]?.message).toMatch(/at least 2/);
   });
 
   test("still accepts the var string shorthand", () => {
@@ -107,12 +78,9 @@ describe("validate", () => {
   });
 
   test("walks a nested operator inside a non-array payload", () => {
-    const result = validate({ "!": { "===": [1] } });
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors).toHaveLength(1);
-      expect(result.errors[0]?.path).toBe("$.!.===");
-      expect(result.errors[0]?.message).toMatch(/at least 2/);
-    }
+    const errors = validationErrors({ "!": { "===": [1] } });
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.path).toBe("$.!.===");
+    expect(errors[0]?.message).toMatch(/at least 2/);
   });
 });

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from "vite-plus/test";
+import { afterEach, describe, expect, test } from "vite-plus/test";
 import { cleanup, render as rtlRender } from "@testing-library/react";
 import { StrictMode, type ReactElement } from "react";
 import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
@@ -15,7 +15,7 @@ const ignoreChange = () => {};
 
 afterEach(() => cleanup());
 
-describe("edge cases — value shapes", () => {
+describe("edge-case value shapes", () => {
   test("empty object value renders the operator dropdown but no children", () => {
     const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={{}} />);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
@@ -59,7 +59,7 @@ describe("edge cases — value shapes", () => {
   });
 });
 
-describe("edge cases — accessor / data shape", () => {
+describe("edge-case accessor and data shapes", () => {
   test("accessor with primitive-array data renders no level inputs", () => {
     const { container } = render(
       <JsonLogicBuilder
@@ -89,32 +89,9 @@ describe("edge cases — accessor / data shape", () => {
     const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value="" data={{}} />);
     expect(container.querySelector("[data-rjl-accessor]")).toBeNull();
   });
-
-  test("primitive JSON data string is recovered to empty object", () => {
-    const onDataError = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder onChange={ignoreChange} value="" data={"null"} onDataError={onDataError} />,
-    );
-    expect(onDataError).toHaveBeenCalled();
-    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
-  });
-
-  test("invalid JSON data string is recovered to empty object", () => {
-    const onDataError = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder
-        onChange={ignoreChange}
-        value=""
-        data={"not json at all"}
-        onDataError={onDataError}
-      />,
-    );
-    expect(onDataError).toHaveBeenCalled();
-    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
-  });
 });
 
-describe("edge cases — validate", () => {
+describe("edge-case validation", () => {
   test("flags unary not with two operands", () => {
     const result = validate({ "!": [true, false] });
     if (result.ok) throw new Error("expected unary not to reject two operands");
@@ -122,54 +99,48 @@ describe("edge cases — validate", () => {
   });
 
   test("walks deeply nested rules and reports all errors", () => {
-    const bad = rule.and(
-      { "===": [1] }, // arity violation
-      { "<": [1, 2, 3] }, // arity violation
-      true,
-    );
+    const bad = rule.and({ "===": [1] }, { "<": [1, 2, 3] }, true);
     const result = validate(bad);
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.errors.length).toBe(2);
-      expect(result.errors[0]?.path).toMatch(/and\[0]/);
-      expect(result.errors[1]?.path).toMatch(/and\[1]/);
-    }
+    if (result.ok) throw new Error("expected nested arity errors");
+    expect(result.errors).toHaveLength(2);
+    expect(result.errors[0]?.path).toMatch(/and\[0]/);
+    expect(result.errors[1]?.path).toMatch(/and\[1]/);
   });
 
-  test("accepts every operator that the builder produces", () => {
-    const samples = [
-      rule.eq(1, 1),
-      rule.looseEq("1", 1),
-      rule.notEq(1, 2),
-      rule.looseNotEq(1, 2),
-      rule.and(true, false),
-      rule.or(true, false),
-      rule.not(true),
-      rule.if(true, 1, 0),
-      rule.lt(1, 2),
-      rule.lte(1, 2),
-      rule.gt(2, 1),
-      rule.gte(2, 1),
-      rule.add(1, 2),
-      rule.sub(2, 1),
-      rule.sub(5),
-      rule.mul(2, 3),
-      rule.div(6, 2),
-      rule.mod(7, 3),
-      rule.min(1, 2, 3),
-      rule.max(1, 2, 3),
-      rule.var("a"),
-      rule.var("a", 0),
-      rule.missing("x"),
-      rule.missingSome(1, ["x", "y"]),
-      rule.in("a", "abc"),
-      rule.cat("a", "b"),
-      rule.merge([1], [2]),
-      rule.some(rule.var("xs"), rule.gt(rule.var(""), 0)),
-      rule.all(rule.var("xs"), rule.gt(rule.var(""), 0)),
-      rule.none(rule.var("xs"), rule.gt(rule.var(""), 0)),
-      rule.map(rule.var("xs"), rule.var("")),
-      rule.filter(rule.var("xs"), rule.gt(rule.var(""), 0)),
+  test("accepts every canonical operator shape", () => {
+    const samples: JsonLogicValue[] = [
+      { "==": [1, 1] },
+      { "===": [1, 1] },
+      { "!=": [1, 2] },
+      { "!==": [1, 2] },
+      { and: [true, false] },
+      { or: [true, false] },
+      { "!": [true] },
+      { if: [true, 1, 0] },
+      { "<": [1, 2] },
+      { "<=": [1, 2] },
+      { ">": [2, 1] },
+      { ">=": [2, 1] },
+      { "+": [1, 2] },
+      { "-": [2, 1] },
+      { "-": [5] },
+      { "*": [2, 3] },
+      { "/": [6, 2] },
+      { "%": [7, 3] },
+      { min: [1, 2, 3] },
+      { max: [1, 2, 3] },
+      { var: ["a"] },
+      { var: ["a", 0] },
+      { missing: ["x"] },
+      { missing_some: [1, ["x", "y"]] },
+      { in: ["a", "abc"] },
+      { cat: ["a", "b"] },
+      { merge: [[1], [2]] },
+      { some: [{ var: ["xs"] }, { ">": [{ var: [""] }, 0] }] },
+      { all: [{ var: ["xs"] }, { ">": [{ var: [""] }, 0] }] },
+      { none: [{ var: ["xs"] }, { ">": [{ var: [""] }, 0] }] },
+      { map: [{ var: ["xs"] }, { var: [""] }] },
+      { filter: [{ var: ["xs"] }, { ">": [{ var: [""] }, 0] }] },
     ];
     for (const r of samples) {
       const result = validate(r);
@@ -181,8 +152,7 @@ describe("edge cases — validate", () => {
 describe("applyLogic", () => {
   test("applyLogic does not mutate the data argument", () => {
     const data = { a: 1, items: [1, 2, 3] };
-    const snapshot = JSON.parse(JSON.stringify(data));
     applyLogic(rule.some(rule.var("items"), rule.gt(rule.var(""), 0)), data);
-    expect(data).toEqual(snapshot);
+    expect(data).toEqual({ a: 1, items: [1, 2, 3] });
   });
 });

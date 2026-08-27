@@ -9,11 +9,8 @@ import JsonLogicBuilder, {
   type JsonLogicValue,
 } from "../src/index.ts";
 
-// All component renders go through StrictMode so React 19's double-invoke
-// of effects + memo getters surfaces any unstable behavior in the suite.
-// `rerender` is wrapped too — RTL's default `rerender` would otherwise drop
-// the StrictMode parent and unmount/remount the subtree, breaking ref-based
-// dedupe assertions across re-renders.
+// Keep StrictMode across rerenders so double invocation exercises the same
+// mounted subtree and its error-report dedupe state.
 const render = (ui: ReactElement) => {
   const result = rtlRender(<StrictMode>{ui}</StrictMode>);
   return {
@@ -22,11 +19,9 @@ const render = (ui: ReactElement) => {
   };
 };
 
-/**
- * Stateful host that mirrors what a real consumer does — wires the builder
- * to local React state via onChange. Use when a test needs to observe the
- * accumulated rule across multiple interactions, not just the first emit.
- */
+const ignoreChange = () => {};
+
+/** Keeps the builder controlled across multi-step interactions. */
 function StatefulHost(props: {
   initial?: JsonLogicValue;
   data?: Parameters<typeof JsonLogicBuilder>[0]["data"];
@@ -48,40 +43,8 @@ function StatefulHost(props: {
 afterEach(() => cleanup());
 
 describe("OPERATORS table", () => {
-  test("is non-empty and well-formed", () => {
-    expect(OPERATORS.length).toBeGreaterThan(0);
-    for (const op of OPERATORS) {
-      expect(op.signature).toBeTruthy();
-      expect(op.label).toBeTruthy();
-      expect(op.fieldCount.min).toBeLessThanOrEqual(op.fieldCount.max);
-      expect(op.fieldCount.min).toBeGreaterThanOrEqual(0);
-    }
-  });
-
-  test("does not include the legacy 'Between' fake operator", () => {
-    expect(OPERATORS.find((o) => o.signature === "Between")).toBeUndefined();
-  });
-
-  test("does not include the legacy 'every' fake operator", () => {
-    expect(OPERATORS.find((o) => o.signature === "every")).toBeUndefined();
-  });
-
-  test("signatures are unique", () => {
-    const sigs = OPERATORS.map((o) => o.signature);
-    expect(new Set(sigs).size).toBe(sigs.length);
-  });
-
-  test("only references declared field types", () => {
-    const allowed: string[] = Object.values(FIELD_TYPES);
-    for (const op of OPERATORS) {
-      for (const f of op.fields) {
-        expect(allowed).toContain(f);
-      }
-    }
-  });
-
-  test("has stable signatures for the canonical JsonLogic operators", () => {
-    const expected = [
+  test("matches the canonical signatures and field contracts", () => {
+    const expectedSignatures = [
       "value",
       "var",
       "missing",
@@ -114,15 +77,28 @@ describe("OPERATORS table", () => {
       "map",
       "filter",
     ];
-    const sigs = new Set(OPERATORS.map((o) => o.signature));
-    for (const s of expected) {
-      expect(sigs.has(s), `expected operator "${s}" to be defined`).toBe(true);
+    const signatures = OPERATORS.map((operator) => operator.signature);
+    expect(signatures).toHaveLength(expectedSignatures.length);
+    expect(new Set(signatures)).toEqual(new Set(expectedSignatures));
+
+    const fieldTypes: string[] = Object.values(FIELD_TYPES);
+    for (const operator of OPERATORS) {
+      expect(operator.label.trim()).not.toBe("");
+      expect(operator.fieldCount.min).toBeGreaterThanOrEqual(0);
+      expect(operator.fieldCount.min).toBeLessThanOrEqual(operator.fieldCount.max);
+      for (const field of operator.fields) expect(fieldTypes).toContain(field);
     }
   });
 
   test("higher-order operators take exactly two args [collection, predicate]", () => {
     const hofs = OPERATORS.filter((o) => o.type === "Higher Order");
-    expect(hofs.length).toBeGreaterThan(0);
+    expect(hofs.map((operator) => operator.signature)).toEqual([
+      "some",
+      "all",
+      "none",
+      "map",
+      "filter",
+    ]);
     for (const op of hofs) {
       expect(op.fieldCount.min).toBe(2);
       expect(op.fieldCount.max).toBe(2);
@@ -165,7 +141,6 @@ describe("applyLogic", () => {
   test("evaluates if / cond chains", () => {
     expect(applyLogic({ if: [true, "yes", "no"] }, {})).toBe("yes");
     expect(applyLogic({ if: [false, "yes", "no"] }, {})).toBe("no");
-    // elseif chain
     expect(
       applyLogic(
         {
@@ -199,56 +174,48 @@ describe("applyLogic", () => {
   });
 });
 
-describe("<JsonLogicBuilder /> — render paths", () => {
+describe("<JsonLogicBuilder /> render paths", () => {
   test("renders the value field by default", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} />);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
     expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
   });
 
   test("renders the active operator label for a populated rule", () => {
-    const onChange = vi.fn();
-    render(<JsonLogicBuilder onChange={onChange} value={{ "===": [1, 1] }} />);
-    expect(screen.getAllByText("===").length).toBeGreaterThan(0);
+    render(<JsonLogicBuilder onChange={ignoreChange} value={{ "===": [1, 1] }} />);
+    expect(screen.queryAllByText("===")).not.toHaveLength(0);
   });
 
   test("renders the canonical higher-order shape with [collection, predicate]", () => {
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ some: [{ var: "items" }, { "==": [{ var: "" }, 1] }] }}
         data={{ items: [{ x: 1 }] }}
       />,
     );
-    expect(screen.getAllByText("some").length).toBeGreaterThan(0);
-    // The => glyph appears on the predicate (second child) only
+    expect(screen.queryAllByText("some")).not.toHaveLength(0);
     const arrows = container.querySelectorAll("[data-rjl-higher-order-arrow]");
     expect(arrows.length).toBe(1);
-    // The first child (collection) is a plain Any (no arrow wrapper)
     const fields = container.querySelectorAll("[data-rjl-field]");
     expect(fields.length).toBeGreaterThanOrEqual(2);
   });
 
   test("hides the var/accessor operator when no data is provided", () => {
-    const onChange = vi.fn();
-    const { container } = render(<JsonLogicBuilder onChange={onChange} />);
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} />);
     expect(container.querySelector("[data-rjl-accessor]")).toBeNull();
   });
 
   test("renders an accessor when value is a var rule and data is provided", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ var: ["a.b"] }} data={{ a: { b: 1 } }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ var: ["a.b"] }} data={{ a: { b: 1 } }} />,
     );
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
   });
 
   test("renders the var string shorthand path in the accessor", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ var: "a.b" }} data={{ a: { b: 1 } }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ var: "a.b" }} data={{ a: { b: 1 } }} />,
     );
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
     const inputs = container.querySelectorAll("[data-rjl-accessor-input]");
@@ -258,10 +225,9 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("accepts a JSON string for data", () => {
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ var: ["a"] }}
         data={JSON.stringify({ a: 1 })}
       />,
@@ -270,10 +236,9 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("renders an accessor when data is an array of records", () => {
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ var: ["a"] }}
         data={[{ a: 1, b: 2 }] as unknown as Record<string, unknown>}
       />,
@@ -282,40 +247,14 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("renders nested arithmetic rules", () => {
-    const onChange = vi.fn();
-    render(<JsonLogicBuilder onChange={onChange} value={{ "===": [{ "+": [1, 2] }, 3] }} />);
-    expect(screen.getAllByText("===").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("+").length).toBeGreaterThan(0);
-  });
-
-  test("renders the not-equals operators", () => {
-    const onChange = vi.fn();
-    const { rerender } = render(<JsonLogicBuilder onChange={onChange} value={{ "!=": [1, 2] }} />);
-    expect(screen.getAllByText("!=").length).toBeGreaterThan(0);
-    rerender(<JsonLogicBuilder onChange={onChange} value={{ "!==": [1, 2] }} />);
-    expect(screen.getAllByText("!==").length).toBeGreaterThan(0);
-  });
-
-  test("renders unary not", () => {
-    const onChange = vi.fn();
-    render(<JsonLogicBuilder onChange={onChange} value={{ "!": [true] }} />);
-    expect(screen.getAllByText("!").length).toBeGreaterThan(0);
-  });
-
-  test("renders boolean operators", () => {
-    const onChange = vi.fn();
-    const { rerender } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ and: [true, false] }} />,
-    );
-    expect(screen.getAllByText("and").length).toBeGreaterThan(0);
-    rerender(<JsonLogicBuilder onChange={onChange} value={{ or: [true, false] }} />);
-    expect(screen.getAllByText("or").length).toBeGreaterThan(0);
+    render(<JsonLogicBuilder onChange={ignoreChange} value={{ "===": [{ "+": [1, 2] }, 3] }} />);
+    expect(screen.queryAllByText("===")).not.toHaveLength(0);
+    expect(screen.queryAllByText("+")).not.toHaveLength(0);
   });
 
   test("preserves boolean literals inside and", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ and: [true, false] }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ and: [true, false] }} />,
     );
     const bools = container.querySelectorAll("[data-rjl-input-boolean]");
     expect(bools.length).toBe(2);
@@ -323,9 +262,8 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("preserves null literals inside operator arguments", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ and: [null, true] }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ and: [null, true] }} />,
     );
     const inputs = container.querySelectorAll("[data-rjl-input]");
     const nullType = inputs[0]?.querySelector("[data-rjl-input-type-trigger]");
@@ -333,27 +271,25 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("preserves an array haystack on in", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ in: ["a", ["a", "b"]] }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ in: ["a", ["a", "b"]] }} />,
     );
     const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
     expect(editor).not.toBeNull();
     expect(JSON.parse(editor.value)).toEqual(["a", "b"]);
   });
 
-  test("renders comparison operators", () => {
-    const onChange = vi.fn();
-    for (const op of ["<", "<=", ">", ">="] as const) {
-      cleanup();
-      render(<JsonLogicBuilder onChange={onChange} value={{ [op]: [1, 2] }} />);
-      expect(screen.getAllByText(op).length).toBeGreaterThan(0);
-    }
-  });
-
-  test("renders the new canonical operators", () => {
-    const onChange = vi.fn();
+  test("renders canonical operator labels", () => {
     const cases: Array<{ rule: JsonLogicValue; label: string }> = [
+      { rule: { "!=": [1, 2] }, label: "!=" },
+      { rule: { "!==": [1, 2] }, label: "!==" },
+      { rule: { "!": [true] }, label: "!" },
+      { rule: { and: [true, false] }, label: "and" },
+      { rule: { or: [true, false] }, label: "or" },
+      { rule: { "<": [1, 2] }, label: "<" },
+      { rule: { "<=": [1, 2] }, label: "<=" },
+      { rule: { ">": [1, 2] }, label: ">" },
+      { rule: { ">=": [1, 2] }, label: ">=" },
       { rule: { if: [true, 1, 0] }, label: "if" },
       { rule: { min: [1, 2] }, label: "min" },
       { rule: { max: [1, 2] }, label: "max" },
@@ -362,21 +298,20 @@ describe("<JsonLogicBuilder /> — render paths", () => {
       { rule: { merge: [[1], [2]] }, label: "merge" },
       { rule: { missing: ["x", "y"] }, label: "missing" },
     ];
-    for (const c of cases) {
+    for (const { rule, label } of cases) {
       cleanup();
-      render(<JsonLogicBuilder onChange={onChange} value={c.rule} />);
+      render(<JsonLogicBuilder onChange={ignoreChange} value={rule} />);
       expect(
-        screen.getAllByText(c.label).length,
-        `expected to render label "${c.label}"`,
+        screen.getAllByText(label).length,
+        `expected to render label "${label}"`,
       ).toBeGreaterThan(0);
     }
   });
 
   test("falls back to the value field for an unrecognized operator key", () => {
-    const onChange = vi.fn();
     const { container } = render(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         value={{ unknownOp: [1, 2] } satisfies JsonLogicValue}
       />,
     );
@@ -384,15 +319,14 @@ describe("<JsonLogicBuilder /> — render paths", () => {
   });
 
   test("renders extra fields when value array exceeds operator default fields", () => {
-    const onChange = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} value={{ or: [true, false, true, false] }} />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ or: [true, false, true, false] }} />,
     );
     expect(container.querySelectorAll("[data-rjl-field]").length).toBeGreaterThanOrEqual(4);
   });
 });
 
-describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
+describe("<JsonLogicBuilder /> onChange interactions", () => {
   test("addField appends an empty entry through onChange", () => {
     const onChange = vi.fn();
     const { container } = render(<JsonLogicBuilder onChange={onChange} value={{ "+": [1, 2] }} />);
@@ -409,7 +343,7 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
       <JsonLogicBuilder onChange={onChange} value={{ "+": [1, 2, 3] }} />,
     );
     const removeButtons = container.querySelectorAll("[data-rjl-remove]");
-    expect(removeButtons.length).toBeGreaterThan(0);
+    expect(removeButtons).toHaveLength(3);
     fireEvent.click(removeButtons[0]!);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0]?.[0]).toEqual({ "+": [2, 3] });
@@ -421,7 +355,6 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const input = container.querySelector("input[data-rjl-input-value]") as HTMLInputElement;
     expect(input.getAttribute("aria-label")).toBe("Value");
     fireEvent.change(input, { target: { value: "hello" } });
-    expect(onChange).toHaveBeenCalled();
     expect(onChange.mock.calls.at(-1)?.[0]).toBe("hello");
   });
 
@@ -448,8 +381,6 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     ) as HTMLInputElement;
     expect(innerInput).not.toBeNull();
     fireEvent.change(innerInput, { target: { value: "x" } });
-    expect(onChange).toHaveBeenCalled();
-    // No `=>` envelope — canonical shape preserved
     const emitted = onChange.mock.calls.at(-1)?.[0] as Record<string, unknown>;
     expect(emitted.some).toEqual([{ var: "items" }, "x"]);
   });
@@ -460,12 +391,10 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
     const trigger = container.querySelector("[data-rjl-operator-trigger]") as HTMLElement;
     await user.click(trigger);
-    // The popup is portaled into document.body — query via screen
+    // Base UI portals listboxes into document.body.
     const popup = await screen.findByRole("listbox");
-    // Find the "and" option
     const option = within(popup).getByRole("option", { name: "and" });
     await user.click(option);
-    expect(onChange).toHaveBeenCalled();
     expect(onChange.mock.calls.at(-1)?.[0]).toEqual({ and: [] });
   });
 
@@ -479,8 +408,6 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     const popup = await screen.findByRole("listbox");
     const numberOption = within(popup).getByRole("option", { name: "number" });
     await user.click(numberOption);
-    expect(onChange).toHaveBeenCalled();
-    // value "42" → 42 after switching to number
     expect(onChange.mock.calls.at(-1)?.[0]).toBe(42);
   });
 
@@ -687,7 +614,6 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     await user.click(typeTrigger);
     const popup = await screen.findByRole("listbox");
     await user.click(within(popup).getByRole("option", { name: "number" }));
-    // parseFloat("hello") → NaN → guarded to 0
     expect(onChange.mock.calls.at(-1)?.[0]).toBe(0);
   });
 
@@ -703,9 +629,6 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
   test("typing into the accessor input accumulates into the var path", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    // Use the StatefulHost so the rule actually accumulates across keystrokes
-    // (StrictMode + a stateless test would reset per-char and we'd only see
-    // the most recent character — that was the previous bug in this test).
     const { container } = render(
       <StatefulHost initial={{ var: [""] }} data={{ alpha: 1, beta: 2 }} onChange={onChange} />,
     );
@@ -713,9 +636,7 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     expect(accessorInput).not.toBeNull();
     await user.click(accessorInput);
     await user.keyboard("alp");
-    expect(onChange).toHaveBeenCalled();
     const last = onChange.mock.calls.at(-1)?.[0] as Record<string, JsonLogicValue>;
-    // the var operator carries an array of [path] (or [path, fallback])
     expect(last.var).toEqual(["alp"]);
   });
 
@@ -728,105 +649,75 @@ describe("<JsonLogicBuilder /> — interaction (onChange)", () => {
     expect(accessorInput).not.toBeNull();
     expect(accessorInput.value).toBe("alpha");
     fireEvent.change(accessorInput, { target: { value: "beta" } });
-    expect(onChange).toHaveBeenCalled();
     const last = onChange.mock.calls.at(-1)?.[0] as Record<string, JsonLogicValue>;
     expect(last.var).toEqual(["beta"]);
   });
 });
 
-describe("<JsonLogicBuilder /> — error surfacing", () => {
+describe("<JsonLogicBuilder /> error reporting", () => {
   test("calls onDataError with the parse error when data is malformed JSON", () => {
-    const onChange = vi.fn();
     const onDataError = vi.fn();
-    render(<JsonLogicBuilder onChange={onChange} data={"{not json"} onDataError={onDataError} />);
+    render(
+      <JsonLogicBuilder onChange={ignoreChange} data={"{not json"} onDataError={onDataError} />,
+    );
     expect(onDataError).toHaveBeenCalledTimes(1);
     expect(onDataError.mock.calls[0]?.[1]).toBe("{not json");
   });
 
   test("warns to console when data is malformed and no onDataError is given", () => {
-    const onChange = vi.fn();
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    render(<JsonLogicBuilder onChange={onChange} data={"{nope"} />);
-    expect(warn).toHaveBeenCalled();
+    render(<JsonLogicBuilder onChange={ignoreChange} data={"{nope"} />);
+    expect(warn).toHaveBeenCalledTimes(1);
     warn.mockRestore();
   });
 
   test("re-fires onDataError after a recovery (invalid → valid → invalid)", () => {
-    const onChange = vi.fn();
     const onDataError = vi.fn();
     const { rerender } = render(
-      <JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />,
+      <JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />,
     );
     expect(onDataError).toHaveBeenCalledTimes(1);
     expect(onDataError.mock.calls[0]?.[1]).toBe("{bad");
 
-    // valid data — dedupe ref must reset so the same raw can re-fire later
     rerender(
       <JsonLogicBuilder
-        onChange={onChange}
+        onChange={ignoreChange}
         data={JSON.stringify({ a: 1 })}
         onDataError={onDataError}
       />,
     );
-    expect(onDataError).toHaveBeenCalledTimes(1); // still 1; valid parse doesn't fire
+    expect(onDataError).toHaveBeenCalledTimes(1);
 
-    // back to the same malformed string — should fire again
-    rerender(<JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />);
+    rerender(<JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />);
     expect(onDataError).toHaveBeenCalledTimes(2);
     expect(onDataError.mock.calls[1]?.[1]).toBe("{bad");
   });
 
-  test("calls onDataError when data JSON parses to null", () => {
-    const onChange = vi.fn();
+  test.each(["null", "42", "true"])("reports primitive JSON %s", (raw) => {
     const onDataError = vi.fn();
     const { container } = render(
-      <JsonLogicBuilder onChange={onChange} data="null" onDataError={onDataError} />,
+      <JsonLogicBuilder onChange={ignoreChange} data={raw} onDataError={onDataError} />,
     );
     expect(onDataError).toHaveBeenCalledTimes(1);
-    expect(onDataError.mock.calls[0]?.[1]).toBe("null");
-    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
-  });
-
-  test("calls onDataError when data JSON parses to a number", () => {
-    const onChange = vi.fn();
-    const onDataError = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder onChange={onChange} data="42" onDataError={onDataError} />,
-    );
-    expect(onDataError).toHaveBeenCalledTimes(1);
-    expect(onDataError.mock.calls[0]?.[1]).toBe("42");
-    expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
-  });
-
-  test("calls onDataError when data JSON parses to a boolean", () => {
-    const onChange = vi.fn();
-    const onDataError = vi.fn();
-    const { container } = render(
-      <JsonLogicBuilder onChange={onChange} data="true" onDataError={onDataError} />,
-    );
-    expect(onDataError).toHaveBeenCalledTimes(1);
-    expect(onDataError.mock.calls[0]?.[1]).toBe("true");
+    expect(onDataError.mock.calls[0]?.[1]).toBe(raw);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
   });
 
   test("warns to console when data JSON is a primitive and no onDataError is given", () => {
-    const onChange = vi.fn();
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const { container } = render(<JsonLogicBuilder onChange={onChange} data="null" />);
-    expect(warn).toHaveBeenCalled();
+    const { container } = render(<JsonLogicBuilder onChange={ignoreChange} data="null" />);
+    expect(warn).toHaveBeenCalledTimes(1);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
     warn.mockRestore();
   });
 
   test("does not fire onDataError twice for the same persistent malformed data", () => {
-    const onChange = vi.fn();
     const onDataError = vi.fn();
     const { rerender } = render(
-      <JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />,
+      <JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />,
     );
     expect(onDataError).toHaveBeenCalledTimes(1);
-    // Re-render with the same data — must stay at 1 call
-    rerender(<JsonLogicBuilder onChange={onChange} data={"{bad"} onDataError={onDataError} />);
+    rerender(<JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />);
     expect(onDataError).toHaveBeenCalledTimes(1);
   });
 });

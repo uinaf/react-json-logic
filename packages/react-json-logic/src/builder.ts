@@ -1,27 +1,12 @@
 import type { JsonLogicValue } from "./operators.ts";
 
-/**
- * Typed factories for constructing JsonLogic rules.
- *
- * Each factory returns a `JsonLogicValue` shaped per the canonical JsonLogic
- * spec. Use these to get autocomplete + arity-checked rule construction
- * without paying for a runtime schema library.
- *
- * Example:
- *   const r = rule.and(
- *     rule.eq(rule.var("user.age"), 21),
- *     rule.gt(rule.var("score"), 100),
- *   );
- *   applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
- */
+/** Typed factories for canonical JsonLogic rules. */
 export const rule = {
-  // -- Equality
   eq: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "===": [a, b] }),
   looseEq: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "==": [a, b] }),
   notEq: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "!==": [a, b] }),
   looseNotEq: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "!=": [a, b] }),
 
-  // -- Logical
   and: (...args: JsonLogicValue[]): JsonLogicValue => ({ and: args }),
   or: (...args: JsonLogicValue[]): JsonLogicValue => ({ or: args }),
   not: (x: JsonLogicValue): JsonLogicValue => ({ "!": [x] }),
@@ -33,13 +18,11 @@ export const rule = {
    */
   if: (...args: JsonLogicValue[]): JsonLogicValue => ({ if: args }),
 
-  // -- Comparison
   lt: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "<": [a, b] }),
   lte: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ "<=": [a, b] }),
   gt: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ ">": [a, b] }),
   gte: (a: JsonLogicValue, b: JsonLogicValue): JsonLogicValue => ({ ">=": [a, b] }),
 
-  // -- Arithmetic
   add: (...args: JsonLogicValue[]): JsonLogicValue => ({ "+": args }),
   sub: (a: JsonLogicValue, b?: JsonLogicValue): JsonLogicValue =>
     b !== undefined ? { "-": [a, b] } : { "-": [a] },
@@ -49,18 +32,16 @@ export const rule = {
   min: (...args: JsonLogicValue[]): JsonLogicValue => ({ min: args }),
   max: (...args: JsonLogicValue[]): JsonLogicValue => ({ max: args }),
 
-  // -- Accessor / data presence
   /** Read a value from the data object by dotted path. */
   var: (path: string, fallback?: JsonLogicValue): JsonLogicValue =>
     fallback !== undefined ? { var: [path, fallback] } : { var: [path] },
   /** Returns the keys (from the given list) that are missing from the data. */
   missing: (...keys: string[]): JsonLogicValue => ({ missing: keys }),
-  /** `missing_some(min, keys)` — returns missing keys only if fewer than `min` are present. */
+  /** `missing_some(min, keys)` returns keys when fewer than `min` are present. */
   missingSome: (min: number, keys: string[]): JsonLogicValue => ({
     missing_some: [min, keys],
   }),
 
-  // -- String / Array
   /** Substring or array containment check. `in("foo", "foobar")` → true. */
   in: (needle: JsonLogicValue, haystack: JsonLogicValue): JsonLogicValue => ({
     in: [needle, haystack],
@@ -70,7 +51,6 @@ export const rule = {
   /** Flatten a list of arrays into one array. */
   merge: (...args: JsonLogicValue[]): JsonLogicValue => ({ merge: args }),
 
-  // -- Higher-order
   some: (collection: JsonLogicValue, predicate: JsonLogicValue): JsonLogicValue => ({
     some: [collection, predicate],
   }),

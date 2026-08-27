@@ -8,16 +8,7 @@ interface Props {
   onChange: (value: JsonLogicValue) => void;
 }
 
-/**
- * Visual wrapper for the predicate of a higher-order operator (`some`, `all`,
- * `none`, `map`, `filter`). Renders an `Any` directly — value flows through
- * untouched, so the surrounding rule keeps its canonical JsonLogic shape:
- *
- *   {some: [<collection>, <predicate>]}
- *
- * The `=>` glyph is a pure UX cue, surfaced via the `data-rjl-higher-order-arrow`
- * attribute for consumers to style. It does NOT appear in the emitted JSON.
- */
+/** Adds a styleable `=>` cue to predicates without changing their JSON shape. */
 export function HigherOrder({ parent, data = {}, value, onChange }: Props) {
   return (
     <span data-rjl-higher-order>

@@ -67,7 +67,6 @@ describe("rule builder", () => {
     expect(rule.if(true, 1, 0)).toEqual({ if: [true, 1, 0] });
     expect(applyLogic(rule.if(true, "yes", "no"), {})).toBe("yes");
     expect(applyLogic(rule.if(false, "yes", "no"), {})).toBe("no");
-    // elseif chain
     const r = rule.if(rule.eq(rule.var("x"), 1), "one", rule.eq(rule.var("x"), 2), "two", "many");
     expect(applyLogic(r, { x: 2 })).toBe("two");
     expect(applyLogic(r, { x: 99 })).toBe("many");

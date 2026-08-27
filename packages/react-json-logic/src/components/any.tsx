@@ -45,10 +45,7 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
 
   const selectedOperator = OPERATORS.find((op) => op.signature === field || op.label === field);
 
-  // Start from the operator's declared field shape, then grow if `value`
-  // already carries more args than the default. Variadic operators like `+`
-  // can carry up to `fieldCount.max` args; we cap growth at `max` to stay
-  // within the operator's declared bounds.
+  // Preserve existing variadic arguments up to the operator's declared limit.
   const fields: FieldType[] = selectedOperator ? [...selectedOperator.fields] : [];
 
   if (selectedOperator && isPlainObject(value)) {
@@ -90,9 +87,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     }
   };
 
-  // Add/remove are gated by the UI on `canAddMoreChildren` / `isRemovable`,
-  // both of which require a real `selectedOperator`. So `field` here is
-  // always a known operator key, never the "value" pseudo-op.
+  // Add/remove controls only call this for a selected operator.
   const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
     const slot = current[field];

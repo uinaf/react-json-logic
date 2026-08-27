@@ -16,11 +16,9 @@ interface Props {
   /** Initial type fallback if `value` is a string. Ignored for number/boolean/null/array. */
   type?: InputType;
   /**
-   * Called with the next value. Note: when the input type is `"number"` and
-   * the user types something unparseable (rare — the browser usually filters
-   * non-numeric input), the raw string is emitted unchanged rather than
-   * `NaN`. Consumers that store the result into a numeric field should
-   * coerce or validate at the boundary.
+   * Called with the next value. For unparseable numeric input, emits the raw
+   * string instead of `NaN`. Consumers should validate numeric fields at their
+   * boundary.
    */
   onChange: (value: JsonLogicValue) => void;
 }
@@ -49,9 +47,7 @@ const toArray = (value: JsonLogicValue | undefined): JsonLogicValue[] => {
     try {
       const parsed: unknown = JSON.parse(value);
       if (Array.isArray(parsed)) return parsed;
-    } catch {
-      // unparseable text becomes an empty array
-    }
+    } catch {}
   }
   return [];
 };
@@ -94,9 +90,7 @@ function ArrayEditor({
       try {
         const parsed: unknown = JSON.parse(raw);
         if (Array.isArray(parsed)) emitted = parsed;
-      } catch {
-        // keep drafting until the JSON is a valid array
-      }
+      } catch {}
     }
     const emittedSerialized = emitted === undefined ? undefined : JSON.stringify(emitted);
     setEditor((current) => {
@@ -124,10 +118,8 @@ function ArrayEditor({
 }
 
 export function Input({ name = "", value = "", type: typeProp = "text", onChange }: Props) {
-  // Type is a pure derivation of (value, typeProp) — no useState/useEffect
-  // mirror. When the user picks a different type from the dropdown, we emit
-  // a re-typed value via `onChange`; the next render derives the new type
-  // from the new value prop.
+  // The controlled value determines the type. A type selection emits a
+  // converted value, and the next render derives its new type.
   const type = useMemo<InputType>(() => getType(value, typeProp), [value, typeProp]);
 
   const onTypeChange = (next: InputType | null) => {

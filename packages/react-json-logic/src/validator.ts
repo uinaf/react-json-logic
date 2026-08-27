@@ -9,13 +9,8 @@ export interface ValidationError {
 export type ValidationResult = { ok: true } | { ok: false; errors: ValidationError[] };
 
 /**
- * Walks a JsonLogic rule and reports structural problems against the operator
- * table — single-key operator objects, array-shaped argument lists, and arity
- * within `min`..`max`.
- *
- * Unknown operator keys (not in `OPERATORS`) are accepted — json-logic-js
- * supports custom operators via `add_operation`. Use this validator as a
- * sanity check, not a sealed schema.
+ * Validates single-key operator objects, array-shaped arguments, and arity.
+ * Unknown keys remain valid because json-logic-js supports custom operations.
  */
 export function validate(rule: unknown): ValidationResult {
   const errors: ValidationError[] = [];
@@ -72,15 +67,10 @@ function walk(
   }
 
   const [key] = keys;
-  // keys.length is exactly 1 by the guards above, so `key` is defined.
   if (key === undefined) return;
   const op = OPERATORS.find((o) => o.signature === key);
 
-  // Unknown operator keys are tolerated (custom ops registered via
-  // json-logic-js's `add_operation`, plus legacy shapes that may still be
-  // floating around). Their args are still walked for nested errors. The
-  // permissive default is intentional — see the validator.test.ts case for
-  // unknown operators. A future strict mode could opt callers into rejection.
+  // Custom operators remain valid, but their arguments still get checked.
   const args = obj[key];
 
   if (Array.isArray(args)) {

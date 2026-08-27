@@ -24,16 +24,10 @@ export type JsonLogicValue =
   | JsonLogicValue[]
   | { [key: string]: JsonLogicValue };
 
-/**
- * Soft cap on variadic-operator argument count (`+`, `*`, `min`, `max`,
- * `cat`, `merge`, `if`, `or`, `and`, `missing`). Picked large enough that
- * real-world rules never hit it; serves to keep the UI's "add field"
- * affordance from spinning a list to infinity.
- */
+/** Caps UI-added fields above practical JsonLogic rule sizes. */
 const MAX_VARIADIC = 100;
 
 export const OPERATORS: Operator[] = [
-  // ── Value field ────────────────────────────────────────────────────────
   {
     type: "Value Field",
     signature: "value",
@@ -43,7 +37,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 1, max: 1 },
   },
 
-  // ── Accessor ───────────────────────────────────────────────────────────
   {
     type: "Accessor",
     signature: "var",
@@ -69,7 +62,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 2, max: 2 },
   },
 
-  // ── Logical ────────────────────────────────────────────────────────────
   {
     type: "Statement",
     signature: "or",
@@ -135,7 +127,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 1, max: 1 },
   },
 
-  // ── Numeric comparison ────────────────────────────────────────────────
   {
     type: "Numeric",
     signature: "<=",
@@ -169,7 +160,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 2, max: 2 },
   },
 
-  // ── Arithmetic ────────────────────────────────────────────────────────
   {
     type: "Arithmetic",
     signature: "+",
@@ -227,7 +217,6 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 1, max: MAX_VARIADIC },
   },
 
-  // ── String / Array ────────────────────────────────────────────────────
   {
     type: "String",
     signature: "in",
@@ -253,8 +242,7 @@ export const OPERATORS: Operator[] = [
     fieldCount: { min: 0, max: MAX_VARIADIC },
   },
 
-  // ── Higher-order ──────────────────────────────────────────────────────
-  // Field shape: [collection, predicate]. Predicate gets a visual `=>` cue.
+  // Higher-order fields are [collection, predicate]. The predicate gets the `=>` cue.
   {
     type: "Higher Order",
     signature: "some",

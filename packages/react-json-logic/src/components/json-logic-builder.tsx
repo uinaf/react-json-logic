@@ -26,13 +26,11 @@ export function JsonLogicBuilder({
   data = {},
   onDataError,
 }: JsonLogicBuilderProps) {
-  // Keep `onDataError` in a ref so we don't re-fire the side-effect just
-  // because the consumer passed a fresh callback closure on render.
+  // A fresh callback must not report the same failed input again.
   const onDataErrorRef = useRef(onDataError);
   onDataErrorRef.current = onDataError;
 
-  // Pure parse — never fires side effects so it's safe under StrictMode's
-  // double-invoke-of-pure-functions check.
+  // Parsing stays pure under StrictMode.
   const parseResult = useMemo<ParseResult>(() => {
     if (typeof data !== "string") return { ok: true, data };
     try {
@@ -46,10 +44,8 @@ export function JsonLogicBuilder({
     }
   }, [data]);
 
-  // Side effect lives in useEffect with a ref-guarded dedupe so it fires
-  // once per (failed) raw value across the StrictMode mount → cleanup → mount
-  // cycle. Keying the effect on `failedRaw` (vs the whole parseResult) makes
-  // the effect a no-op when nothing relevant changed.
+  // Recovery clears the dedupe key so the same invalid value can be reported
+  // after it becomes invalid again.
   const lastReportedRaw = useRef<string | null>(null);
   const failedRaw: string | null = parseResult.ok ? null : parseResult.raw;
   useEffect(() => {
@@ -59,13 +55,11 @@ export function JsonLogicBuilder({
     }
     if (lastReportedRaw.current === failedRaw) return;
     lastReportedRaw.current = failedRaw;
-    // failedRaw being non-null implies parseResult is the error variant.
     if (parseResult.ok) return;
     const cb = onDataErrorRef.current;
     if (cb) cb(parseResult.error, parseResult.raw);
     else console.warn("[react-json-logic] data prop is not valid JSON:", parseResult.error);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- parseResult is keyed via failedRaw
-  }, [failedRaw]);
+  }, [failedRaw, parseResult]);
 
   const parsedData: JsonLogicData = parseResult.ok ? parseResult.data : {};
 
