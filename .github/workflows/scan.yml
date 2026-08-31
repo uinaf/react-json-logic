@@ -1,9 +1,8 @@
 name: Scan
 
+# No push trigger: pull requests scan the same tree before merge and the
+# weekly schedule covers history.
 on:
-  push:
-    branches:
-      - main
   pull_request:
   schedule:
     - cron: "23 6 * * 1"
