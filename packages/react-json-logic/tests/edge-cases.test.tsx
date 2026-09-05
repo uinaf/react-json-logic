@@ -99,7 +99,7 @@ describe("edge-case validation", () => {
   });
 
   test("walks deeply nested rules and reports all errors", () => {
-    const bad = rule.and({ "===": [1] }, { "<": [1, 2, 3] }, true);
+    const bad = rule.and({ "===": [1] }, { "<": [1, 2, 3, 4] }, true);
     const result = validate(bad);
     if (result.ok) throw new Error("expected nested arity errors");
     expect(result.errors).toHaveLength(2);
