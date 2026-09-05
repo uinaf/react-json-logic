@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { validate, type ValidationError } from "../src/index.ts";
+import { applyLogic, validate, type JsonLogicValue, type ValidationError } from "../src/index.ts";
 
 function validationErrors(value: unknown): ValidationError[] {
   const result = validate(value);
@@ -27,9 +27,21 @@ describe("validate", () => {
     expect(errors[0]?.path).toBe("$.===");
   });
 
+  test.each<{ rule: JsonLogicValue; result: unknown }>([
+    { rule: { "<": [1, 2, 3] }, result: true },
+    { rule: { "<": [1, 3, 2] }, result: false },
+    { rule: { "<=": [1, 2, 2] }, result: true },
+    { rule: { "<=": [2, 1, 3] }, result: false },
+    { rule: { if: [true, "yes"] }, result: "yes" },
+    { rule: { if: [false, "yes"] }, result: null },
+  ])("accepts evaluator-supported $rule", ({ rule, result }) => {
+    expect(applyLogic(rule)).toEqual(result);
+    expect(validate(rule)).toEqual({ ok: true });
+  });
+
   test("flags arity above maximum", () => {
-    const errors = validationErrors({ "<": [1, 2, 3] });
-    expect(errors[0]?.message).toMatch(/at most 2/);
+    const errors = validationErrors({ "<": [1, 2, 3, 4] });
+    expect(errors[0]?.message).toMatch(/at most 3/);
   });
 
   test("walks nested rules and reports child errors", () => {

@@ -84,7 +84,7 @@ export const OPERATORS: Operator[] = [
     label: "if",
     fields: ["any", "any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 3, max: MAX_VARIADIC - 1 },
+    fieldCount: { min: 2, max: MAX_VARIADIC - 1 },
   },
   {
     type: "Logical",
@@ -133,7 +133,7 @@ export const OPERATORS: Operator[] = [
     label: "<=",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 2 },
+    fieldCount: { min: 2, max: 3 },
   },
   {
     type: "Numeric",
@@ -149,7 +149,7 @@ export const OPERATORS: Operator[] = [
     label: "<",
     fields: ["any", "any"],
     notAvailableUnder: [],
-    fieldCount: { min: 2, max: 2 },
+    fieldCount: { min: 2, max: 3 },
   },
   {
     type: "Numeric",

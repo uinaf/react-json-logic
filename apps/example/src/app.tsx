@@ -18,6 +18,10 @@ const SAMPLE_DATA = {
 
 const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
   { title: "empty", rule: "" },
+  { title: "imported unary number", rule: { "-": 5 } },
+  { title: "imported nested negation", rule: { "!": { "===": [1, 2] } } },
+  { title: "imported age range", rule: { "<=": [18, { var: "user.age" }, 65] } },
+  { title: "conditional without else", rule: { if: [true, "yes"] } },
   { title: "simple comparison", rule: rule.eq(rule.var("user.age"), 21) },
   {
     title: "and / or",

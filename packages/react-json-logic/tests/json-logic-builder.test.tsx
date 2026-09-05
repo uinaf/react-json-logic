@@ -326,6 +326,71 @@ describe("<JsonLogicBuilder /> render paths", () => {
   });
 });
 
+describe("imported operands", () => {
+  test.each([5, false, null, { "===": [1, 2] }])(
+    "preserves shorthand %j when adding and removing a sibling",
+    (operand) => {
+      const onChange = vi.fn();
+      render(<StatefulHost initial={{ "+": operand }} onChange={onChange} />);
+      fireEvent.click(screen.getByRole("button", { name: "Add field" }));
+      expect(onChange).toHaveBeenLastCalledWith({ "+": [operand, ""] });
+      fireEvent.click(screen.getByRole("button", { name: "Remove field 2" }));
+      expect(onChange).toHaveBeenLastCalledWith({ "+": [operand] });
+    },
+  );
+
+  test("renders and edits a numeric shorthand without changing its sibling", () => {
+    const onChange = vi.fn();
+    render(<StatefulHost initial={{ "-": 5 }} onChange={onChange} />);
+    expect(screen.getByRole("spinbutton").getAttribute("value")).toBe("5");
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "2" } });
+    expect(onChange).toHaveBeenLastCalledWith({ "-": [5, "2"] });
+  });
+
+  test("renders boolean and explicit null shorthand, distinct from missing operands", () => {
+    const { container, rerender } = render(
+      <JsonLogicBuilder value={{ "!": false }} onChange={ignoreChange} />,
+    );
+    expect(container.querySelector("[data-rjl-input-boolean]")?.textContent).toBe("false");
+    rerender(<JsonLogicBuilder value={{ "!": null }} onChange={ignoreChange} />);
+    expect(container.querySelector("[data-rjl-input-type-trigger]")?.textContent).toBe("null");
+    expect(screen.queryByRole("textbox")).toBeNull();
+    rerender(<JsonLogicBuilder value={{ "!": [] }} onChange={ignoreChange} />);
+    expect(screen.getByRole("textbox").getAttribute("value")).toBe("");
+  });
+
+  test("renders and edits a nested shorthand", () => {
+    const onChange = vi.fn();
+    render(<StatefulHost initial={{ "!": { "===": [1, 2] } }} onChange={onChange} />);
+    const inputs = screen.getAllByRole("spinbutton");
+    expect(inputs.map((input) => input.getAttribute("value"))).toEqual(["1", "2"]);
+    fireEvent.change(inputs[1]!, { target: { value: "1" } });
+    expect(onChange).toHaveBeenLastCalledWith({ "!": [{ "===": [1, 1] }] });
+    expect(applyLogic(onChange.mock.calls.at(-1)?.[0])).toBe(false);
+  });
+
+  test("edits a conditional consequence without adding an absent else", () => {
+    const onChange = vi.fn();
+    render(<StatefulHost initial={{ if: [true, "yes"] }} onChange={onChange} />);
+    fireEvent.change(screen.getByDisplayValue("yes"), { target: { value: "ok" } });
+    expect(onChange).toHaveBeenLastCalledWith({ if: [true, "ok"] });
+    expect(applyLogic(onChange.mock.calls.at(-1)?.[0])).toBe("ok");
+  });
+
+  test.each(["<", "<="])("edits all three %s range operands", (operator) => {
+    const onChange = vi.fn();
+    render(<StatefulHost initial={{ [operator]: [1, 2, 3] }} onChange={onChange} />);
+    const inputs = screen.getAllByRole("spinbutton");
+    expect(inputs.map((input) => input.getAttribute("value"))).toEqual(["1", "2", "3"]);
+    fireEvent.change(inputs[2]!, { target: { value: "4" } });
+    expect(onChange).toHaveBeenLastCalledWith({ [operator]: [1, 2, 4] });
+    fireEvent.click(screen.getByRole("button", { name: "Remove field 3" }));
+    expect(onChange).toHaveBeenLastCalledWith({ [operator]: [1, 2] });
+    fireEvent.click(screen.getByRole("button", { name: "Add field" }));
+    expect(onChange).toHaveBeenLastCalledWith({ [operator]: [1, 2, ""] });
+  });
+});
+
 describe("<JsonLogicBuilder /> onChange interactions", () => {
   test("addField appends an empty entry through onChange", () => {
     const onChange = vi.fn();

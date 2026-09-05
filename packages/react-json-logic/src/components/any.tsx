@@ -30,6 +30,11 @@ function isPlainObject(value: unknown): value is Record<string, JsonLogicValue> 
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function getOperands(value: JsonLogicValue | undefined): JsonLogicValue[] {
+  if (Array.isArray(value)) return value;
+  return value === undefined ? [] : [value];
+}
+
 function deriveState(value: JsonLogicValue | undefined): DerivedState {
   let field = "value";
 
@@ -90,8 +95,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
   // Add/remove controls only call this for a selected operator.
   const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
-    const slot = current[field];
-    const arr = Array.isArray(slot) ? [...slot] : typeof slot === "string" ? [slot] : [];
+    const arr = getOperands(current[field]);
     onChange({ ...current, [field]: update(arr) });
   };
 
@@ -122,9 +126,8 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     if (field === "value") {
       childValue = value === undefined ? "" : value;
     } else if (isPlainObject(value)) {
-      const slot = value[field];
-      if (Array.isArray(slot)) childValue = slot[index] === undefined ? "" : slot[index];
-      else if (typeof slot === "string" && index === 0) childValue = slot;
+      const operand = getOperands(value[field])[index];
+      childValue = operand === undefined ? "" : operand;
     }
 
     const childOnChange = (val: JsonLogicValue) => onChildValueChange(val, index);
