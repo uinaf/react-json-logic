@@ -369,6 +369,18 @@ describe("imported operands", () => {
     expect(applyLogic(onChange.mock.calls.at(-1)?.[0])).toBe(false);
   });
 
+  test("keeps conditional removal at the actual operand minimum", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <JsonLogicBuilder value={{ if: [true, "yes"] }} onChange={onChange} />,
+    );
+    expect(screen.queryByRole("button", { name: /Remove field/ })).toBeNull();
+    rerender(<StatefulHost initial={{ if: [true, "yes", "no"] }} onChange={onChange} />);
+    fireEvent.click(screen.getByRole("button", { name: "Remove field 3" }));
+    expect(onChange).toHaveBeenLastCalledWith({ if: [true, "yes"] });
+    expect(screen.queryByRole("button", { name: /Remove field/ })).toBeNull();
+  });
+
   test("edits a conditional consequence without adding an absent else", () => {
     const onChange = vi.fn();
     render(<StatefulHost initial={{ if: [true, "yes"] }} onChange={onChange} />);

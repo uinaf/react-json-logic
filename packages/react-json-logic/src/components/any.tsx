@@ -119,9 +119,10 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     updateChildArray((arr) => arr.filter((_, i) => i !== index));
   };
 
-  const renderChild = (childField: FieldType, index: number) => {
-    const isRemovable = selectedOperator ? fields.length > selectedOperator.fieldCount.min : false;
+  const operandCount = isPlainObject(value) ? getOperands(value[field]).length : 0;
+  const isRemovable = selectedOperator ? operandCount > selectedOperator.fieldCount.min : false;
 
+  const renderChild = (childField: FieldType, index: number) => {
     let childValue: JsonLogicValue = "";
     if (field === "value") {
       childValue = value === undefined ? "" : value;
