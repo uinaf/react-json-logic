@@ -22,13 +22,7 @@
         "npmPublish": true
       }
     ],
-    [
-      "@jno21/semantic-release-github-commit",
-      {
-        "files": ["packages/react-json-logic/package.json"],
-        "commitMessage": "chore(release): ${nextRelease.version} [skip ci]"
-      }
-    ],
+    "./packages/react-json-logic/scripts/release-commit.ts",
     "@semantic-release/github"
   ]
 }
