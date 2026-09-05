@@ -47,3 +47,18 @@ pnpm exec vp run verify
 - Publishing uses npm Trusted Publishing (OpenID Connect): the release job grants `id-token: write` and uses no `NPM_TOKEN` secret
 - GitHub Releases and version push-back commits are authored by `uinaf-releaser[bot]` via a short-lived App installation token from the `release` Environment
 - The demo app deploy is configured through the repository host dashboard
+
+Release preparation uses `packages/react-json-logic/scripts/release-commit.ts`
+after npm prepares the package version. The checkout and GitHub's atomic
+`expectedHeadOid` are bound to the verified workflow event SHA. GitHub signs
+the commit and rejects writeback if `main` has advanced. The plugin fetches the
+returned immutable SHA and checks its parent, unchanged source, and exact
+prepared manifest before semantic-release tags it. Only the package version
+may change. Keep `.github/workflows/ci.yml` and the `release` Environment names:
+these identify the npm trusted publisher.
+
+If GitHub accepts writeback but fetching or validating it fails, preparation
+stops before tagging or publishing. Inspect that commit's parent, tree, version
+and verified signature, plus existing tags, npm versions and GitHub Releases,
+before recovery. Reconcile only missing publication steps from the validated
+commit; do not create another version or move an existing tag to hide failure.
