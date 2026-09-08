@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "platformAutomerge": true,
   "extends": ["github>uinaf/renovate-config"],
   "packageRules": [
     {
