@@ -1,9 +1,9 @@
 name: Scan
 
-# No push trigger: pull request runs already scan every commit, history
-# included, because the shared baseline checks out with fetch-depth 0. The
-# weekly schedule re-scans an unchanged repository so detector rules published
-# since the last run still find old material.
+# No push trigger: pull requests already scan the full history, because the
+# shared baseline checks out with `fetch-depth: 0`. The weekly schedule
+# re-scans unchanged code so that detector rules published since the last run
+# still find old material.
 on:
   pull_request:
   schedule:
@@ -21,5 +21,6 @@ jobs:
     permissions:
       contents: read
     # Tracks main by design: baseline changes reach every adopter without a
-    # pin bump per repository, and Renovate does not update this reference.
+    # pin bump per repository. The shared Renovate preset deliberately disables
+    # updates for `uinaf/.github`, so a pin here would never move again.
     uses: uinaf/.github/.github/workflows/scan.yml@main
