@@ -21,6 +21,7 @@ jobs:
     permissions:
       contents: read
     # Tracks main by design: baseline changes reach every adopter without a
-    # pin bump per repository. The shared Renovate preset deliberately disables
-    # updates for `uinaf/.github`, so a pin here would never move again.
+    # pin bump per repository. Renovate is configured not to update
+    # `uinaf/.github` references, so a pin here would only ever move if someone
+    # bumped it by hand.
     uses: uinaf/.github/.github/workflows/scan.yml@main
