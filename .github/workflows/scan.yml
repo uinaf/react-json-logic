@@ -1,9 +1,11 @@
 name: Scan
 
 # No push trigger: pull requests already scan the full history, because the
-# shared baseline checks out with `fetch-depth: 0`. The weekly schedule
-# re-scans unchanged code so that detector rules published since the last run
-# still find old material.
+# shared baseline checks out with `fetch-depth: 0`. The weekly run is for the
+# scanners that consult live state - TruffleHog reports only credentials it can
+# verify, and zizmor's online audits read GitHub - so a secret that was inactive
+# at commit time is caught once it becomes valid. Gitleaks and actionlint are
+# digest-pinned and offline, so they return the same answer every week.
 on:
   pull_request:
   schedule:
