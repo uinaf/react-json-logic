@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent reaches for useSyncExternalStore (the correct primitive for browser values that change over time) rather than a useState+useEffect pair, and avoids importing or calling useEffect directly in components or hooks. Also checks that the subscribe function correctly returns a cleanup/unsubscribe function, and that the agent documents its design rationale.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "useSyncExternalStore used",
+      "description": "The hook implementation calls useSyncExternalStore (imported from 'react') rather than a useState+useEffect pair to track the network status",
+      "max_score": 20
+    },
+    {
+      "name": "No direct useEffect import",
+      "description": "Neither the hook file (useNetworkStatus) nor the demo component (NetworkBanner) contains an import of useEffect from 'react'",
+      "max_score": 15
+    },
+    {
+      "name": "No direct useEffect call",
+      "description": "Neither the hook file nor the demo component contains a direct call to useEffect(...) or React.useEffect(...)",
+      "max_score": 15
+    },
+    {
+      "name": "Subscribe returns cleanup",
+      "description": "The subscribe callback passed to useSyncExternalStore returns a cleanup/unsubscribe function that removes the event listeners (i.e., it calls window.removeEventListener or equivalent)",
+      "max_score": 15
+    },
+    {
+      "name": "getSnapshot reads browser value",
+      "description": "The getSnapshot argument reads navigator.onLine (or an equivalent live browser value) to return the current network status",
+      "max_score": 10
+    },
+    {
+      "name": "Correct subscribe signature",
+      "description": "useSyncExternalStore is called with at least two arguments: a subscribe function and a getSnapshot function (correct API usage)",
+      "max_score": 10
+    },
+    {
+      "name": "Design rationale documented",
+      "description": "README.md contains a written explanation of why the chosen React primitive was used for this problem (mentions useSyncExternalStore or the reason for the approach, not just 'it works')",
+      "max_score": 10
+    },
+    {
+      "name": "No prop-copy or state-relay misuse",
+      "description": "The hook only subscribes to the browser network event. It does NOT copy props into state, relay user actions, or fetch server data",
+      "max_score": 5
+    }
+  ]
+}

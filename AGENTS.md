@@ -69,3 +69,8 @@ All filenames are kebab-case.
 ## Commit style
 
 Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`). Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
+
+## Repository Skills
+
+- For React effect changes, use [react-ban-use-effect](.agents/skills/react-ban-use-effect/SKILL.md).
+- For React feature and bug verification or diagnostics, use [react-doctor](.agents/skills/react-doctor/SKILL.md).

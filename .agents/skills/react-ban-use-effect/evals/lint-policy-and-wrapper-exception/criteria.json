@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether react-ban-use-effect can encode the policy into lint rules while preserving a narrow domain-specific external-integration hook with honest reactive dependencies and existing hook guardrails.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Import ban",
+      "max_score": 14,
+      "description": "ESLint blocks importing `useEffect` from `react` in normal application code, for example with `no-restricted-imports`"
+    },
+    {
+      "name": "Namespace call ban",
+      "max_score": 14,
+      "description": "ESLint blocks `React.useEffect(...)` namespace calls in normal application code, for example with `no-restricted-syntax`"
+    },
+    {
+      "name": "Hook exception scoped",
+      "max_score": 12,
+      "description": "The policy allows direct useEffect only in `src/hooks/useChatConnection.ts` or an equivalently narrow named external-integration hook path"
+    },
+    {
+      "name": "Domain hook owns lifecycle",
+      "max_score": 12,
+      "description": "`useChatConnection` calls connectChat with serverUrl and roomId, opens the connection, and closes that same connection during effect cleanup"
+    },
+    {
+      "name": "Reactive dependencies explicit",
+      "max_score": 14,
+      "description": "The hook accepts serverUrl and roomId explicitly and lists both in its effect dependency array so either change reconnects"
+    },
+    {
+      "name": "No hidden dependency escape",
+      "max_score": 10,
+      "description": "The solution does not add a generic EffectCallback/dependency-array wrapper and does not suppress react-hooks/exhaustive-deps"
+    },
+    {
+      "name": "Hooks lint preserved",
+      "max_score": 8,
+      "description": "Existing `react-hooks/rules-of-hooks` and `react-hooks/exhaustive-deps` enforcement is preserved or strengthened, not disabled globally"
+    },
+    {
+      "name": "No unrelated bans",
+      "max_score": 6,
+      "description": "The policy does not ban unrelated APIs such as `useLayoutEffect` or non-React effect systems unless requested"
+    },
+    {
+      "name": "Message points to replacements",
+      "max_score": 5,
+      "description": "Lint messages direct developers toward declarative replacements or reviewed external-integration hooks rather than dependency-array tuning"
+    },
+    {
+      "name": "Verification named",
+      "max_score": 5,
+      "description": "The report says to run lint and includes positive/negative checks for blocked imports, blocked namespace calls, and the allowed domain hook"
+    }
+  ]
+}

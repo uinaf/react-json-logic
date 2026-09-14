@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether react-ban-use-effect replaces direct effects used for derived state and fetching with render-time derivation plus the repo's existing TanStack Query library pattern.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "No direct useEffect",
+      "max_score": 18,
+      "description": "The refactored component does not import `useEffect`, call `useEffect`, or call `React.useEffect`"
+    },
+    {
+      "name": "Derived during render",
+      "max_score": 16,
+      "description": "Visible projects are derived during render from query data and `showArchived`, not copied into local state by an effect"
+    },
+    {
+      "name": "Existing query pattern used",
+      "max_score": 16,
+      "description": "Server data fetching uses the TanStack Query library and the existing `projectsQuery`/`queryOptions` pattern rather than a fetch-in-effect or new dependency"
+    },
+    {
+      "name": "Abort signal preserved",
+      "max_score": 8,
+      "description": "The data path preserves the query function's AbortSignal-aware fetch behavior"
+    },
+    {
+      "name": "No mirrored state",
+      "max_score": 10,
+      "description": "The solution does not keep redundant `projects` or `visible` state solely to mirror query data or props"
+    },
+    {
+      "name": "Behavior preserved",
+      "max_score": 10,
+      "description": "The rendered list still filters archived projects when `showArchived` is false and includes them when true"
+    },
+    {
+      "name": "Effect categories explained",
+      "max_score": 10,
+      "description": "The notes classify the original effects as data fetching/server state and render-time derivation"
+    },
+    {
+      "name": "Verification named",
+      "max_score": 12,
+      "description": "The notes include lint/type/test guardrails and a component or UI check for the filtering behavior"
+    }
+  ]
+}

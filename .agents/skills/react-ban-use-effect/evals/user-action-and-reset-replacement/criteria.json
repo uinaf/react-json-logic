@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether react-ban-use-effect keeps user-caused work in handlers and replaces identity-change reset effects with component boundaries or equivalent declarative reset semantics.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "No direct useEffect",
+      "max_score": 18,
+      "description": "The refactored code does not import `useEffect`, call `useEffect`, or call `React.useEffect`"
+    },
+    {
+      "name": "Submit in handler",
+      "max_score": 16,
+      "description": "The save request is triggered directly from the click or submit handler, not via a state flag observed by an effect"
+    },
+    {
+      "name": "Flag state removed",
+      "max_score": 10,
+      "description": "`shouldSubmit` or equivalent effect-trigger flag state is removed"
+    },
+    {
+      "name": "Reset semantics declarative",
+      "max_score": 16,
+      "description": "Changing `user.id` resets draft state with a keyed child component, keyed boundary, or a clearly guarded render-time alternative rather than an effect"
+    },
+    {
+      "name": "Draft editing preserved",
+      "max_score": 10,
+      "description": "The user can still edit the input locally before saving"
+    },
+    {
+      "name": "Scope controlled",
+      "max_score": 8,
+      "description": "The solution does not rewrite unrelated form architecture or introduce a new form/data dependency without being asked"
+    },
+    {
+      "name": "Categories explained",
+      "max_score": 10,
+      "description": "The report classifies the original effects as event-caused work and identity-change reset"
+    },
+    {
+      "name": "Verification named",
+      "max_score": 12,
+      "description": "The report names lint/type/test checks and a small interaction check for editing, saving, and switching users"
+    }
+  ]
+}
