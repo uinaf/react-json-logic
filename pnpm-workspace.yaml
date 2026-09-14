@@ -2,18 +2,18 @@ packages:
   - "packages/*"
   - "apps/*"
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.6
-  vite-plus: 0.2.6
-  vitest: 4.1.10
-  "@vitest/coverage-v8": 4.1.10
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.0
+  vite-plus: 0.3.0
+  vitest: 4.1.11
+  "@vitest/coverage-v8": 4.1.11
 minimumReleaseAgeExclude:
-  - postcss@8.5.26
-  - undici@7.29.0
+  - postcss@8.5.28
+  - undici@7.29.1
   - nanoid@3.3.18
 overrides:
   nanoid@<3.3.17: 6.0.1
-  postcss@<=8.5.22: 8.5.26
-  undici@>=7.0.0 <7.29.0: 7.29.0
+  postcss@<=8.5.22: 8.5.28
+  undici@>=7.0.0 <7.29.0: 7.29.1
   vite: "catalog:"
   vitest: "catalog:"
 peerDependencyRules:
