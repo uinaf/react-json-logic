@@ -45,7 +45,7 @@ pnpm exec vp run verify
 - On every push to `main` without `[skip ci]` in the commit message, CI runs `verify`, then [semantic-release](https://github.com/semantic-release/semantic-release) for `packages/react-json-logic`
 - Conventional Commits drive the version bump and npm publish, when applicable
 - Publishing uses npm Trusted Publishing (OpenID Connect): the release job grants `id-token: write` and uses no `NPM_TOKEN` secret
-- GitHub Releases and version push-back commits are authored by `uinaf-releaser[bot]` via a short-lived App installation token from the `release` Environment
+- GitHub Releases and version push-back commits are authored by `uinaf-ci[bot]` via a short-lived App installation token from the `release` Environment
 - The demo app deploy is configured through the repository host dashboard
 
 Release preparation uses `packages/react-json-logic/scripts/release-commit.ts`
