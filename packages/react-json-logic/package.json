@@ -60,8 +60,7 @@
     "react-dom": "^19.2.7",
     "typescript": "^7.0.2",
     "vite": "catalog:",
-    "vite-plus": "catalog:",
-    "vitest": "catalog:"
+    "vite-plus": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.0.0",
