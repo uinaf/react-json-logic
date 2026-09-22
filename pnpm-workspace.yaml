@@ -2,8 +2,8 @@ packages:
   - "packages/*"
   - "apps/*"
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.3.0
-  vite-plus: 0.3.0
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.2
+  vite-plus: 0.3.2
   vitest: 4.1.11
   "@vitest/coverage-v8": 4.1.11
 minimumReleaseAgeExclude:
