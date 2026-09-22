@@ -2,7 +2,4 @@ rules:
   unpinned-uses:
     config:
       policies:
-        # First-party reusable workflows track main by design; version and
-        # digest bumps land once in uinaf/.github for every adopter.
-        "uinaf/.github/*": ref-pin
         "*": hash-pin
