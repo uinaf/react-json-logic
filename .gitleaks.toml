@@ -1,11 +1,6 @@
 [extend]
 useDefault = true
 
-# Survey fixture "question_key" fields are identifiers, not credentials, but
-# `generic-api-key` reads them as tokens. Allow only that identifier shape in
-# that fixture: the condition is AND, and the regex matches the finding's
-# secret rather than its line, so a credential sharing a line with an
-# identifier is still reported.
 [[allowlists]]
 description = "Example survey fixture question identifiers"
 condition = "AND"

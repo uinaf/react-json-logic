@@ -30,7 +30,6 @@ export function JsonLogicBuilder({
   const onDataErrorRef = useRef(onDataError);
   onDataErrorRef.current = onDataError;
 
-  // Parsing stays pure under StrictMode.
   const parseResult = useMemo<ParseResult>(() => {
     if (typeof data !== "string") return { ok: true, data };
     try {
