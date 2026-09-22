@@ -4,7 +4,6 @@ packages:
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.3.2
   vite-plus: 0.3.2
-  vitest: 4.1.11
   "@vitest/coverage-v8": 4.1.11
 minimumReleaseAgeExclude:
   - postcss@8.5.28
@@ -15,7 +14,6 @@ overrides:
   postcss@<=8.5.22: 8.5.28
   undici@>=7.0.0 <7.29.0: 8.10.2
   vite: "catalog:"
-  vitest: "catalog:"
 peerDependencyRules:
   allowAny:
     - vite
