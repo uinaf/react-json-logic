@@ -42,79 +42,14 @@ jobs:
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
-    name: Release react-json-logic
     needs:
       - verify
-    # npm trusted publishing requires GitHub-hosted runners.
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment: release
-    concurrency:
-      group: release-${{ github.repository }}-main
-      cancel-in-progress: false
     permissions:
       contents: read
       id-token: write
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Set up pnpm native binary
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          standalone: true
-
-      - name: Set up Vite+
-        uses: voidzero-dev/setup-vp@24d870228786dc83ae73482406bdd1e7befaec14 # v1.21.0
-        with:
-          node-version-file: ".node-version"
-          cache: false
-
-      - name: Build library
-        working-directory: packages/react-json-logic
-        run: vp pack
-
-      - name: Create release bot token
-        id: release-bot
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          client-id: ${{ vars.UINAF_CI_APP_CLIENT_ID }}
-          private-key: ${{ secrets.UINAF_CI_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: ${{ github.event.repository.name }}
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-
-      - name: Authorize release writes
-        env:
-          GH_TOKEN: ${{ steps.release-bot.outputs.token }}
-        run: gh auth setup-git
-
-      - name: Release package
-        id: release
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
-        with:
-          semantic_version: 25.0.9
-          extra_plugins: |
-            @semantic-release/commit-analyzer@13.0.1
-            @semantic-release/release-notes-generator@14.1.1
-            @semantic-release/npm@13.1.5
-            @semantic-release/github@12.0.8
-            conventional-changelog-conventionalcommits@9.3.1
-        env:
-          GITHUB_TOKEN: ${{ steps.release-bot.outputs.token }}
-          GH_TOKEN: ${{ steps.release-bot.outputs.token }}
-
-      - name: Verify immutable release
-        if: steps.release.outputs.new_release_published == 'true'
-        env:
-          GH_TOKEN: ${{ steps.release-bot.outputs.token }}
-          RELEASE_TAG: ${{ steps.release.outputs.new_release_git_tag }}
-        run: |
-          test "$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" --jq .immutable)" = true
+    uses: uinaf/.github/.github/workflows/release-npm.yml@main
+    with:
+      pack-command: vp pack
+      working-directory: packages/react-json-logic
+    secrets:
+      UINAF_CI_APP_PRIVATE_KEY: ${{ secrets.UINAF_CI_APP_PRIVATE_KEY }}
