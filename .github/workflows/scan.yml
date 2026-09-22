@@ -1,11 +1,5 @@
 name: Scan
 
-# No push trigger: pull requests scan what the shared baseline needs (Gitleaks
-# on the commits outside the PR base, TruffleHog on full history, Actionlint
-# and Zizmor only when workflow or scanner configuration changes). The weekly
-# run rescans full history and consults live state - TruffleHog reports only
-# credentials it can verify, and zizmor's online audits read GitHub - so a
-# secret that was inactive at commit time is caught once it becomes valid.
 on:
   pull_request:
   schedule:
