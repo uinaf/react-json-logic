@@ -11,6 +11,8 @@ All meaningful work happens in `packages/react-json-logic`. The demo exists to e
 
 ## Toolchain
 
+`.gitleaks.toml` allowlists survey fixture `question_key` identifiers that `generic-api-key` reads as tokens; the regex matches the finding, not the line, so a real credential on the same line is still reported.
+
 This repo runs on [Vite+](https://viteplus.dev). Bootstrap with the
 repository-pinned pnpm and invoke the repository-local Vite+ binary explicitly:
 

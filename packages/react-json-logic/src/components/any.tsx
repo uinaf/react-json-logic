@@ -92,7 +92,6 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     }
   };
 
-  // Add/remove controls only call this for a selected operator.
   const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
     const current = isPlainObject(value) ? value : {};
     const arr = getOperands(current[field]);
