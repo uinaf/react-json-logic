@@ -16,9 +16,10 @@
       "dependencyDashboardApproval": true
     },
     {
-      "description": "@vitest/coverage-v8 must equal the vitest version vite-plus bundles; bump it with vite-plus",
+      "description": "@vitest/coverage-v8 and vitest must equal the vitest version vite-plus bundles; bump them with vite-plus",
       "matchPackageNames": [
-        "@vitest/coverage-v8"
+        "@vitest/coverage-v8",
+        "vitest"
       ],
       "enabled": false
     }
