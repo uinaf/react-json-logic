@@ -7,7 +7,7 @@
 
 ## Local Setup
 
-Use Node 24.18 or newer with Corepack enabled, then run from the workspace root:
+Run from the workspace root:
 
 ```bash
 pnpm install --frozen-lockfile
