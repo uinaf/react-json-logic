@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions: {}
 
@@ -39,6 +40,10 @@ jobs:
 
       - name: Verify workspace
         run: pnpm run verify
+
+      - name: Scan
+        if: ${{ !cancelled() }}
+        uses: uinaf/.github/.github/actions/scan@7bc3f9ea25b5494f4026dfdb64fb866a520afcd0 # v3.0.0
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
