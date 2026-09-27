@@ -76,7 +76,7 @@ Setup, workflow, and release notes: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md).
+See the [security policy](https://github.com/uinaf/react-json-logic/security/policy).
 
 ## License
 
