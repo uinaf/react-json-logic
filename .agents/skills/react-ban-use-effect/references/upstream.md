@@ -8,6 +8,6 @@ This skill credits Tyler Gibbs' `useeffect-ban` skill as upstream inspiration.
 - Relationship: inspiration and attribution, not a vendored upstream copy. If future changes copy upstream text or code substantially, add the appropriate upstream notice beside this file.
 
 This version uses the catalog's two-field skill frontmatter, keeps activation and workflow in `SKILL.md`,
-moves replacement doctrine into `references/replacements.md`, adds repo-aware
-enforcement and verification boundaries, and cites React/Factory sources
+keeps non-obvious replacement details in `references/replacements.md`, adds repo-aware
+enforcement and verification boundaries, and cites React sources
 directly.

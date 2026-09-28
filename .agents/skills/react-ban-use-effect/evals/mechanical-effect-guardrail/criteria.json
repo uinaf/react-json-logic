@@ -1,0 +1,41 @@
+{
+  "context": "A request to stop useEffect creep mechanically, in a repo whose only trusted effect is a domain chat hook and which also carries a generic update-effect wrapper with an exhaustive-deps suppression. Graded on the enforcement shape a no-direct-effect policy needs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both call shapes blocked",
+      "max_score": 20,
+      "description": "The ESLint config rejects named `useEffect` imports from `react` AND namespace calls such as `React.useEffect(...)` (for example `no-restricted-imports` plus `no-restricted-syntax`), and the notes show `src/components/Dashboard.tsx` is now reported. Blocking only one shape scores 0."
+    },
+    {
+      "name": "Exception limited to the chat hook",
+      "max_score": 15,
+      "description": "The only file allowed to call `useEffect` directly is `src/hooks/useChatConnection.ts` (or an equally narrow named file list containing just that hook). Exempting a directory such as `src/hooks/**` or all hooks scores 0."
+    },
+    {
+      "name": "Generic wrapper treated as an escape",
+      "max_score": 15,
+      "description": "`useUpdateEffect` is not allowlisted. The output identifies it as a generic callback-plus-dependency-array wrapper whose exhaustive-deps suppression hides the same problem, and handles both sides: the wrapper is removed or reported by lint (for example by restricting its import), and its caller `Settings` is migrated to an event-handler call or reported; it does not leave the wrapper as a sanctioned loophole."
+    },
+    {
+      "name": "Rides the existing gate",
+      "max_score": 10,
+      "description": "The rule lives in the existing `eslint.config.js`, so the `verify` script and the CI workflow enforce it unchanged; the solution does not rely on a separate scanner, a new CI step, or agent guidance text alone."
+    },
+    {
+      "name": "useLayoutEffect and hooks lint untouched",
+      "max_score": 20,
+      "description": "Nothing in the new rules reports `useLayoutEffect` (so `src/components/Tooltip.tsx` stays clean) or other non-`useEffect` hooks such as `useInsertionEffect`, and `react-hooks/rules-of-hooks` and `exhaustive-deps` stay enabled. A rule or pattern that also flags `useLayoutEffect` scores 0."
+    },
+    {
+      "name": "Non-React effect methods untouched",
+      "max_score": 10,
+      "description": "The member-call rule is scoped to React (for example `React.useEffect` or the namespace imported from `react`), so `src/signals/cartEffects.ts`, which calls a non-React `effects.useEffect(...)` method, stays unreported. A selector matching any `.useEffect(...)` member call scores 0."
+    },
+    {
+      "name": "Honest verification",
+      "max_score": 10,
+      "description": "The notes report lint actually run with its real result, or state it could not run; they do not claim results that were not produced."
+    }
+  ]
+}

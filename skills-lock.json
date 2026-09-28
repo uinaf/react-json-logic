@@ -2,10 +2,10 @@
   "version": 1,
   "skills": {
     "react-ban-use-effect": {
-      "source": "uinaf/agent-skills",
+      "source": "uinaf/ffss",
       "sourceType": "github",
       "skillPath": "skills/react-ban-use-effect/SKILL.md",
-      "computedHash": "f8822f6513d833ec6b936ba344984ce8aab0fe8150a11792b9e6076228598f8f"
+      "computedHash": "1561454ae051fa4a190736d967115840de89ea2e785868bb9b408cedacf22a6d"
     },
     "react-doctor": {
       "source": "millionco/react-doctor",

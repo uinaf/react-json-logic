@@ -1,0 +1,7 @@
+interface:
+  display_name: "react-ban-use-effect"
+  short_description: "Replace direct React useEffect with clearer patterns"
+  default_prompt: "Use $react-ban-use-effect to review or replace direct useEffect calls in this React code, or to enforce a no-direct-effect policy."
+
+policy:
+  allow_implicit_invocation: true

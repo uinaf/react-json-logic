@@ -1,0 +1,36 @@
+{
+  "context": "Integrating an imperative third-party map SDK into a React page. This is a legitimate external-system effect; graded on containing it in a reviewed domain hook with honest dependencies instead of direct effects in the component.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Effects confined to a named map hook",
+      "max_score": 25,
+      "description": "All `useEffect` code lives in one domain-specific hook named for the map integration (for example `useAcmeMap`) in its own file; the `StoreMap` component itself neither imports nor calls `useEffect` or `React.useEffect`. A component that calls `useEffect` directly scores 0."
+    },
+    {
+      "name": "Hook exposes reactive inputs honestly",
+      "max_score": 15,
+      "description": "The hook takes the container ref and the map inputs (center, zoom, and the move-end callback or an equivalent) as explicit parameters, lists every value its setup and cleanup read in the dependency arrays, and contains no `eslint-disable` for `react-hooks/exhaustive-deps`."
+    },
+    {
+      "name": "No generic effect wrapper",
+      "max_score": 10,
+      "description": "The solution does not add a generic helper that accepts a callback plus a caller-provided dependency array (such as `useMountEffect(fn)`, `useUpdateEffect(fn, deps)`, or `useAsyncEffect`)."
+    },
+    {
+      "name": "Lifecycle correct",
+      "max_score": 20,
+      "description": "`StoreMap` renders a host element carrying the container ref passed to the hook; the map is created once per container, follows `center` and `zoom` changes with `setCenter`/`setZoom` without recreating it, subscribes to `moveend` and unsubscribes, calls `onMoveEnd` with `getCenter()`, and calls `destroy()` on unmount."
+    },
+    {
+      "name": "Map mounted on the locator page",
+      "max_score": 20,
+      "description": "`src/stores/StoreLocatorPage.tsx` imports `StoreMap` and renders it in place of the TODO with the page's `center`, zoom 12, and a move-end callback that updates `center` (`setCenter` directly or an equivalent wrapper). An unused `StoreMap` with the TODO left in place scores 0."
+    },
+    {
+      "name": "Notes and checks",
+      "max_score": 10,
+      "description": "`NOTES.md` explains that the map is an external system synchronized through the hook, and reports the lint, type, or component checks actually run (or states they could not run) without inventing results."
+    }
+  ]
+}
