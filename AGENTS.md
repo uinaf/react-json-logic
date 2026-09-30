@@ -39,6 +39,13 @@ pnpm exec vp pack
 Use `pnpm exec vp` interactively, keep bare `vp` inside package scripts, and
 import test utilities from `vite-plus/test`.
 
+Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
+`@vitest/coverage-v8`, because the last two must equal the `vitest` that
+`vite-plus` pins. Upgrade the four in one change: run
+`pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`, set the
+`vitest` and `@vitest/coverage-v8` catalog entries to
+`npm view vite-plus@<version> dependencies.vitest`, then run `pnpm verify`.
+
 ## Library layout
 
 ```
