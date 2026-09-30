@@ -10,8 +10,13 @@
       "dependencyDashboardApproval": true
     },
     {
-      "description": "@vitest/coverage-v8 and vitest must equal the vitest version vite-plus bundles; bump them with vite-plus",
-      "matchPackageNames": ["@vitest/coverage-v8", "vitest"],
+      "description": "Renovate skips the Vite+ toolchain: vitest and @vitest/coverage-v8 must equal the vitest that vite-plus pins, which Renovate cannot derive. Upgrade all four by hand as one change (AGENTS.md, Toolchain)",
+      "matchPackageNames": [
+        "vite-plus",
+        "@voidzero-dev/vite-plus-core",
+        "vitest",
+        "@vitest/coverage-v8"
+      ],
       "enabled": false
     }
   ]
