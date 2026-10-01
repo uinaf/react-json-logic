@@ -43,7 +43,7 @@ jobs:
 
       - name: Scan
         if: ${{ !cancelled() }}
-        uses: uinaf/.github/.github/actions/scan@7bc3f9ea25b5494f4026dfdb64fb866a520afcd0 # v3.0.0
+        uses: uinaf/.github/.github/actions/scan@906e5111d19132ce85765cdc5ed28c9a87381d4b # v3.0.1
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
@@ -52,7 +52,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: uinaf/.github/.github/workflows/release-npm.yml@7bc3f9ea25b5494f4026dfdb64fb866a520afcd0 # v3.0.0
+    uses: uinaf/.github/.github/workflows/release-npm.yml@906e5111d19132ce85765cdc5ed28c9a87381d4b # v3.0.1
     with:
       pack-command: vp pack
       working-directory: packages/react-json-logic
