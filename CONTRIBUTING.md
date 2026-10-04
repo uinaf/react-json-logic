@@ -38,7 +38,7 @@ pnpm exec vp run verify
 - Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
 - Keep each pull request focused on one concern
 - Fill out the [pull request template](https://github.com/uinaf/.github/blob/main/PULL_REQUEST_TEMPLATE.md)
-- Include validation evidence (at minimum `pnpm verify`)
+- Include validation evidence: `pnpm verify` for code, `pnpm exec vp fmt --check <file>` for root docs alone
 
 ## Release and Deployment Notes
 

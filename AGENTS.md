@@ -48,11 +48,11 @@ Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
 
 ## Proof
 
-| Change                                                        | Check                                                                  |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`)       | `pnpm exec vp fmt --check <file>`; no workspace script reads them      |
-| Library code, tests, or `packages/react-json-logic/README.md` | `pnpm exec vp test` in the package while iterating, then `pnpm verify` |
-| Demo app                                                      | `pnpm build:example`; `pnpm dev:example` to use it                     |
+| Change                                                        | Check                                                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`)       | `pnpm exec vp fmt --check <file>`; no workspace script reads them                    |
+| Library code, tests, or `packages/react-json-logic/README.md` | `pnpm exec vp test` in the package while iterating, then `pnpm verify`               |
+| Demo app                                                      | `pnpm verify` (runs the demo's `vp check && vp build`); `pnpm dev:example` to use it |
 
 ## Library layout
 
