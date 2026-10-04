@@ -7,11 +7,9 @@ Guide for working on `react-json-logic`, a headless React component library for 
 - One publishable package: `packages/react-json-logic` (the library on npm)
 - One demo app: `apps/example` (consumes the library via `workspace:*`)
 
-All meaningful work happens in `packages/react-json-logic`. The demo exists to exercise the library locally.
+All meaningful work happens in `packages/react-json-logic`. The demo exists to exercise the library locally; the public demo on uinaf.dev installs the published npm package, so it picks up a change only after a release.
 
 ## Toolchain
-
-`.gitleaks.toml` allowlists survey fixture `question_key` identifiers that `generic-api-key` reads as tokens; the regex matches the finding, not the line, so a real credential on the same line is still reported.
 
 This repo runs on [Vite+](https://viteplus.dev). Bootstrap with the
 repository-pinned pnpm and invoke the repository-local Vite+ binary explicitly:
@@ -46,6 +44,16 @@ Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
 `vitest` and `@vitest/coverage-v8` catalog entries to
 `npm view vite-plus@<version> dependencies.vitest`, then run `pnpm verify`.
 
+`.gitleaks.toml` allowlists survey fixture `question_key` identifiers in `examples/constants/question.json`, a file that survives only in history, because `generic-api-key` reads them as tokens; the regex matches the finding, not the line, so a real credential on the same line is still reported.
+
+## Proof
+
+| Change                                                        | Check                                                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`)       | `pnpm exec vp fmt --check <file>`; no workspace script reads them                    |
+| Library code, tests, or `packages/react-json-logic/README.md` | `pnpm exec vp test` in the package while iterating, then `pnpm verify`               |
+| Demo app                                                      | `pnpm verify` (runs the demo's `vp check && vp build`); `pnpm dev:example` to use it |
+
 ## Library layout
 
 ```
@@ -75,9 +83,9 @@ All filenames are kebab-case.
 - **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `pnpm exec vp test --coverage` (or `pnpm verify`) to evaluate.
 - **Public API is small on purpose.** Default export `JsonLogicBuilder`, plus `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, and the core types. Adding a new public export is an API decision, not a casual change.
 
-## Commit style
+## Releases
 
-Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`). Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
+Every push to `main` whose head commit lacks `[skip ci]` runs `verify`, then semantic-release publishes `packages/react-json-logic` to npm when the commits call for it: `feat` is a minor, `fix`, `perf`, and reverts a patch, and `!` or a `BREAKING CHANGE:` footer a major. `docs`, `chore`, `refactor`, `test`, and `ci` publish nothing, so pick the commit type for the release it should cause. Pipeline and recovery details: [CONTRIBUTING.md](CONTRIBUTING.md#release-and-deployment-notes).
 
 ## Repository Skills
 

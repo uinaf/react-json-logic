@@ -38,7 +38,7 @@ pnpm exec vp run verify
 - Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
 - Keep each pull request focused on one concern
 - Fill out the [pull request template](https://github.com/uinaf/.github/blob/main/PULL_REQUEST_TEMPLATE.md)
-- Include validation evidence (at minimum `pnpm verify`)
+- Include validation evidence: `pnpm verify` for code, `pnpm exec vp fmt --check <file>` for root docs alone
 
 ## Release and Deployment Notes
 
@@ -46,7 +46,7 @@ pnpm exec vp run verify
 - Conventional Commits drive the version bump and npm publish, when applicable
 - Publishing uses npm Trusted Publishing (OpenID Connect): the release job grants `id-token: write` and uses no `NPM_TOKEN` secret
 - GitHub Releases and version push-back commits are authored by `uinaf-ci[bot]` via a short-lived App installation token from the `release` Environment
-- The demo app deploy is configured through the repository host dashboard
+- `apps/example` is not deployed; the public demo on uinaf.dev installs the published package
 
 Release preparation uses `packages/react-json-logic/scripts/release-commit.ts`
 after npm prepares the package version. The checkout and GitHub's atomic
