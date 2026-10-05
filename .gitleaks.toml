@@ -1,8 +1,0 @@
-[extend]
-useDefault = true
-
-[[allowlists]]
-description = "Example survey fixture question identifiers"
-condition = "AND"
-paths = ['''examples/constants/question\.json$''']
-regexes = ['''^[a-z]+_question_[0-9]{10}$''']

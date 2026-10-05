@@ -44,8 +44,6 @@ Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
 `vitest` and `@vitest/coverage-v8` catalog entries to
 `npm view vite-plus@<version> dependencies.vitest`, then run `pnpm verify`.
 
-`.gitleaks.toml` allowlists survey fixture `question_key` identifiers in `examples/constants/question.json`, a file that survives only in history, because `generic-api-key` reads them as tokens; the regex matches the finding, not the line, so a real credential on the same line is still reported.
-
 ## Proof
 
 | Change                                                        | Check                                                                                |
