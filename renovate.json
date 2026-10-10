@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "platformAutomerge": true,
-  "extends": ["github>uinaf/renovate-config"],
+  "extends": ["github>uinaf/.github:renovate-config"],
   "packageRules": [
     {
       "description": "TypeScript majors are opt-in from the dependency dashboard",
