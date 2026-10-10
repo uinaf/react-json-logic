@@ -1,5 +1,19 @@
 import { OPERATORS } from "./operators.ts";
 
+// Variadic evaluator arities are independent of the editor's field limits.
+const VARIADIC_MINIMUMS = new Map<string, number>([
+  ["missing", 0],
+  ["or", 0],
+  ["and", 0],
+  ["if", 0],
+  ["+", 0],
+  ["*", 1],
+  ["min", 0],
+  ["max", 0],
+  ["cat", 0],
+  ["merge", 0],
+]);
+
 export interface ValidationError {
   /** JSON-pointer-ish path to the offending node, e.g. `$.and[0].===` */
   path: string;
@@ -9,7 +23,7 @@ export interface ValidationError {
 export type ValidationResult = { ok: true } | { ok: false; errors: ValidationError[] };
 
 /**
- * Validates single-key operator objects, array-shaped arguments, and arity.
+ * Validates operator structure and arity independently of variadic UI limits.
  * Unknown keys remain valid because json-logic-js supports custom operations.
  */
 export function validate(rule: unknown): ValidationResult {
@@ -25,16 +39,19 @@ function pushArityErrors(
   argCount: number,
   errors: ValidationError[],
 ): void {
-  if (argCount < op.fieldCount.min) {
+  const variadicMinimum = VARIADIC_MINIMUMS.get(key);
+  const min = variadicMinimum ?? op.fieldCount.min;
+  const max = variadicMinimum === undefined ? op.fieldCount.max : Infinity;
+  if (argCount < min) {
     errors.push({
       path: `${path}.${key}`,
-      message: `${key}: expected at least ${op.fieldCount.min} arg(s), got ${argCount}`,
+      message: `${key}: expected at least ${min} arg(s), got ${argCount}`,
     });
   }
-  if (argCount > op.fieldCount.max) {
+  if (argCount > max) {
     errors.push({
       path: `${path}.${key}`,
-      message: `${key}: expected at most ${op.fieldCount.max} arg(s), got ${argCount}`,
+      message: `${key}: expected at most ${max} arg(s), got ${argCount}`,
     });
   }
 }

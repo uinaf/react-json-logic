@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vite-plus/test";
-import { applyLogic, validate, type JsonLogicValue, type ValidationError } from "../src/index.ts";
+import {
+  applyLogic,
+  rule,
+  validate,
+  type JsonLogicValue,
+  type ValidationError,
+} from "../src/index.ts";
 
 function validationErrors(value: unknown): ValidationError[] {
   const result = validate(value);
@@ -37,6 +43,57 @@ describe("validate", () => {
   ])("accepts evaluator-supported $rule", ({ rule, result }) => {
     expect(applyLogic(rule)).toEqual(result);
     expect(validate(rule)).toEqual({ ok: true });
+  });
+
+  test.each<{ name: string; value: JsonLogicValue; result: unknown }>([
+    { name: "add", value: rule.add(), result: 0 },
+    { name: "and", value: rule.and(), result: undefined },
+    { name: "or", value: rule.or(), result: undefined },
+    { name: "if", value: rule.if(), result: null },
+    { name: "min", value: rule.min(), result: Infinity },
+    { name: "max", value: rule.max(), result: -Infinity },
+    { name: "missing", value: rule.missing(), result: [] },
+    { name: "cat", value: rule.cat(), result: "" },
+    { name: "merge", value: rule.merge(), result: [] },
+  ])("accepts empty $name as evaluated", ({ value, result }) => {
+    expect(applyLogic(value)).toEqual(result);
+    expect(validate(value)).toEqual({ ok: true });
+  });
+
+  test("multiplication needs one operand because the evaluator reduces without a seed", () => {
+    expect(() => applyLogic(rule.mul())).toThrow(TypeError);
+    expect(validationErrors(rule.mul())[0]?.message).toMatch(/at least 1/);
+    expect(applyLogic(rule.mul(7))).toBe(7);
+    expect(validate(rule.mul(7))).toEqual({ ok: true });
+  });
+
+  const operands = Array.from({ length: 101 }, () => 1);
+  const keys = Array.from({ length: 101 }, (_, index) => `key${index}`);
+  test.each<{ name: string; value: JsonLogicValue; result: unknown }>([
+    { name: "add", value: rule.add(...operands), result: 101 },
+    { name: "mul", value: rule.mul(...operands), result: 1 },
+    { name: "and", value: rule.and(...operands), result: 1 },
+    { name: "or", value: rule.or(...operands), result: 1 },
+    {
+      name: "if",
+      value: rule.if(...Array.from({ length: 100 }, () => false), "else"),
+      result: "else",
+    },
+    { name: "min", value: rule.min(...operands), result: 1 },
+    { name: "max", value: rule.max(...operands), result: 1 },
+    { name: "missing", value: rule.missing(...keys), result: keys },
+    { name: "cat", value: rule.cat(...operands), result: "1".repeat(101) },
+    { name: "merge", value: rule.merge(...operands), result: operands },
+  ])("accepts over-cap $name as evaluated", ({ value, result }) => {
+    expect(applyLogic(value)).toEqual(result);
+    expect(validate(value)).toEqual({ ok: true });
+  });
+
+  test("checks nested rules beyond the editor cap", () => {
+    const value = rule.add(...operands, { "===": [1] });
+    expect(validationErrors(value)).toEqual([
+      { path: "$.+[101].===", message: "===: expected at least 2 arg(s), got 1" },
+    ]);
   });
 
   test("flags arity above maximum", () => {
@@ -81,8 +138,8 @@ describe("validate", () => {
     const equalityErrors = validationErrors({ "===": 1 });
     expect(equalityErrors[0]?.message).toMatch(/at least 2/);
 
-    const andErrors = validationErrors({ and: true });
-    expect(andErrors[0]?.message).toMatch(/at least 2/);
+    expect(applyLogic({ and: true })).toBe(true);
+    expect(validate({ and: true })).toEqual({ ok: true });
   });
 
   test("still accepts the var string shorthand", () => {
