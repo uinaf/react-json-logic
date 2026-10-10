@@ -60,7 +60,7 @@ applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
 validate(r); // → { ok: true }
 ```
 
-Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Arity is enforced at the function signature level (no runtime schema overhead).
+Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Fixed-arity factories enforce argument counts through their TypeScript signatures. Variadic factories accept any number of arguments; call `validate()` to check them against the operator table.
 
 | Group        | Factories                                                            |
 | ------------ | -------------------------------------------------------------------- |
