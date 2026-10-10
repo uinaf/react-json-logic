@@ -327,6 +327,18 @@ describe("<JsonLogicBuilder /> render paths", () => {
 });
 
 describe("imported operands", () => {
+  test("caps rendered variadic fields without discarding imported operands on edit", () => {
+    const onChange = vi.fn();
+    const operands = Array.from({ length: 101 }, () => 1);
+    render(<StatefulHost initial={{ "+": operands }} onChange={onChange} />);
+    expect(screen.getAllByRole("spinbutton")).toHaveLength(100);
+    expect(screen.queryByRole("button", { name: "Add field" })).toBeNull();
+    const [firstInput] = screen.getAllByRole("spinbutton");
+    if (!firstInput) throw new Error("expected the first operand input");
+    fireEvent.change(firstInput, { target: { value: "2" } });
+    expect(onChange).toHaveBeenLastCalledWith({ "+": [2, ...operands.slice(1)] });
+  });
+
   test.each([5, false, null, { "===": [1, 2] }])(
     "preserves shorthand %j when adding and removing a sibling",
     (operand) => {

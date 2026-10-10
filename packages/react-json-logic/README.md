@@ -60,7 +60,7 @@ applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
 validate(r); // → { ok: true }
 ```
 
-Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Fixed-arity factories enforce argument counts through their TypeScript signatures. Variadic factories accept any number of arguments; call `validate()` to check them against the operator table.
+Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Fixed-arity factories enforce argument counts through their TypeScript signatures. Variadic factories accept any number of arguments; call `validate()` to check their evaluator arity.
 
 | Group        | Factories                                                            |
 | ------------ | -------------------------------------------------------------------- |
@@ -72,7 +72,9 @@ Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](htt
 | String/Array | `in(needle, haystack)`, `cat(...args)`, `merge(...args)`             |
 | Higher-order | `some`, `all`, `none`, `map`, `filter`                               |
 
-`validate(rule)` walks a rule against the operator table and reports structural problems (multi-key operator objects, arity violations, etc.) as `{ ok: false, errors: [{ path, message }] }`. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated; only known operators get arity-checked.
+`validate(rule)` reports structural problems (multi-key operator objects and arity violations) as `{ ok: false, errors: [{ path, message }] }`. Variadic arity follows `json-logic-js`: there is no editor-sized maximum, and empty argument lists are accepted except for multiplication, which requires at least one operand. Empty `and`/`or` return `undefined`, `min`/`max` return positive/negative infinity, and `if` returns `null`; validation does not guarantee a finite or JSON-serializable result. Fixed-arity operators still check their declared argument counts. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated; only known operators get arity-checked.
+
+`OPERATORS[].fieldCount` governs the visual editor's add/remove controls and rendered fields. Rules larger than those editing limits can still validate and evaluate. For example, `rule.add()` validates and evaluates to `0`, and `rule.add(...Array(101).fill(1))` validates and evaluates to `101`.
 
 ## Styling
 

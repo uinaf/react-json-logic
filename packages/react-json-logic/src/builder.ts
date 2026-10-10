@@ -14,7 +14,7 @@ export const rule = {
   /**
    * `if(cond, then, else)` for the simple case;
    * `if(cond1, then1, cond2, then2, ..., else)` for elseif chains.
-   * Mirrors json-logic-js' variadic-odd-args `if` operator.
+   * A final else is optional; an empty rule evaluates to null.
    */
   if: (...args: JsonLogicValue[]): JsonLogicValue => ({ if: args }),
 

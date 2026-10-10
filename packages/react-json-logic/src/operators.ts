@@ -13,6 +13,7 @@ export interface Operator {
   label: string;
   fields: FieldType[];
   notAvailableUnder: string[];
+  /** Field limits for the visual editor; variadic validation follows the evaluator. */
   fieldCount: { min: number; max: number };
 }
 
