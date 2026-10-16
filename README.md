@@ -14,61 +14,11 @@ pnpm add react-json-logic react react-dom
 
 Requires React 19 (`react` / `react-dom` peer `^19.0.0`).
 
-## Basic Usage
+## Usage
 
-```tsx
-import { useState } from "react";
-import JsonLogicBuilder, { applyLogic, type JsonLogicValue } from "react-json-logic";
+Props, the typed `rule` factory, `validate()`, and the `data-rjl-*` styling hooks are documented in the [package README](packages/react-json-logic/README.md).
 
-function Example() {
-  const [rule, setRule] = useState<JsonLogicValue>("");
-  const data = { user: { age: 21 } };
-
-  return (
-    <>
-      <JsonLogicBuilder value={rule} data={data} onChange={setRule} />
-      <p>Result: {String(applyLogic(rule, data))}</p>
-    </>
-  );
-}
-```
-
-## API Overview
-
-- Default export: `JsonLogicBuilder`
-- Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`
-- Core types: `JsonLogicBuilderProps`, `JsonLogicValue`, `JsonLogicData`, `ValidationResult`, `ValidationError`
-
-### Component Props
-
-- `value: JsonLogicValue` - controlled current rule
-- `onChange: (value: JsonLogicValue) => void` - called whenever the rule changes
-- `data?: JsonLogicData | string` - sample data for accessor suggestions (`var`)
-- `onDataError?: (err: unknown, raw: string) => void` - parse error hook when `data` is a string
-
-## Styling
-
-Use stable `data-rjl-*` attributes to style the rendered DOM (for example with Tailwind, CSS Modules, or vanilla CSS). The full attribute table is in the [package README](packages/react-json-logic/README.md#styling).
-
-## Building Rules in Code
-
-Use the typed `rule` factory to construct rules without hand-writing JSON:
-
-```ts
-import { applyLogic, rule, validate } from "react-json-logic";
-
-const r = rule.and(rule.eq(rule.var("user.age"), 21), rule.gt(rule.var("score"), 100));
-
-applyLogic(r, { user: { age: 21 }, score: 150 }); // true
-validate(r); // { ok: true }
-```
-
-## Repo and Development
-
-This repository is a workspace with:
-
-- `packages/react-json-logic` (publishable npm package)
-- `apps/example` (demo app)
+The workspace holds the library in `packages/react-json-logic` and a demo app in `apps/example`.
 
 ## Contributing
 

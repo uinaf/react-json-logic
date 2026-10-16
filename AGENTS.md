@@ -83,7 +83,7 @@ All filenames are kebab-case.
 
 ## Releases
 
-Every push to `main` whose head commit lacks `[skip ci]` runs `verify`, then semantic-release publishes `packages/react-json-logic` to npm when the commits call for it: `feat` is a minor, `fix`, `perf`, and reverts a patch, and `!` or a `BREAKING CHANGE:` footer a major. `docs`, `chore`, `refactor`, `test`, and `ci` publish nothing, so pick the commit type for the release it should cause. Pipeline and recovery details: [CONTRIBUTING.md](CONTRIBUTING.md#release-and-deployment-notes).
+Every push to `main` whose head commit lacks `[skip ci]` runs `verify`, then semantic-release publishes `packages/react-json-logic` to npm when the commits call for it: `feat` is a minor, `fix`, `perf`, and reverts a patch, and `!` or a `BREAKING CHANGE:` footer a major. `docs`, `chore`, `refactor`, `test`, and `ci` publish nothing, so pick the commit type for the release it should cause. npm Trusted Publishing is registered to `.github/workflows/ci.yml` and the `release` Environment, so renaming either breaks publishing. Credentials, version writeback, and recovery: [Package releases](https://app.notion.com/p/3e5e75710b52814ab798f9febefb38ed) in the uinaf Notion.
 
 ## Repository Skills
 

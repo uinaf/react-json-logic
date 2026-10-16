@@ -121,21 +121,9 @@ Example with Tailwind:
 }
 ```
 
-## Development
+## Contributing
 
-This repo runs on [Vite+](https://viteplus.dev). Bootstrap with pnpm and invoke
-the repository-local Vite+ binary explicitly:
-
-```bash
-pnpm install --frozen-lockfile  # install deps
-pnpm exec vp check              # format + lint + typecheck
-pnpm exec vp test               # run tests
-pnpm exec vp test --coverage    # with coverage report
-pnpm exec vp pack               # build the library
-pnpm verify       # the full gate (check + test --coverage + pack)
-```
-
-See [AGENTS.md](https://github.com/uinaf/react-json-logic/blob/main/AGENTS.md) for project layout and contributor notes.
+See [CONTRIBUTING.md](https://github.com/uinaf/react-json-logic/blob/main/CONTRIBUTING.md).
 
 ## License
 

@@ -40,25 +40,7 @@ pnpm exec vp run verify
 - Fill out the [pull request template](https://github.com/uinaf/.github/blob/main/PULL_REQUEST_TEMPLATE.md)
 - Include validation evidence: `pnpm verify` for code, `pnpm exec vp fmt --check <file>` for root docs alone
 
-## Release and Deployment Notes
+## Releases
 
-- On every push to `main` without `[skip ci]` in the commit message, CI runs `verify`, then the shared [uinaf release workflow](https://github.com/uinaf/.github/blob/main/.github/workflows/release-npm.yml), which packs `packages/react-json-logic` and runs [semantic-release](https://github.com/semantic-release/semantic-release)
-- Conventional Commits drive the version bump and npm publish, when applicable
-- Publishing uses npm Trusted Publishing (OpenID Connect): the release job grants `id-token: write` and uses no `NPM_TOKEN` secret
-- GitHub Releases and version push-back commits are authored by `uinaf-ci[bot]` via a short-lived App installation token from the `release` Environment
+- Every push to `main` runs `verify`, then [semantic-release](https://github.com/semantic-release/semantic-release) publishes `packages/react-json-logic` to npm when the Conventional Commits call for a version bump
 - `apps/example` is not deployed; the public demo on uinaf.dev installs the published package
-
-Release preparation uses `packages/react-json-logic/scripts/release-commit.ts`
-after npm prepares the package version. The checkout and GitHub's atomic
-`expectedHeadOid` are bound to the verified workflow event SHA. GitHub signs
-the commit and rejects writeback if `main` has advanced. The plugin fetches the
-returned immutable SHA and checks its parent, unchanged source, and exact
-prepared manifest before semantic-release tags it. Only the package version
-may change. Keep `.github/workflows/ci.yml` and the `release` Environment names:
-these identify the npm trusted publisher.
-
-If GitHub accepts writeback but fetching or validating it fails, preparation
-stops before tagging or publishing. Inspect that commit's parent, tree, version
-and verified signature, plus existing tags, npm versions and GitHub Releases,
-before recovery. Reconcile only missing publication steps from the validated
-commit; do not create another version or move an existing tag to hide failure.
