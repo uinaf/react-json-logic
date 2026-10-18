@@ -4,45 +4,23 @@ Guide for working on `react-json-logic`, a headless React component library for 
 
 ## What this repo is
 
-- One publishable package: `packages/react-json-logic` (the library on npm)
-- One demo app: `apps/example` (consumes the library via `workspace:*`)
-
-All meaningful work happens in `packages/react-json-logic`. The demo exists to exercise the library locally; the public demo on uinaf.dev installs the published npm package, so it picks up a change only after a release.
+- `packages/react-json-logic`: the library published to npm. All meaningful work happens here.
+- `apps/example`: a local demo that consumes the library via `workspace:*`. The public demo on uinaf.dev installs the published npm package, so it picks up a change only after a release.
 
 ## Toolchain
 
-This repo runs on [Vite+](https://viteplus.dev). Bootstrap with the
-repository-pinned pnpm and invoke the repository-local Vite+ binary explicitly:
+This repo runs on [Vite+](https://viteplus.dev) with the pnpm version pinned in `package.json`:
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm verify          # full gate: check + tests (with coverage) + build
-pnpm test            # tests across packages
-pnpm check           # format + lint + typecheck
-pnpm build           # build the library
-pnpm dev:example     # run the demo locally
-pnpm build:example   # build the demo
+pnpm verify          # check + build + tests with coverage
 ```
 
-Per-package work (recommended for library development):
+The other entry points are the scripts in the root and package `package.json`. Inside `packages/react-json-logic`, `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack` give a faster loop.
 
-```bash
-cd packages/react-json-logic
-pnpm exec vp check
-pnpm exec vp test
-pnpm exec vp test --coverage
-pnpm exec vp pack
-```
+Use `pnpm exec vp` interactively, bare `vp` inside package scripts, and import test utilities from `vite-plus/test`.
 
-Use `pnpm exec vp` interactively, keep bare `vp` inside package scripts, and
-import test utilities from `vite-plus/test`.
-
-Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
-`@vitest/coverage-v8`, because the last two must equal the `vitest` that
-`vite-plus` pins. Upgrade the four in one change: run
-`pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`, set the
-`vitest` and `@vitest/coverage-v8` catalog entries to
-`npm view vite-plus@<version> dependencies.vitest`, then run `pnpm verify`.
+Renovate skips `vite-plus`, its `vite` alias, `vitest`, and `@vitest/coverage-v8`, because the last two must equal the `vitest` that `vite-plus` pins. Upgrade the four in one change: run `pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`, set the `vitest` and `@vitest/coverage-v8` catalog entries to `npm view vite-plus@<version> dependencies.vitest`, then run `pnpm verify`.
 
 ## Proof
 
@@ -52,34 +30,15 @@ Renovate skips `vite-plus`, its `vite` alias, `vitest`, and
 | Library code, tests, or `packages/react-json-logic/README.md` | `pnpm exec vp test` in the package while iterating, then `pnpm verify`               |
 | Demo app                                                      | `pnpm verify` (runs the demo's `vp check && vp build`); `pnpm dev:example` to use it |
 
-## Library layout
-
-```
-packages/react-json-logic/
-  src/
-    index.ts                       # public exports
-    operators.ts                   # OPERATORS + FIELD_TYPES table
-    builder.ts                     # typed `rule` factory
-    validator.ts                   # `validate()`
-    components/
-      json-logic-builder.tsx       # default export: top-level controlled wrapper
-      any.tsx                      # recursive operator dispatcher
-      input.tsx                    # value field (Base UI Select for type chooser)
-      accessor.tsx                 # var/accessor field (Base UI Autocomplete)
-      higher-order.tsx             # some/all/none/map/filter wrapper
-      select-operator.tsx          # operator dropdown (Base UI Select)
-  tests/                           # vitest + @testing-library/react
-```
-
-All filenames are kebab-case.
+The coverage thresholds live in `packages/react-json-logic/vite.config.ts`.
 
 ## Development conventions
 
-- **Headless.** No CSS shipped. Style via `data-rjl-*` attributes documented in the README. Keep CSS modules out of the library.
-- **Base UI for primitives.** Operator/type dropdowns use `Select` from `@base-ui/react/select`. The accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
-- **Controlled components.** `props.onChange` is the source of truth; no internal `useState` mirror for `value`.
-- **Coverage gate** is enforced in `packages/react-json-logic/vite.config.ts`. Run `pnpm exec vp test --coverage` (or `pnpm verify`) to evaluate.
-- **Public API is small on purpose.** Default export `JsonLogicBuilder`, plus `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, and the core types. Adding a new public export is an API decision, not a casual change.
+- **Headless.** The library ships no CSS. Consumers style it through the `data-rjl-*` attributes listed in the [package README](packages/react-json-logic/README.md#styling); a new attribute goes in that table.
+- **Base UI for primitives.** Dropdowns use `Select` from `@base-ui/react/select`, and the accessor field uses `Autocomplete` from `@base-ui/react/autocomplete`. Both render through portals.
+- **Controlled components.** `value` and `onChange` props are the only source of truth for the rule.
+- **Small public API.** [`src/index.ts`](packages/react-json-logic/src/index.ts) defines it; a new export is an API decision.
+- `components/any.tsx` is the recursive operator dispatcher. Filenames are kebab-case.
 
 ## Releases
 
