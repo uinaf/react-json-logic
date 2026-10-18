@@ -2,7 +2,7 @@
   "version": 1,
   "skills": {
     "react-ban-use-effect": {
-      "source": "uinaf/ffss",
+      "source": "uinaf/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/react-ban-use-effect/SKILL.md",
       "computedHash": "1561454ae051fa4a190736d967115840de89ea2e785868bb9b408cedacf22a6d"
