@@ -2,7 +2,7 @@
 
 Build and evaluate [JsonLogic](http://jsonlogic.com) rules with React components.
 
-**Headless.** No CSS shipped; bring your own. Built on [Base UI](https://base-ui.com) primitives. Style with Tailwind, CSS modules, vanilla CSS, or whatever you like.
+Headless: no CSS ships. Built on [Base UI](https://base-ui.com) primitives.
 
 ## Install
 
@@ -40,16 +40,12 @@ function Example() {
 | `data`        | `JsonLogicData \| string`             | `{}`           | Sample data, used by accessor (`var`) field suggestions. Pass an object/array directly or a JSON string (parsed for you). |
 | `onDataError` | `(err: unknown, raw: string) => void` | `console.warn` | Called when `data` is a string and `JSON.parse` fails. De-duplicated by raw value, fires once per malformed input.        |
 
-`JsonLogicValue` is the recursive any-shape type for rules and primitive
-values. `JsonLogicData = Record<string, unknown> | unknown[]` is the
-narrower shape the `data` prop accepts (objects or arrays; primitives
-make no sense as accessor data).
-
-Named exports: `applyLogic`, `rule`, `validate`, `OPERATORS`, `FIELD_TYPES`, types `JsonLogicBuilderProps`, `FieldType`, `Operator`, `JsonLogicValue`, `JsonLogicData`, `ValidationError`, `ValidationResult`.
+`JsonLogicValue` is any rule or primitive value. `JsonLogicData` is
+`Record<string, unknown> | unknown[]`.
 
 ## Building rules in code
 
-`rule` is a typed factory you can use to construct JsonLogic rules without writing the JSON shape by hand:
+`rule` builds JsonLogic rules with typed factories:
 
 ```ts
 import { applyLogic, rule, validate } from "react-json-logic";
@@ -60,7 +56,7 @@ applyLogic(r, { user: { age: 21 }, score: 150 }); // → true
 validate(r); // → { ok: true }
 ```
 
-Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](http://jsonlogic.com) spec; the `<JsonLogicBuilder />` UI, `applyLogic`, and `validate` all consume the same shape. Fixed-arity factories enforce argument counts through their TypeScript signatures. Variadic factories accept any number of arguments; call `validate()` to check their evaluator arity.
+Each factory returns a standard JsonLogic `JsonLogicValue`, which the builder, `applyLogic`, and `validate` all accept. Fixed-arity factories enforce argument counts in their types; check variadic ones with `validate()`.
 
 | Group        | Factories                                                            |
 | ------------ | -------------------------------------------------------------------- |
@@ -72,13 +68,15 @@ Each factory returns a `JsonLogicValue` shaped per the canonical [JsonLogic](htt
 | String/Array | `in(needle, haystack)`, `cat(...args)`, `merge(...args)`             |
 | Higher-order | `some`, `all`, `none`, `map`, `filter`                               |
 
-`validate(rule)` reports structural problems (multi-key operator objects and arity violations) as `{ ok: false, errors: [{ path, message }] }`. Variadic arity follows `json-logic-js`: there is no editor-sized maximum, and empty argument lists are accepted except for multiplication, which requires at least one operand. Empty `and`/`or` return `undefined`, `min`/`max` return positive/negative infinity, and `if` returns `null`; validation does not guarantee a finite or JSON-serializable result. Fixed-arity operators still check their declared argument counts. Custom operators (registered via `json-logic-js`'s `add_operation`) are tolerated; only known operators get arity-checked.
+`validate(rule)` returns `{ ok: false, errors: [{ path, message }] }` for multi-key operator objects and arity violations.
 
-`OPERATORS[].fieldCount` governs the visual editor's add/remove controls and rendered fields. Rules larger than those editing limits can still validate and evaluate. For example, `rule.add()` validates and evaluates to `0`, and `rule.add(...Array(101).fill(1))` validates and evaluates to `101`.
+- Variadic arity follows `json-logic-js`: no maximum, and empty argument lists pass except for `*` (`rule.mul`). A valid rule can still evaluate to `undefined` (empty `and`/`or`), ±infinity (`min`/`max`), or `null` (`if`).
+- Custom operators from `json-logic-js`'s `add_operation` pass; only known operators are arity-checked.
+- `OPERATORS[].fieldCount` limits only the editor's add and remove controls. `rule.add()` evaluates to `0`, and `rule.add(...Array(101).fill(1))` to `101`.
 
 ## Styling
 
-Components render unstyled. Target the rendered DOM via stable `data-rjl-*` attributes:
+Target these stable `data-rjl-*` attributes:
 
 | Attribute                       | What it marks                                                          |
 | ------------------------------- | ---------------------------------------------------------------------- |
@@ -105,21 +103,6 @@ Components render unstyled. Target the rendered DOM via stable `data-rjl-*` attr
 | `data-rjl-higher-order`         | `some` / `all` / `none` / `map` / `filter` wrapper                     |
 | `data-rjl-higher-order-arrow`   | The `=>` glyph                                                         |
 | `data-rjl-higher-order-child`   | The inner expression of a higher-order op                              |
-
-Example with Tailwind:
-
-```css
-[data-rjl-operator-trigger] {
-  @apply inline-flex h-8 items-center rounded border px-2;
-}
-[data-rjl-operator-popup] {
-  @apply rounded border bg-white shadow;
-}
-[data-rjl-add],
-[data-rjl-remove] {
-  @apply h-6 w-6 rounded border bg-white text-sm;
-}
-```
 
 ## Contributing
 
