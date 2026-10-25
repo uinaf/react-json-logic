@@ -15,13 +15,11 @@ pnpm dev:example     # run the demo
 
 In `packages/react-json-logic`, `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack` give a faster loop. Use bare `vp` inside package scripts, and import test utilities from `vite-plus/test`.
 
-| Change                                                        | Proof                             |
-| ------------------------------------------------------------- | --------------------------------- |
-| Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`)       | `pnpm exec vp fmt --check <file>` |
-| Library code, tests, or `packages/react-json-logic/README.md` | `pnpm verify`                     |
-| Demo app                                                      | `pnpm verify`                     |
+Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt --check <file>`; every other change needs `pnpm verify`.
 
-Renovate skips `vite-plus`, its `vite` alias, `vitest`, and `@vitest/coverage-v8`; the last two must equal the `vitest` that `vite-plus` pins. Upgrade all four together:
+## Toolchain
+
+[`renovate.json`](renovate.json) skips the Vite+ toolchain. Upgrade all four packages it lists in one change:
 
 1. `pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`
 2. Set the `vitest` and `@vitest/coverage-v8` catalog entries to `npm view vite-plus@<version> dependencies.vitest`.
@@ -39,8 +37,7 @@ Renovate skips `vite-plus`, its `vite` alias, `vitest`, and `@vitest/coverage-v8
 
 A push to `main` publishes to npm when the commit type calls for it ([`.releaserc.json`](.releaserc.json)); pick the type for the release it should cause.
 
-- npm Trusted Publishing is registered to `.github/workflows/ci.yml` and the `release` Environment. Renaming either breaks publishing.
-- Credentials, version writeback, and recovery: [Package releases](https://app.notion.com/p/3e5e75710b52814ab798f9febefb38ed) (Notion).
+npm Trusted Publishing is registered to `.github/workflows/ci.yml` and the `release` Environment. Renaming either breaks publishing.
 
 ## Repository skills
 
