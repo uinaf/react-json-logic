@@ -1,23 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "platformAutomerge": true,
-  "extends": ["github>uinaf/.github:renovate-config"],
+  "extends": ["github>uinaf/.github:renovate-vite-plus"],
   "packageRules": [
     {
       "description": "TypeScript majors are opt-in from the dependency dashboard",
       "matchPackageNames": ["typescript"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
-    },
-    {
-      "description": "Renovate skips the Vite+ toolchain: vitest and @vitest/coverage-v8 must equal the vitest that vite-plus pins, which Renovate cannot derive. Upgrade all four by hand as one change (AGENTS.md, Toolchain)",
-      "matchPackageNames": [
-        "vite-plus",
-        "@voidzero-dev/vite-plus-core",
-        "vitest",
-        "@vitest/coverage-v8"
-      ],
-      "enabled": false
     }
   ]
 }

@@ -19,7 +19,9 @@ Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt -
 
 ## Toolchain
 
-[`renovate.json`](renovate.json) skips the Vite+ toolchain. Upgrade all four packages it lists in one change:
+[`renovate.json`](renovate.json) uses the shared [Vite+ mapping](https://github.com/uinaf/.github/blob/main/renovate-vite-plus.json). It updates the toolchain together using the Vitest version bundled by Vite+.
+
+For a manual upgrade:
 
 1. `pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`
 2. Set the `vitest` and `@vitest/coverage-v8` catalog entries to `npm view vite-plus@<version> dependencies.vitest`.
