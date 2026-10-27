@@ -19,8 +19,6 @@ Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt -
 
 [`renovate.json`](renovate.json) uses the shared [Vite+ mapping](https://github.com/uinaf/.github/blob/main/renovate-vite-plus.json). It updates the toolchain together using the Vitest version bundled by Vite+.
 
-Manual upgrade: [vite-plus-upgrade](.agents/skills/vite-plus-upgrade/SKILL.md).
-
 ## Conventions
 
 - **Headless.** Ship no CSS. A new `data-rjl-*` attribute goes in the [styling table](packages/react-json-logic/README.md#styling).
@@ -39,4 +37,3 @@ npm Trusted Publishing is registered to `.github/workflows/ci.yml` and the `rele
 
 - React effect changes: [react-ban-use-effect](.agents/skills/react-ban-use-effect/SKILL.md).
 - React feature and bug verification or diagnostics: [react-doctor](.agents/skills/react-doctor/SKILL.md).
-- Manual Vite+ upgrade: [vite-plus-upgrade](.agents/skills/vite-plus-upgrade/SKILL.md).
