@@ -15,10 +15,6 @@ Setup and `pnpm verify`: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt --check <file>`; every other change needs `pnpm verify`.
 
-## Toolchain
-
-[`renovate.json`](renovate.json) uses the shared [Vite+ mapping](https://github.com/uinaf/.github/blob/main/renovate-vite-plus.json). It updates the toolchain together using the Vitest version bundled by Vite+.
-
 ## Conventions
 
 - **Headless.** Ship no CSS. A new `data-rjl-*` attribute goes in the [styling table](packages/react-json-logic/README.md#styling).
