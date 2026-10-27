@@ -7,13 +7,11 @@
 
 ## Commands
 
-```bash
-pnpm install --frozen-lockfile
-pnpm verify          # check, build, and tests with coverage
-pnpm dev:example     # run the demo
-```
+Setup and `pnpm verify`: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-In `packages/react-json-logic`, `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack` give a faster loop. Use bare `vp` inside package scripts, and import test utilities from `vite-plus/test`.
+- Fast loop in `packages/react-json-logic`: `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack`.
+- Package scripts call bare `vp`.
+- Import test utilities from `vite-plus/test`.
 
 Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt --check <file>`; every other change needs `pnpm verify`.
 
@@ -21,11 +19,7 @@ Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt -
 
 [`renovate.json`](renovate.json) uses the shared [Vite+ mapping](https://github.com/uinaf/.github/blob/main/renovate-vite-plus.json). It updates the toolchain together using the Vitest version bundled by Vite+.
 
-For a manual upgrade:
-
-1. `pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`
-2. Set the `vitest` and `@vitest/coverage-v8` catalog entries to `npm view vite-plus@<version> dependencies.vitest`.
-3. `pnpm verify`
+Manual upgrade: [vite-plus-upgrade](.agents/skills/vite-plus-upgrade/SKILL.md).
 
 ## Conventions
 
@@ -45,3 +39,4 @@ npm Trusted Publishing is registered to `.github/workflows/ci.yml` and the `rele
 
 - React effect changes: [react-ban-use-effect](.agents/skills/react-ban-use-effect/SKILL.md).
 - React feature and bug verification or diagnostics: [react-doctor](.agents/skills/react-doctor/SKILL.md).
+- Manual Vite+ upgrade: [vite-plus-upgrade](.agents/skills/vite-plus-upgrade/SKILL.md).
