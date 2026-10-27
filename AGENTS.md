@@ -7,25 +7,13 @@
 
 ## Commands
 
-```bash
-pnpm install --frozen-lockfile
-pnpm verify          # check, build, and tests with coverage
-pnpm dev:example     # run the demo
-```
+Setup and `pnpm verify`: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-In `packages/react-json-logic`, `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack` give a faster loop. Use bare `vp` inside package scripts, and import test utilities from `vite-plus/test`.
+- Fast loop in `packages/react-json-logic`: `pnpm exec vp check`, `pnpm exec vp test`, and `pnpm exec vp pack`.
+- Package scripts call bare `vp`.
+- Import test utilities from `vite-plus/test`.
 
 Root docs (`AGENTS.md`, `CONTRIBUTING.md`, `README.md`) need `pnpm exec vp fmt --check <file>`; every other change needs `pnpm verify`.
-
-## Toolchain
-
-[`renovate.json`](renovate.json) uses the shared [Vite+ mapping](https://github.com/uinaf/.github/blob/main/renovate-vite-plus.json). It updates the toolchain together using the Vitest version bundled by Vite+.
-
-For a manual upgrade:
-
-1. `pnpm --package=vite-plus@<version> dlx vp migrate --no-interactive`
-2. Set the `vitest` and `@vitest/coverage-v8` catalog entries to `npm view vite-plus@<version> dependencies.vitest`.
-3. `pnpm verify`
 
 ## Conventions
 
