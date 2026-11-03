@@ -5,16 +5,15 @@ description: "Review or replace React useEffect calls, or enforce a no-direct-ef
 
 # React Ban useEffect
 
-Direct `useEffect` is an external-synchronization escape hatch. Components do
-not call it; a reviewed, domain-specific hook for a real external system may.
+Direct `useEffect` is an external-synchronization escape hatch. It lives in a
+reviewed, domain-specific hook for a real external system; components stay
+effect-free.
 
 ## Scope
 
-Effect replacement changes the touched behavior. Repository-wide lint
-enforcement is a separate task: apply it when requested or required by existing
-repository policy. A review request produces findings; an implementation
-request authorizes in-scope replacements and verification without another
-approval checkpoint.
+Replace effects only in the touched or requested surface. Add
+repository-wide lint enforcement only when requested or required by existing
+repository policy.
 
 ## Workflow
 
@@ -45,27 +44,23 @@ approval checkpoint.
 Put every legitimate effect in a hook named for its external system (a chat
 connection, a map SDK, a widget), in its own file. The hook owns setup and
 cleanup, takes its reactive inputs as parameters, and lists every value setup
-or cleanup reads. The component calling it stays effect-free. Prefer an
-existing repository hook.
+or cleanup reads, so `react-hooks/exhaustive-deps` passes unsuppressed. Prefer
+an existing repository hook.
 
-Never:
-
-- write a generic wrapper that takes a callback and a caller-provided
-  dependency array (`useUpdateEffect(fn, deps)`, `useAsyncEffect(fn, deps)`,
-  `useMountEffect(fn)`);
-- suppress `react-hooks/exhaustive-deps`;
-- use an exception hook to fetch server state, copy props into state, relay
-  user actions, or hide a reset that belongs at a keyed boundary.
+The hook is specific to one external system. A generic wrapper that takes a
+callback and a caller-provided dependency array (`useUpdateEffect(fn, deps)`,
+`useMountEffect(fn)`) is a direct effect under another name, and server state,
+prop copies, user actions, and keyed resets each have their own replacement
+above.
 
 ## Enforcement
 
 When enforcement is in scope, extend the repository's existing linter so it
 rejects both named `useEffect` imports and `React.useEffect(...)` calls. Allow
-only the named, reviewed integration-hook files, never a directory such as
-`src/hooks/**`, and never a generic wrapper; report the wrapper and its callers
-as violations to migrate. Keep the canonical local gate and CI on that same lint
-surface; agent guidance or optional scanners do not replace it. Do not use
-`@latest` diagnostic tools as durable enforcement.
+only the named, reviewed integration-hook files, not a directory such as
+`src/hooks/**`; report generic wrappers and their callers as violations to
+migrate. Run the same lint surface in the canonical local gate and CI, with
+pinned tool versions.
 
 In review, every new direct effect is a finding unless the change documents and
 proves a legitimate external-system boundary. Ask for a replacement, not
@@ -73,9 +68,8 @@ dependency-array tuning.
 
 ## Boundaries
 
-- Scope migrations to the touched or requested surface.
 - Leave `useLayoutEffect`, `useInsertionEffect`, framework lifecycle APIs, and
   non-React effect systems alone, including in lint rules, unless requested.
-- Apply performance primitives only for measured behavior or an established
-  repository pattern.
-- Upstream attribution: [upstream](references/upstream.md).
+- Credit: adapted from Tyler Gibbs'
+  [`useeffect-ban`](https://github.com/tylergibbs1/useeffectban/tree/69d3252c58e33de3c28b3dae504ee13fc40aa137/skills/useeffect-ban)
+  (MIT), not vendored. Add its notice here before copying upstream text or code.
