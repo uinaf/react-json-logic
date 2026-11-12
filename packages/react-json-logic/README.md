@@ -10,7 +10,7 @@ Headless: no CSS ships. Built on [Base UI](https://base-ui.com) primitives.
 pnpm add react-json-logic react react-dom
 ```
 
-Requires React 19 (`react` / `react-dom` peer `^19.0.0`).
+Requires React 19.
 
 ## Usage
 
