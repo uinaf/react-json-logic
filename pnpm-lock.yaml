@@ -187,7 +187,7 @@ overrides:
   nanoid@<3.3.17: 6.0.2
   postcss@<=8.5.22: 8.5.33
   source-map-js@<1.2.2: 1.2.4
-  undici@>=7.0.0 <7.29.0: 8.13.0
+  undici@>=7.0.0 <7.29.0: 8.13.1
   vite@*: npm:@voidzero-dev/vite-plus-core@1.6.0
   vitest@*: 5.1.0
 
