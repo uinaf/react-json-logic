@@ -26,7 +26,6 @@ export default defineConfig({
       "anti-slop/no-runtime-typeof": "off",
       "react/refs": "off",
       "no-console": "off",
-      "no-empty": "off",
       "quality/no-unknown-returns": "off",
       "typescript/no-unsafe-assignment": "off",
       "typescript/no-unsafe-argument": "off",

@@ -57,19 +57,23 @@ const toText = (value: JsonLogicValue | undefined): string => {
 const toBoolean = (value: JsonLogicValue | undefined): boolean =>
   value === true || value === "true" || value === 1;
 
+const parseJsonArray = (text: string): Array<JsonLogicValue> | undefined => {
+  try {
+    const parsed: unknown = JSON.parse(text);
+
+    return Array.isArray(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const toArray = (value: JsonLogicValue | undefined): Array<JsonLogicValue> => {
   if (Array.isArray(value)) {
     return value;
   }
 
   if (typeof value === "string") {
-    try {
-      const parsed: unknown = JSON.parse(value);
-
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    } catch {}
+    return parseJsonArray(value) ?? [];
   }
 
   return [];
@@ -113,13 +117,7 @@ function ArrayEditor({
     if (raw.trim() === "") {
       emitted = [];
     } else {
-      try {
-        const parsed: unknown = JSON.parse(raw);
-
-        if (Array.isArray(parsed)) {
-          emitted = parsed;
-        }
-      } catch {}
+      emitted = parseJsonArray(raw);
     }
 
     const emittedSerialized = emitted === undefined ? undefined : JSON.stringify(emitted);
