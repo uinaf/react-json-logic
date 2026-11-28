@@ -16,7 +16,6 @@ export default defineConfig({
     rules: {
       curly: "off",
       "anti-slop/require-readable-spacing": "off",
-      "import/consistent-type-specifier-style": "off",
       "typescript/no-non-null-assertion": "off",
       "unicorn/catch-error-name": "off",
       "anti-slop/no-runtime-typeof": "off",

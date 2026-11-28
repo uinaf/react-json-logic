@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, test } from "vite-plus/test";
 import { cleanup, render as rtlRender } from "@testing-library/react";
-import { StrictMode, type ReactElement } from "react";
-import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
+import { StrictMode } from "react";
+import type { ReactElement } from "react";
+import JsonLogicBuilder, { applyLogic, rule, validate } from "../src/index.ts";
+import type { JsonLogicValue } from "../src/index.ts";
 
 const render = (ui: ReactElement) => {
   const result = rtlRender(<StrictMode>{ui}</StrictMode>);

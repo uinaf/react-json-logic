@@ -1,10 +1,6 @@
 import { useMemo, useState } from "react";
-import JsonLogicBuilder, {
-  applyLogic,
-  type JsonLogicData,
-  type JsonLogicValue,
-  rule,
-} from "react-json-logic";
+import JsonLogicBuilder, { applyLogic, rule } from "react-json-logic";
+import type { JsonLogicData, JsonLogicValue } from "react-json-logic";
 
 const SAMPLE_DATA = {
   user: { age: 21, name: "Ada" },

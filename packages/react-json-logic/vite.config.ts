@@ -18,7 +18,6 @@ export default defineConfig({
     },
     rules: {
       "uinaf/no-comments": "off",
-      "import/consistent-type-specifier-style": "off",
       curly: "off",
       "anti-slop/require-safety-comment-for-type-assertion": "off",
       "quality/no-chained-type-assertions": "off",

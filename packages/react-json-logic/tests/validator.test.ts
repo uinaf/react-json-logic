@@ -1,11 +1,6 @@
 import { describe, expect, test } from "vite-plus/test";
-import {
-  applyLogic,
-  rule,
-  validate,
-  type JsonLogicValue,
-  type ValidationError,
-} from "../src/index.ts";
+import { applyLogic, rule, validate } from "../src/index.ts";
+import type { JsonLogicValue, ValidationError } from "../src/index.ts";
 
 function validationErrors(value: unknown): Array<ValidationError> {
   const result = validate(value);

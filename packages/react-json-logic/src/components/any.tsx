@@ -1,11 +1,6 @@
 import { useMemo } from "react";
-import {
-  FIELD_TYPES,
-  OPERATORS,
-  type FieldType,
-  type JsonLogicValue,
-  type Operator,
-} from "../operators.ts";
+import { FIELD_TYPES, OPERATORS } from "../operators.ts";
+import type { FieldType, JsonLogicValue, Operator } from "../operators.ts";
 import Accessor from "./accessor.tsx";
 import HigherOrder from "./higher-order.tsx";
 import Input from "./input.tsx";
