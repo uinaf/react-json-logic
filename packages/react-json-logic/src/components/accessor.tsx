@@ -9,7 +9,7 @@ interface Props {
 
 function getIterator(data: unknown): Array<string> | null {
   if (Array.isArray(data)) {
-    const head = data[0];
+    const head: unknown = data[0];
 
     if (head && typeof head === "object") {
       return Object.keys(head);
