@@ -24,7 +24,6 @@ export default defineConfig({
       "quality/no-known-value-widening": "off",
       "anti-slop/no-unknown-parameters": "off",
       "anti-slop/no-runtime-typeof": "off",
-      eqeqeq: "off",
       "react/refs": "off",
       "no-console": "off",
       "no-empty": "off",

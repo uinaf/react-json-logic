@@ -244,7 +244,7 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
           items={[...BOOLEAN_ITEMS]}
           value={value === true ? "true" : "false"}
           onValueChange={(next) => {
-            if (next == null) {
+            if (next === null || next === undefined) {
               return;
             }
 
