@@ -19,7 +19,6 @@ export default defineConfig({
     overrides: [{ files: ["src/builder.ts"], rules: { "uinaf/no-comments": "off" } }],
     rules: {
       "anti-slop/require-safety-comment-for-type-assertion": "off",
-      "quality/no-chained-type-assertions": "off",
       "quality/no-unsafe-dictionary-type": "off",
       "quality/no-known-value-widening": "off",
       "anti-slop/no-unknown-parameters": "off",
