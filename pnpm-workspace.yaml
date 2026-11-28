@@ -21,4 +21,5 @@ peerDependencyRules:
     vite: "*"
     vitest: "*"
 minimumReleaseAgeExclude:
-  - "@uinaf/oxlint-config@1.0.0"
+  - "@uinaf/oxlint-config"
+  - "@uinaf/oxlint-plugin-no-comments"
