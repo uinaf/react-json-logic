@@ -64,8 +64,12 @@ for (const mode of [
       },
       nextRelease: { version: "1.0.1", gitHead: expected },
     };
-    if (mode === "wrong-checkout") context.env.GITHUB_SHA = "a".repeat(40);
-    if (mode === "wrong-release-head") context.nextRelease.gitHead = "a".repeat(40);
+    if (mode === "wrong-checkout") {
+      context.env.GITHUB_SHA = "a".repeat(40);
+    }
+    if (mode === "wrong-release-head") {
+      context.nextRelease.gitHead = "a".repeat(40);
+    }
     let created = "";
     if (mode === "advanced-before") {
       fs.writeFileSync(
@@ -74,12 +78,15 @@ for (const mode of [
       );
       commit(remote);
     }
-    if (mode === "source-edit") fs.writeFileSync(path.join(cwd, "source.txt"), "unverified\n");
-    if (mode === "manifest-edit")
+    if (mode === "source-edit") {
+      fs.writeFileSync(path.join(cwd, "source.txt"), "unverified\n");
+    }
+    if (mode === "manifest-edit") {
       fs.writeFileSync(
         path.join(cwd, "packages/react-json-logic/package.json"),
         JSON.stringify({ name: "other", version: "1.0.1" }),
       );
+    }
     const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (url, options) => {
       assert.equal(url, "https://api.github.com/graphql");
       assert(typeof options?.body === "string");
@@ -97,21 +104,26 @@ for (const mode of [
           contents: Buffer.from(content).toString("base64"),
         },
       ]);
-      if (mode === "http-error") return new Response("denied", { status: 403 });
-      if (mode === "advanced-before")
+      if (mode === "http-error") {
+        return new Response("denied", { status: 403 });
+      }
+      if (mode === "advanced-before") {
         return Response.json({
           data: null,
           errors: [{ message: "expectedHeadOid does not match branch head" }],
         });
+      }
       if (mode === "wrong-parent") {
         fs.writeFileSync(path.join(remote, "source.txt"), "raced\n");
         commit(remote);
       }
       fs.writeFileSync(path.join(remote, "packages/react-json-logic/package.json"), content);
-      if (mode === "returned-source-edit")
+      if (mode === "returned-source-edit") {
         fs.writeFileSync(path.join(remote, "source.txt"), "unverified\n");
-      if (mode === "returned-manifest-edit")
+      }
+      if (mode === "returned-manifest-edit") {
         fs.appendFileSync(path.join(remote, "packages/react-json-logic/package.json"), "\n");
+      }
       created = commit(remote);
       if (mode === "advanced-after") {
         fs.writeFileSync(path.join(remote, "source.txt"), "newer source\n");
@@ -136,7 +148,9 @@ for (const mode of [
           fs.readFileSync(path.join(cwd, "packages/react-json-logic/package.json"), "utf8"),
           content,
         );
-        if (mode === "advanced-after") assert.notEqual(git(remote, "rev-parse", "HEAD"), created);
+        if (mode === "advanced-after") {
+          assert.notEqual(git(remote, "rev-parse", "HEAD"), created);
+        }
       } else {
         await assert.rejects(
           prepare({}, context),
@@ -147,14 +161,18 @@ for (const mode of [
           mode === "wrong-release-head" ? "a".repeat(40) : expected,
         );
         assert.equal(git(cwd, "rev-parse", "HEAD"), expected);
-        if (mode === "fetch-failure") assert.equal(git(remote, "rev-parse", "HEAD"), created);
-        if (mode === "advanced-before")
+        if (mode === "fetch-failure") {
+          assert.equal(git(remote, "rev-parse", "HEAD"), created);
+        }
+        if (mode === "advanced-before") {
           assert.match(
             fs.readFileSync(path.join(remote, "packages/react-json-logic/package.json"), "utf8"),
             /newDependency/,
           );
-        if (mode === "source-edit" || mode === "manifest-edit")
+        }
+        if (mode === "source-edit" || mode === "manifest-edit") {
           assert.equal(fetchMock.mock.calls.length, 0);
+        }
       }
       assert.equal(git(remote, "tag", "--list"), "");
     } finally {

@@ -53,7 +53,9 @@ describe("edge-case value shapes", () => {
 
   test("renders a deeply nested rule (10+ levels)", () => {
     let r: JsonLogicValue = 1;
-    for (let i = 0; i < 12; i += 1) r = rule.add(r, 1);
+    for (let i = 0; i < 12; i += 1) {
+      r = rule.add(r, 1);
+    }
     const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={r} />);
     expect(container.querySelectorAll("[data-rjl-operator-trigger]").length).toBeGreaterThanOrEqual(
       12,
@@ -96,14 +98,18 @@ describe("edge-case accessor and data shapes", () => {
 describe("edge-case validation", () => {
   test("flags unary not with two operands", () => {
     const result = validate({ "!": [true, false] });
-    if (result.ok) throw new Error("expected unary not to reject two operands");
+    if (result.ok) {
+      throw new Error("expected unary not to reject two operands");
+    }
     expect(result.errors[0]?.path).toBe("$.!");
   });
 
   test("walks deeply nested rules and reports all errors", () => {
     const bad = rule.and({ "===": [1] }, { "<": [1, 2, 3, 4] }, true);
     const result = validate(bad);
-    if (result.ok) throw new Error("expected nested arity errors");
+    if (result.ok) {
+      throw new Error("expected nested arity errors");
+    }
     expect(result.errors).toHaveLength(2);
     expect(result.errors[0]?.path).toMatch(/and\[0]/);
     expect(result.errors[1]?.path).toMatch(/and\[1]/);

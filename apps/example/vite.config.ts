@@ -14,7 +14,6 @@ export default defineConfig({
       typeCheck: true,
     },
     rules: {
-      curly: "off",
       "anti-slop/require-readable-spacing": "off",
       "typescript/no-non-null-assertion": "off",
       "unicorn/catch-error-name": "off",

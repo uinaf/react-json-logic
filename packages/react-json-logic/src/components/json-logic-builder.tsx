@@ -31,7 +31,9 @@ export function JsonLogicBuilder({
   onDataErrorRef.current = onDataError;
 
   const parseResult = useMemo<ParseResult>(() => {
-    if (typeof data !== "string") return { ok: true, data };
+    if (typeof data !== "string") {
+      return { ok: true, data };
+    }
     try {
       const parsed: unknown = JSON.parse(data);
       if (parsed !== null && typeof parsed === "object") {
@@ -52,12 +54,19 @@ export function JsonLogicBuilder({
       lastReportedRaw.current = null;
       return;
     }
-    if (lastReportedRaw.current === failedRaw) return;
+    if (lastReportedRaw.current === failedRaw) {
+      return;
+    }
     lastReportedRaw.current = failedRaw;
-    if (parseResult.ok) return;
+    if (parseResult.ok) {
+      return;
+    }
     const cb = onDataErrorRef.current;
-    if (cb) cb(parseResult.error, parseResult.raw);
-    else console.warn("[react-json-logic] data prop is not valid JSON:", parseResult.error);
+    if (cb) {
+      cb(parseResult.error, parseResult.raw);
+    } else {
+      console.warn("[react-json-logic] data prop is not valid JSON:", parseResult.error);
+    }
   }, [failedRaw, parseResult]);
 
   const parsedData: JsonLogicData = parseResult.ok ? parseResult.data : {};

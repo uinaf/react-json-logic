@@ -83,7 +83,9 @@ describe("OPERATORS table", () => {
       expect(operator.label.trim()).not.toBe("");
       expect(operator.fieldCount.min).toBeGreaterThanOrEqual(0);
       expect(operator.fieldCount.min).toBeLessThanOrEqual(operator.fieldCount.max);
-      for (const field of operator.fields) expect(fieldTypes).toContain(field);
+      for (const field of operator.fields) {
+        expect(fieldTypes).toContain(field);
+      }
     }
   });
 
@@ -331,7 +333,9 @@ describe("imported operands", () => {
     expect(screen.getAllByRole("spinbutton")).toHaveLength(100);
     expect(screen.queryByRole("button", { name: "Add field" })).toBeNull();
     const [firstInput] = screen.getAllByRole("spinbutton");
-    if (!firstInput) throw new Error("expected the first operand input");
+    if (!firstInput) {
+      throw new Error("expected the first operand input");
+    }
     fireEvent.change(firstInput, { target: { value: "2" } });
     expect(onChange).toHaveBeenLastCalledWith({ "+": [2, ...operands.slice(1)] });
   });

@@ -62,7 +62,9 @@ function walk(
   errors: Array<ValidationError>,
   isArrayElement = false,
 ): void {
-  if (node === null || typeof node !== "object") return;
+  if (node === null || typeof node !== "object") {
+    return;
+  }
   if (Array.isArray(node)) {
     node.forEach((item, i) => walk(item, `${path}[${i}]`, errors, true));
     return;
@@ -71,11 +73,15 @@ function walk(
   const obj = node as Record<string, unknown>;
   const keys = Object.keys(obj);
 
-  if (keys.length === 0) return;
+  if (keys.length === 0) {
+    return;
+  }
   if (keys.length > 1) {
     // json-logic-js preserves multi-key objects inside arrays as literal
     // records rather than interpreting them as operator objects.
-    if (isArrayElement) return;
+    if (isArrayElement) {
+      return;
+    }
     errors.push({
       path,
       message: `Operator object should have exactly one key, found ${keys.length}: ${keys.join(", ")}`,
@@ -84,14 +90,18 @@ function walk(
   }
 
   const [key] = keys;
-  if (key === undefined) return;
+  if (key === undefined) {
+    return;
+  }
   const op = OPERATORS.find((o) => o.signature === key);
 
   // Custom operators remain valid, but their arguments still get checked.
   const args = obj[key];
 
   if (Array.isArray(args)) {
-    if (op) pushArityErrors(op, key, path, args.length, errors);
+    if (op) {
+      pushArityErrors(op, key, path, args.length, errors);
+    }
     args.forEach((arg, i) => walk(arg, `${path}.${key}[${i}]`, errors, true));
     return;
   }

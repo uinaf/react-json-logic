@@ -29,8 +29,9 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
   assert(token, "Release token required");
   const git = (...args: Array<string>) =>
     execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
-  if (git("rev-parse", "HEAD") !== expected || nextRelease.gitHead !== expected)
+  if (git("rev-parse", "HEAD") !== expected || nextRelease.gitHead !== expected) {
     throw new Error("release checkout must match the verified event commit");
+  }
   if (
     git(
       "diff",
@@ -40,17 +41,19 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
       ".",
       ":(exclude)packages/react-json-logic/package.json",
     )
-  )
+  ) {
     throw new Error(
       "release preparation changed files other than packages/react-json-logic/package.json",
     );
+  }
   const before = record(
     JSON.parse(git("show", `${expected}:packages/react-json-logic/package.json`)),
   );
   const content = fs.readFileSync(path.join(cwd, "packages/react-json-logic/package.json"));
   const prepared = record(JSON.parse(content.toString("utf8")));
-  if (!isDeepStrictEqual(prepared, { ...before, version: nextRelease.version }))
+  if (!isDeepStrictEqual(prepared, { ...before, version: nextRelease.version })) {
     throw new Error("release preparation must change only the package version");
+  }
 
   // GitHub signs this commit and rejects a moved branch atomically. A preflight
   // against main would leave a race between reading its head and writing it.
@@ -79,7 +82,9 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
       },
     }),
   });
-  if (!response.ok) throw new Error(`release writeback failed: GitHub HTTP ${response.status}`);
+  if (!response.ok) {
+    throw new Error(`release writeback failed: GitHub HTTP ${response.status}`);
+  }
   const result = record(await response.json());
   if (result.errors !== undefined) {
     assert(Array.isArray(result.errors), "Expected GraphQL errors array");
@@ -97,8 +102,9 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
   // main may advance after the mutation. Fetch and tag the returned commit,
   // never the moving branch. A failure here leaves writeback without a release.
   git("fetch", "origin", committed);
-  if (git("show", "-s", "--format=%P", committed) !== expected)
+  if (git("show", "-s", "--format=%P", committed) !== expected) {
     throw new Error("release writeback has an unexpected parent");
+  }
   if (
     git(
       "diff",
@@ -109,16 +115,18 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
       ".",
       ":(exclude)packages/react-json-logic/package.json",
     )
-  )
+  ) {
     throw new Error(
       "release writeback changed source outside packages/react-json-logic/package.json",
     );
+  }
   if (
     !execFileSync("git", ["show", `${committed}:packages/react-json-logic/package.json`], {
       cwd,
     }).equals(content)
-  )
+  ) {
     throw new Error("release writeback does not match the prepared package");
+  }
   git("reset", "--hard", committed);
   nextRelease.gitHead = committed;
 }

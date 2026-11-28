@@ -10,7 +10,9 @@ interface Props {
 function getIterator(data: unknown): Array<string> | null {
   if (Array.isArray(data)) {
     const head = data[0];
-    if (head && typeof head === "object") return Object.keys(head);
+    if (head && typeof head === "object") {
+      return Object.keys(head);
+    }
     return null;
   }
   if (data !== null && typeof data === "object") {
@@ -25,7 +27,9 @@ export function Accessor({ value = "", data = {}, onChange }: Props) {
   const renderSelector = (current: unknown, level: number): ReactNode => {
     const levelValue = splitValue[level] ?? "";
     const iterator = getIterator(current);
-    if (!iterator) return null;
+    if (!iterator) {
+      return null;
+    }
 
     const handleChange = (newText: string) => {
       const next = splitValue.slice(0, level);

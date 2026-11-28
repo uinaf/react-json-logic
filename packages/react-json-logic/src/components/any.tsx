@@ -26,7 +26,9 @@ function isPlainObject(value: unknown): value is Record<string, JsonLogicValue> 
 }
 
 function getOperands(value: JsonLogicValue | undefined): Array<JsonLogicValue> {
-  if (Array.isArray(value)) return value;
+  if (Array.isArray(value)) {
+    return value;
+  }
   return value === undefined ? [] : [value];
 }
 

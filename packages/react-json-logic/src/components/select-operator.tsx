@@ -19,7 +19,9 @@ export function SelectOperator({ value, options, onChange }: Props) {
   }));
 
   const handleChange = (next: string | null) => {
-    if (next != null) onChange(next);
+    if (next != null) {
+      onChange(next);
+    }
   };
 
   return (

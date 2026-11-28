@@ -24,17 +24,31 @@ interface Props {
 }
 
 const getType = (value: JsonLogicValue | undefined, fallback: InputType): InputType => {
-  if (typeof value === "number" && Number.isFinite(value)) return "number";
-  if (typeof value === "boolean") return "boolean";
-  if (value === null) return "null";
-  if (Array.isArray(value)) return "array";
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return "number";
+  }
+  if (typeof value === "boolean") {
+    return "boolean";
+  }
+  if (value === null) {
+    return "null";
+  }
+  if (Array.isArray(value)) {
+    return "array";
+  }
   return fallback;
 };
 
 const toText = (value: JsonLogicValue | undefined): string => {
-  if (value === null || value === undefined) return "";
-  if (typeof value === "string") return value;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (value === null || value === undefined) {
+    return "";
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
   return JSON.stringify(value);
 };
 
@@ -42,11 +56,15 @@ const toBoolean = (value: JsonLogicValue | undefined): boolean =>
   value === true || value === "true" || value === 1;
 
 const toArray = (value: JsonLogicValue | undefined): Array<JsonLogicValue> => {
-  if (Array.isArray(value)) return value;
+  if (Array.isArray(value)) {
+    return value;
+  }
   if (typeof value === "string") {
     try {
       const parsed: unknown = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
     } catch {}
   }
   return [];
@@ -89,7 +107,9 @@ function ArrayEditor({
     } else {
       try {
         const parsed: unknown = JSON.parse(raw);
-        if (Array.isArray(parsed)) emitted = parsed;
+        if (Array.isArray(parsed)) {
+          emitted = parsed;
+        }
       } catch {}
     }
     const emittedSerialized = emitted === undefined ? undefined : JSON.stringify(emitted);
@@ -102,7 +122,9 @@ function ArrayEditor({
             : emittedSerialized;
       return { ...current, draft: raw, pendingValue };
     });
-    if (emitted !== undefined) onChange(emitted);
+    if (emitted !== undefined) {
+      onChange(emitted);
+    }
   };
 
   return (
@@ -123,7 +145,9 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
   const type = useMemo<InputType>(() => getType(value, typeProp), [value, typeProp]);
 
   const onTypeChange = (next: InputType | null) => {
-    if (!next) return;
+    if (!next) {
+      return;
+    }
     switch (next) {
       case "number": {
         const n = parseFloat(toText(value));
@@ -198,7 +222,9 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
           items={[...BOOLEAN_ITEMS]}
           value={value === true ? "true" : "false"}
           onValueChange={(next) => {
-            if (next == null) return;
+            if (next == null) {
+              return;
+            }
             onChange(next === "true");
           }}
         >

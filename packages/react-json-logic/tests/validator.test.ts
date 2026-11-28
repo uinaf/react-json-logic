@@ -4,7 +4,9 @@ import type { JsonLogicValue, ValidationError } from "../src/index.ts";
 
 function validationErrors(value: unknown): Array<ValidationError> {
   const result = validate(value);
-  if (result.ok) throw new Error(`expected validation errors for ${JSON.stringify(value)}`);
+  if (result.ok) {
+    throw new Error(`expected validation errors for ${JSON.stringify(value)}`);
+  }
   return result.errors;
 }
 
