@@ -3,11 +3,17 @@ import type { JsonLogicValue } from "./operators.ts";
 import type { JsonLogicData } from "./components/json-logic-builder.tsx";
 
 export { default } from "./components/json-logic-builder.tsx";
+
 export type { JsonLogicData, JsonLogicBuilderProps } from "./components/json-logic-builder.tsx";
+
 export { OPERATORS, FIELD_TYPES } from "./operators.ts";
+
 export type { FieldType, Operator, JsonLogicValue } from "./operators.ts";
+
 export { rule } from "./builder.ts";
+
 export { validate } from "./validator.ts";
+
 export type { ValidationError, ValidationResult } from "./validator.ts";
 
 /**

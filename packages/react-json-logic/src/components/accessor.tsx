@@ -10,14 +10,18 @@ interface Props {
 function getIterator(data: unknown): Array<string> | null {
   if (Array.isArray(data)) {
     const head = data[0];
+
     if (head && typeof head === "object") {
       return Object.keys(head);
     }
+
     return null;
   }
+
   if (data !== null && typeof data === "object") {
     return Object.keys(data as Record<string, unknown>);
   }
+
   return null;
 }
 
@@ -27,6 +31,7 @@ export function Accessor({ value = "", data = {}, onChange }: Props) {
   const renderSelector = (current: unknown, level: number): ReactNode => {
     const levelValue = splitValue[level] ?? "";
     const iterator = getIterator(current);
+
     if (!iterator) {
       return null;
     }

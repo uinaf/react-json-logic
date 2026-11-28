@@ -22,7 +22,6 @@ export default defineConfig({
       "quality/no-chained-type-assertions": "off",
       "quality/no-unsafe-dictionary-type": "off",
       "quality/no-known-value-widening": "off",
-      "anti-slop/require-readable-spacing": "off",
       "anti-slop/no-unknown-parameters": "off",
       "anti-slop/no-runtime-typeof": "off",
       eqeqeq: "off",

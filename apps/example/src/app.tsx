@@ -47,9 +47,11 @@ export default function App() {
   const { data, dataError } = useMemo(() => {
     try {
       const parsed: unknown = JSON.parse(dataText);
+
       if (parsed !== null && typeof parsed === "object") {
         return { data: parsed as JsonLogicData, dataError: null as string | null };
       }
+
       return { data: {} as JsonLogicData, dataError: "data must be an object or array" };
     } catch (err) {
       return {
@@ -61,6 +63,7 @@ export default function App() {
 
   let evaluated: unknown = null;
   let evalError: string | null = null;
+
   try {
     evaluated = applyLogic(r, data);
   } catch (err) {

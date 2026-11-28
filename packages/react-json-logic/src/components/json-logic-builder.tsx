@@ -34,11 +34,14 @@ export function JsonLogicBuilder({
     if (typeof data !== "string") {
       return { ok: true, data };
     }
+
     try {
       const parsed: unknown = JSON.parse(data);
+
       if (parsed !== null && typeof parsed === "object") {
         return { ok: true, data: parsed as JsonLogicData };
       }
+
       return { ok: false, error: new Error("data must be an object or array"), raw: data };
     } catch (error) {
       return { ok: false, error, raw: data };
@@ -52,16 +55,22 @@ export function JsonLogicBuilder({
   useEffect(() => {
     if (failedRaw === null) {
       lastReportedRaw.current = null;
+
       return;
     }
+
     if (lastReportedRaw.current === failedRaw) {
       return;
     }
+
     lastReportedRaw.current = failedRaw;
+
     if (parseResult.ok) {
       return;
     }
+
     const cb = onDataErrorRef.current;
+
     if (cb) {
       cb(parseResult.error, parseResult.raw);
     } else {

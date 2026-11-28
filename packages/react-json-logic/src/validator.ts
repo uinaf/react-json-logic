@@ -29,6 +29,7 @@ export type ValidationResult = { ok: true } | { ok: false; errors: Array<Validat
 export function validate(rule: unknown): ValidationResult {
   const errors: Array<ValidationError> = [];
   walk(rule, "$", errors);
+
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
 
@@ -42,12 +43,14 @@ function pushArityErrors(
   const variadicMinimum = VARIADIC_MINIMUMS.get(key);
   const min = variadicMinimum ?? op.fieldCount.min;
   const max = variadicMinimum === undefined ? op.fieldCount.max : Infinity;
+
   if (argCount < min) {
     errors.push({
       path: `${path}.${key}`,
       message: `${key}: expected at least ${min} arg(s), got ${argCount}`,
     });
   }
+
   if (argCount > max) {
     errors.push({
       path: `${path}.${key}`,
@@ -65,8 +68,10 @@ function walk(
   if (node === null || typeof node !== "object") {
     return;
   }
+
   if (Array.isArray(node)) {
     node.forEach((item, i) => walk(item, `${path}[${i}]`, errors, true));
+
     return;
   }
 
@@ -76,23 +81,28 @@ function walk(
   if (keys.length === 0) {
     return;
   }
+
   if (keys.length > 1) {
     // json-logic-js preserves multi-key objects inside arrays as literal
     // records rather than interpreting them as operator objects.
     if (isArrayElement) {
       return;
     }
+
     errors.push({
       path,
       message: `Operator object should have exactly one key, found ${keys.length}: ${keys.join(", ")}`,
     });
+
     return;
   }
 
   const [key] = keys;
+
   if (key === undefined) {
     return;
   }
+
   const op = OPERATORS.find((o) => o.signature === key);
 
   // Custom operators remain valid, but their arguments still get checked.
@@ -102,7 +112,9 @@ function walk(
     if (op) {
       pushArityErrors(op, key, path, args.length, errors);
     }
+
     args.forEach((arg, i) => walk(arg, `${path}.${key}[${i}]`, errors, true));
+
     return;
   }
 
@@ -111,5 +123,6 @@ function walk(
   if (op && key !== "var") {
     pushArityErrors(op, key, path, 1, errors);
   }
+
   walk(args, `${path}.${key}`, errors);
 }

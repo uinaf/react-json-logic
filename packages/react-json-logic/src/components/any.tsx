@@ -29,6 +29,7 @@ function getOperands(value: JsonLogicValue | undefined): Array<JsonLogicValue> {
   if (Array.isArray(value)) {
     return value;
   }
+
   return value === undefined ? [] : [value];
 }
 
@@ -37,6 +38,7 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
 
   if (isPlainObject(value)) {
     const [first] = Object.keys(value);
+
     if (first === undefined) {
       field = "";
     } else {
@@ -52,6 +54,7 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
 
   if (selectedOperator && isPlainObject(value)) {
     const valueAtField = value[field];
+
     if (
       Array.isArray(valueAtField) &&
       valueAtField.length > fields.length &&
@@ -61,6 +64,7 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
         valueAtField.length - fields.length,
         selectedOperator.fieldCount.max - fields.length,
       );
+
       for (let i = 0; i < extra; i += 1) {
         fields.push(FIELD_TYPES.ANY);
       }
@@ -75,9 +79,11 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
 
   const availableOperators = useMemo(() => {
     let operators = OPERATORS.filter((op) => !op.notAvailableUnder.includes(parent));
+
     if (Object.keys(data).length === 0) {
       operators = operators.filter((op) => op.signature !== "var");
     }
+
     return operators;
   }, [parent, data]);
 
@@ -98,11 +104,14 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
   const onChildValueChange = (childValue: JsonLogicValue, index: number) => {
     if (field === "value") {
       onChange(childValue);
+
       return;
     }
+
     updateChildArray((arr) => {
       const next = [...arr];
       next[index] = childValue;
+
       return next;
     });
   };
@@ -120,6 +129,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
 
   const renderChild = (childField: FieldType, index: number) => {
     let childValue: JsonLogicValue = "";
+
     if (field === "value") {
       childValue = value === undefined ? "" : value;
     } else if (isPlainObject(value)) {
@@ -130,6 +140,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     const childOnChange = (val: JsonLogicValue) => onChildValueChange(val, index);
 
     let element: React.ReactNode;
+
     switch (childField) {
       case "any":
         element = <Any parent={field} value={childValue} data={data} onChange={childOnChange} />;

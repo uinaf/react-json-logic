@@ -10,6 +10,7 @@ import type { JsonLogicValue } from "../src/index.ts";
 // mounted subtree and its error-report dedupe state.
 const render = (ui: ReactElement) => {
   const result = rtlRender(<StrictMode>{ui}</StrictMode>);
+
   return {
     ...result,
     rerender: (nextUi: ReactElement) => result.rerender(<StrictMode>{nextUi}</StrictMode>),
@@ -25,6 +26,7 @@ function StatefulHost(props: {
   onChange?: (next: JsonLogicValue) => void;
 }) {
   const [value, setValue] = useState<JsonLogicValue>(props.initial ?? "");
+
   return (
     <JsonLogicBuilder
       value={value}
@@ -74,15 +76,18 @@ describe("OPERATORS table", () => {
       "map",
       "filter",
     ];
+
     const signatures = OPERATORS.map((operator) => operator.signature);
     expect(signatures).toHaveLength(expectedSignatures.length);
     expect(new Set(signatures)).toEqual(new Set(expectedSignatures));
 
     const fieldTypes: Array<string> = Object.values(FIELD_TYPES);
+
     for (const operator of OPERATORS) {
       expect(operator.label.trim()).not.toBe("");
       expect(operator.fieldCount.min).toBeGreaterThanOrEqual(0);
       expect(operator.fieldCount.min).toBeLessThanOrEqual(operator.fieldCount.max);
+
       for (const field of operator.fields) {
         expect(fieldTypes).toContain(field);
       }
@@ -98,6 +103,7 @@ describe("OPERATORS table", () => {
       "map",
       "filter",
     ]);
+
     for (const op of hofs) {
       expect(op.fieldCount.min).toBe(2);
       expect(op.fieldCount.max).toBe(2);
@@ -193,6 +199,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
         data={{ items: [{ x: 1 }] }}
       />,
     );
+
     expect(screen.queryAllByText("some")).not.toHaveLength(0);
     const arrows = container.querySelectorAll("[data-rjl-higher-order-arrow]");
     expect(arrows.length).toBe(1);
@@ -209,6 +216,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ var: ["a.b"] }} data={{ a: { b: 1 } }} />,
     );
+
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
   });
 
@@ -216,6 +224,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ var: "a.b" }} data={{ a: { b: 1 } }} />,
     );
+
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
     const inputs = container.querySelectorAll("[data-rjl-accessor-input]");
     expect(inputs.length).toBeGreaterThanOrEqual(2);
@@ -231,6 +240,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
         data={JSON.stringify({ a: 1 })}
       />,
     );
+
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
   });
 
@@ -242,6 +252,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
         data={[{ a: 1, b: 2 }] as unknown as Record<string, unknown>}
       />,
     );
+
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
   });
 
@@ -255,6 +266,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ and: [true, false] }} />,
     );
+
     const bools = container.querySelectorAll("[data-rjl-input-boolean]");
     expect(bools.length).toBe(2);
     expect(container.querySelectorAll("input[data-rjl-input-value]").length).toBe(0);
@@ -264,6 +276,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ and: [null, true] }} />,
     );
+
     const inputs = container.querySelectorAll("[data-rjl-input]");
     const nullType = inputs[0]?.querySelector("[data-rjl-input-type-trigger]");
     expect(nullType?.textContent).toBe("null");
@@ -273,6 +286,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ in: ["a", ["a", "b"]] }} />,
     );
+
     const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
     expect(editor).not.toBeNull();
     expect(JSON.parse(editor.value)).toEqual(["a", "b"]);
@@ -297,6 +311,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
       { rule: { merge: [[1], [2]] }, label: "merge" },
       { rule: { missing: ["x", "y"] }, label: "missing" },
     ];
+
     for (const { rule, label } of cases) {
       cleanup();
       render(<JsonLogicBuilder onChange={ignoreChange} value={rule} />);
@@ -314,6 +329,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
         value={{ unknownOp: [1, 2] } satisfies JsonLogicValue}
       />,
     );
+
     expect(container.querySelector("input[data-rjl-input-value]")).not.toBeNull();
   });
 
@@ -321,6 +337,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} value={{ or: [true, false, true, false] }} />,
     );
+
     expect(container.querySelectorAll("[data-rjl-field]").length).toBeGreaterThanOrEqual(4);
   });
 });
@@ -333,9 +350,11 @@ describe("imported operands", () => {
     expect(screen.getAllByRole("spinbutton")).toHaveLength(100);
     expect(screen.queryByRole("button", { name: "Add field" })).toBeNull();
     const [firstInput] = screen.getAllByRole("spinbutton");
+
     if (!firstInput) {
       throw new Error("expected the first operand input");
     }
+
     fireEvent.change(firstInput, { target: { value: "2" } });
     expect(onChange).toHaveBeenLastCalledWith({ "+": [2, ...operands.slice(1)] });
   });
@@ -364,6 +383,7 @@ describe("imported operands", () => {
     const { container, rerender } = render(
       <JsonLogicBuilder value={{ "!": false }} onChange={ignoreChange} />,
     );
+
     expect(container.querySelector("[data-rjl-input-boolean]")?.textContent).toBe("false");
     rerender(<JsonLogicBuilder value={{ "!": null }} onChange={ignoreChange} />);
     expect(container.querySelector("[data-rjl-input-type-trigger]")?.textContent).toBe("null");
@@ -384,9 +404,11 @@ describe("imported operands", () => {
 
   test("keeps conditional removal at the actual operand minimum", () => {
     const onChange = vi.fn();
+
     const { rerender } = render(
       <JsonLogicBuilder value={{ if: [true, "yes"] }} onChange={onChange} />,
     );
+
     expect(screen.queryByRole("button", { name: /Remove field/ })).toBeNull();
     rerender(<StatefulHost initial={{ if: [true, "yes", "no"] }} onChange={onChange} />);
     fireEvent.click(screen.getByRole("button", { name: "Remove field 3" }));
@@ -429,9 +451,11 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
 
   test("removeField drops the entry at the given index through onChange", () => {
     const onChange = vi.fn();
+
     const { container } = render(
       <JsonLogicBuilder onChange={onChange} value={{ "+": [1, 2, 3] }} />,
     );
+
     const removeButtons = container.querySelectorAll("[data-rjl-remove]");
     expect(removeButtons).toHaveLength(3);
     fireEvent.click(removeButtons[0]!);
@@ -459,6 +483,7 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
 
   test("typing into a higher-order predicate input emits a canonical-shaped rule", () => {
     const onChange = vi.fn();
+
     const { container } = render(
       <JsonLogicBuilder
         onChange={onChange}
@@ -466,9 +491,11 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
         data={{ items: [1, 2, 3] }}
       />,
     );
+
     const innerInput = container.querySelector(
       "[data-rjl-higher-order-child] input[data-rjl-input-value]",
     ) as HTMLInputElement;
+
     expect(innerInput).not.toBeNull();
     fireEvent.change(innerInput, { target: { value: "x" } });
     const emitted = onChange.mock.calls.at(-1)?.[0] as Record<string, unknown>;
@@ -540,9 +567,11 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
 
   test("editing an array literal textarea emits the parsed array", () => {
     const onChange = vi.fn();
+
     const { container } = render(
       <JsonLogicBuilder onChange={onChange} value={[] as JsonLogicValue} />,
     );
+
     const editor = container.querySelector("[data-rjl-input-array]") as HTMLTextAreaElement;
     expect(editor).not.toBeNull();
     expect(editor.getAttribute("aria-label")).toBe("Array value");
@@ -719,9 +748,11 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
   test("typing into the accessor input accumulates into the var path", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
+
     const { container } = render(
       <StatefulHost initial={{ var: [""] }} data={{ alpha: 1, beta: 2 }} onChange={onChange} />,
     );
+
     const accessorInput = container.querySelector("[data-rjl-accessor-input]") as HTMLInputElement;
     expect(accessorInput).not.toBeNull();
     await user.click(accessorInput);
@@ -732,9 +763,11 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
 
   test("editing a var string shorthand normalizes to the array form", () => {
     const onChange = vi.fn();
+
     const { container } = render(
       <StatefulHost initial={{ var: "alpha" }} data={{ alpha: 1, beta: 2 }} onChange={onChange} />,
     );
+
     const accessorInput = container.querySelector("[data-rjl-accessor-input]") as HTMLInputElement;
     expect(accessorInput).not.toBeNull();
     expect(accessorInput.value).toBe("alpha");
@@ -763,9 +796,11 @@ describe("<JsonLogicBuilder /> error reporting", () => {
 
   test("re-fires onDataError after a recovery (invalid → valid → invalid)", () => {
     const onDataError = vi.fn();
+
     const { rerender } = render(
       <JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />,
     );
+
     expect(onDataError).toHaveBeenCalledTimes(1);
     expect(onDataError.mock.calls[0]?.[1]).toBe("{bad");
 
@@ -785,9 +820,11 @@ describe("<JsonLogicBuilder /> error reporting", () => {
 
   test.each(["null", "42", "true"])("reports primitive JSON %s", (raw) => {
     const onDataError = vi.fn();
+
     const { container } = render(
       <JsonLogicBuilder onChange={ignoreChange} data={raw} onDataError={onDataError} />,
     );
+
     expect(onDataError).toHaveBeenCalledTimes(1);
     expect(onDataError.mock.calls[0]?.[1]).toBe(raw);
     expect(container.querySelector("[data-rjl-builder]")).not.toBeNull();
@@ -803,9 +840,11 @@ describe("<JsonLogicBuilder /> error reporting", () => {
 
   test("does not fire onDataError twice for the same persistent malformed data", () => {
     const onDataError = vi.fn();
+
     const { rerender } = render(
       <JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />,
     );
+
     expect(onDataError).toHaveBeenCalledTimes(1);
     rerender(<JsonLogicBuilder onChange={ignoreChange} data={"{bad"} onDataError={onDataError} />);
     expect(onDataError).toHaveBeenCalledTimes(1);

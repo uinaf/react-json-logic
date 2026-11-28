@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import type { JsonLogicValue } from "../operators.ts";
 
 const INPUT_TYPES = ["text", "number", "boolean", "null", "array"] as const;
+
 type InputType = (typeof INPUT_TYPES)[number];
 
 const BOOLEAN_ITEMS = [
@@ -27,15 +28,19 @@ const getType = (value: JsonLogicValue | undefined, fallback: InputType): InputT
   if (typeof value === "number" && Number.isFinite(value)) {
     return "number";
   }
+
   if (typeof value === "boolean") {
     return "boolean";
   }
+
   if (value === null) {
     return "null";
   }
+
   if (Array.isArray(value)) {
     return "array";
   }
+
   return fallback;
 };
 
@@ -43,12 +48,15 @@ const toText = (value: JsonLogicValue | undefined): string => {
   if (value === null || value === undefined) {
     return "";
   }
+
   if (typeof value === "string") {
     return value;
   }
+
   if (typeof value === "number" || typeof value === "boolean") {
     return String(value);
   }
+
   return JSON.stringify(value);
 };
 
@@ -59,14 +67,17 @@ const toArray = (value: JsonLogicValue | undefined): Array<JsonLogicValue> => {
   if (Array.isArray(value)) {
     return value;
   }
+
   if (typeof value === "string") {
     try {
       const parsed: unknown = JSON.parse(value);
+
       if (Array.isArray(parsed)) {
         return parsed;
       }
     } catch {}
   }
+
   return [];
 };
 
@@ -86,11 +97,13 @@ function ArrayEditor({
   onChange: (value: Array<JsonLogicValue>) => void;
 }) {
   const serialized = JSON.stringify(value);
+
   const [editor, setEditor] = useState<ArrayEditorState>(() => ({
     draft: serialized,
     serializedValue: serialized,
     pendingValue: null,
   }));
+
   if (serialized !== editor.serializedValue) {
     const isAcknowledgement = editor.pendingValue === serialized;
     setEditor({
@@ -102,16 +115,19 @@ function ArrayEditor({
 
   const onDraftChange = (raw: string) => {
     let emitted: Array<JsonLogicValue> | undefined;
+
     if (raw.trim() === "") {
       emitted = [];
     } else {
       try {
         const parsed: unknown = JSON.parse(raw);
+
         if (Array.isArray(parsed)) {
           emitted = parsed;
         }
       } catch {}
     }
+
     const emittedSerialized = emitted === undefined ? undefined : JSON.stringify(emitted);
     setEditor((current) => {
       const pendingValue =
@@ -120,8 +136,10 @@ function ArrayEditor({
           : emittedSerialized === current.serializedValue
             ? null
             : emittedSerialized;
+
       return { ...current, draft: raw, pendingValue };
     });
+
     if (emitted !== undefined) {
       onChange(emitted);
     }
@@ -148,37 +166,49 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
     if (!next) {
       return;
     }
+
     switch (next) {
       case "number": {
         const n = parseFloat(toText(value));
         onChange(Number.isFinite(n) ? n : 0);
+
         return;
       }
+
       case "text":
         onChange(toText(value));
+
         return;
       case "boolean":
         onChange(toBoolean(value));
+
         return;
       case "null":
         onChange(null);
+
         return;
       case "array":
         onChange(toArray(value));
+
         return;
     }
   };
 
   const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
+
     if (type !== "number") {
       onChange(raw);
+
       return;
     }
+
     if (raw === "") {
       onChange("");
+
       return;
     }
+
     const n = parseFloat(raw);
     onChange(Number.isFinite(n) ? n : raw);
   };
@@ -225,6 +255,7 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
             if (next == null) {
               return;
             }
+
             onChange(next === "true");
           }}
         >
