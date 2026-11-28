@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import type { JsonLogicValue } from "../operators.ts";
 
 const INPUT_TYPES = ["text", "number", "boolean", "null", "array"] as const;
+
 type InputType = (typeof INPUT_TYPES)[number];
 
 const BOOLEAN_ITEMS = [
@@ -13,42 +14,68 @@ const BOOLEAN_ITEMS = [
 interface Props {
   name?: string;
   value?: JsonLogicValue;
-  /** Initial type fallback if `value` is a string. Ignored for number/boolean/null/array. */
   type?: InputType;
-  /**
-   * Called with the next value. For unparseable numeric input, emits the raw
-   * string instead of `NaN`. Consumers should validate numeric fields at their
-   * boundary.
-   */
   onChange: (value: JsonLogicValue) => void;
 }
 
 const getType = (value: JsonLogicValue | undefined, fallback: InputType): InputType => {
-  if (typeof value === "number" && Number.isFinite(value)) return "number";
-  if (typeof value === "boolean") return "boolean";
-  if (value === null) return "null";
-  if (Array.isArray(value)) return "array";
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return "number";
+  }
+
+  if (typeof value === "boolean") {
+    return "boolean";
+  }
+
+  if (value === null) {
+    return "null";
+  }
+
+  if (Array.isArray(value)) {
+    return "array";
+  }
+
   return fallback;
 };
 
 const toText = (value: JsonLogicValue | undefined): string => {
-  if (value === null || value === undefined) return "";
-  if (typeof value === "string") return value;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+
   return JSON.stringify(value);
 };
 
 const toBoolean = (value: JsonLogicValue | undefined): boolean =>
   value === true || value === "true" || value === 1;
 
-const toArray = (value: JsonLogicValue | undefined): JsonLogicValue[] => {
-  if (Array.isArray(value)) return value;
-  if (typeof value === "string") {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
-    } catch {}
+const parseJsonArray = (text: string): Array<JsonLogicValue> | undefined => {
+  try {
+    const parsed: unknown = JSON.parse(text);
+
+    return Array.isArray(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
   }
+};
+
+const toArray = (value: JsonLogicValue | undefined): Array<JsonLogicValue> => {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    return parseJsonArray(value) ?? [];
+  }
+
   return [];
 };
 
@@ -64,15 +91,17 @@ function ArrayEditor({
   onChange,
 }: {
   name: string;
-  value: JsonLogicValue[];
-  onChange: (value: JsonLogicValue[]) => void;
+  value: Array<JsonLogicValue>;
+  onChange: (value: Array<JsonLogicValue>) => void;
 }) {
   const serialized = JSON.stringify(value);
+
   const [editor, setEditor] = useState<ArrayEditorState>(() => ({
     draft: serialized,
     serializedValue: serialized,
     pendingValue: null,
   }));
+
   if (serialized !== editor.serializedValue) {
     const isAcknowledgement = editor.pendingValue === serialized;
     setEditor({
@@ -83,15 +112,14 @@ function ArrayEditor({
   }
 
   const onDraftChange = (raw: string) => {
-    let emitted: JsonLogicValue[] | undefined;
+    let emitted: Array<JsonLogicValue> | undefined;
+
     if (raw.trim() === "") {
       emitted = [];
     } else {
-      try {
-        const parsed: unknown = JSON.parse(raw);
-        if (Array.isArray(parsed)) emitted = parsed;
-      } catch {}
+      emitted = parseJsonArray(raw);
     }
+
     const emittedSerialized = emitted === undefined ? undefined : JSON.stringify(emitted);
     setEditor((current) => {
       const pendingValue =
@@ -100,9 +128,13 @@ function ArrayEditor({
           : emittedSerialized === current.serializedValue
             ? null
             : emittedSerialized;
+
       return { ...current, draft: raw, pendingValue };
     });
-    if (emitted !== undefined) onChange(emitted);
+
+    if (emitted !== undefined) {
+      onChange(emitted);
+    }
   };
 
   return (
@@ -118,44 +150,56 @@ function ArrayEditor({
 }
 
 export function Input({ name = "", value = "", type: typeProp = "text", onChange }: Props) {
-  // The controlled value determines the type. A type selection emits a
-  // converted value, and the next render derives its new type.
   const type = useMemo<InputType>(() => getType(value, typeProp), [value, typeProp]);
 
   const onTypeChange = (next: InputType | null) => {
-    if (!next) return;
+    if (!next) {
+      return;
+    }
+
     switch (next) {
       case "number": {
-        const n = parseFloat(toText(value));
+        const n = Number.parseFloat(toText(value));
         onChange(Number.isFinite(n) ? n : 0);
+
         return;
       }
+
       case "text":
         onChange(toText(value));
+
         return;
       case "boolean":
         onChange(toBoolean(value));
+
         return;
       case "null":
         onChange(null);
+
         return;
       case "array":
         onChange(toArray(value));
+
         return;
     }
   };
 
   const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
+
     if (type !== "number") {
       onChange(raw);
+
       return;
     }
+
     if (raw === "") {
       onChange("");
+
       return;
     }
-    const n = parseFloat(raw);
+
+    const n = Number.parseFloat(raw);
     onChange(Number.isFinite(n) ? n : raw);
   };
 
@@ -198,7 +242,10 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
           items={[...BOOLEAN_ITEMS]}
           value={value === true ? "true" : "false"}
           onValueChange={(next) => {
-            if (next == null) return;
+            if (next === null || next === undefined) {
+              return;
+            }
+
             onChange(next === "true");
           }}
         >

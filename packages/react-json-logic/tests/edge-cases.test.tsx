@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, test } from "vite-plus/test";
 import { cleanup, render as rtlRender } from "@testing-library/react";
-import { StrictMode, type ReactElement } from "react";
-import JsonLogicBuilder, { applyLogic, type JsonLogicValue, rule, validate } from "../src/index.ts";
+import { StrictMode } from "react";
+import type { ReactElement } from "react";
+import JsonLogicBuilder, { applyLogic, rule, validate } from "../src/index.ts";
+import type { JsonLogicValue } from "../src/index.ts";
 
 const render = (ui: ReactElement) => {
   const result = rtlRender(<StrictMode>{ui}</StrictMode>);
+
   return {
     ...result,
     rerender: (nextUi: ReactElement) => result.rerender(<StrictMode>{nextUi}</StrictMode>),
@@ -51,7 +54,11 @@ describe("edge-case value shapes", () => {
 
   test("renders a deeply nested rule (10+ levels)", () => {
     let r: JsonLogicValue = 1;
-    for (let i = 0; i < 12; i += 1) r = rule.add(r, 1);
+
+    for (let i = 0; i < 12; i += 1) {
+      r = rule.add(r, 1);
+    }
+
     const { container } = render(<JsonLogicBuilder onChange={ignoreChange} value={r} />);
     expect(container.querySelectorAll("[data-rjl-operator-trigger]").length).toBeGreaterThanOrEqual(
       12,
@@ -62,12 +69,9 @@ describe("edge-case value shapes", () => {
 describe("edge-case accessor and data shapes", () => {
   test("accessor with primitive-array data renders no level inputs", () => {
     const { container } = render(
-      <JsonLogicBuilder
-        onChange={ignoreChange}
-        value={{ var: ["a"] }}
-        data={[1, 2, 3] as unknown as Record<string, unknown>}
-      />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ var: ["a"] }} data={[1, 2, 3]} />,
     );
+
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();
     expect(container.querySelectorAll("[data-rjl-accessor-input]").length).toBe(0);
   });
@@ -80,6 +84,7 @@ describe("edge-case accessor and data shapes", () => {
         data={{ a: { b: { c: 1, d: 2 } } }}
       />,
     );
+
     expect(container.querySelectorAll("[data-rjl-accessor-input]").length).toBeGreaterThanOrEqual(
       3,
     );
@@ -94,21 +99,29 @@ describe("edge-case accessor and data shapes", () => {
 describe("edge-case validation", () => {
   test("flags unary not with two operands", () => {
     const result = validate({ "!": [true, false] });
-    if (result.ok) throw new Error("expected unary not to reject two operands");
+
+    if (result.ok) {
+      throw new Error("expected unary not to reject two operands");
+    }
+
     expect(result.errors[0]?.path).toBe("$.!");
   });
 
   test("walks deeply nested rules and reports all errors", () => {
     const bad = rule.and({ "===": [1] }, { "<": [1, 2, 3, 4] }, true);
     const result = validate(bad);
-    if (result.ok) throw new Error("expected nested arity errors");
+
+    if (result.ok) {
+      throw new Error("expected nested arity errors");
+    }
+
     expect(result.errors).toHaveLength(2);
     expect(result.errors[0]?.path).toMatch(/and\[0]/);
     expect(result.errors[1]?.path).toMatch(/and\[1]/);
   });
 
   test("accepts every canonical operator shape", () => {
-    const samples: JsonLogicValue[] = [
+    const samples: Array<JsonLogicValue> = [
       { "==": [1, 1] },
       { "===": [1, 1] },
       { "!=": [1, 2] },
@@ -142,6 +155,7 @@ describe("edge-case validation", () => {
       { map: [{ var: ["xs"] }, { var: [""] }] },
       { filter: [{ var: ["xs"] }, { ">": [{ var: [""] }, 0] }] },
     ];
+
     for (const r of samples) {
       const result = validate(r);
       expect(result.ok, `expected validate to accept: ${JSON.stringify(r)}`).toBe(true);

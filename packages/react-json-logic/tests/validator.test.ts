@@ -1,15 +1,14 @@
 import { describe, expect, test } from "vite-plus/test";
-import {
-  applyLogic,
-  rule,
-  validate,
-  type JsonLogicValue,
-  type ValidationError,
-} from "../src/index.ts";
+import { applyLogic, rule, validate } from "../src/index.ts";
+import type { JsonLogicValue, ValidationError } from "../src/index.ts";
 
-function validationErrors(value: unknown): ValidationError[] {
+function validationErrors(value: unknown): Array<ValidationError> {
   const result = validate(value);
-  if (result.ok) throw new Error(`expected validation errors for ${JSON.stringify(value)}`);
+
+  if (result.ok) {
+    throw new Error(`expected validation errors for ${JSON.stringify(value)}`);
+  }
+
   return result.errors;
 }
 

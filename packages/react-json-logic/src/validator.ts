@@ -1,6 +1,5 @@
 import { OPERATORS } from "./operators.ts";
 
-// Variadic evaluator arities are independent of the editor's field limits.
 const VARIADIC_MINIMUMS = new Map<string, number>([
   ["missing", 0],
   ["or", 0],
@@ -20,15 +19,16 @@ export interface ValidationError {
   message: string;
 }
 
-export type ValidationResult = { ok: true } | { ok: false; errors: ValidationError[] };
+export type ValidationResult = { ok: true } | { ok: false; errors: Array<ValidationError> };
 
 /**
  * Validates operator structure and arity independently of variadic UI limits.
  * Unknown keys remain valid because json-logic-js supports custom operations.
  */
 export function validate(rule: unknown): ValidationResult {
-  const errors: ValidationError[] = [];
+  const errors: Array<ValidationError> = [];
   walk(rule, "$", errors);
+
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
 
@@ -37,17 +37,19 @@ function pushArityErrors(
   key: string,
   path: string,
   argCount: number,
-  errors: ValidationError[],
+  errors: Array<ValidationError>,
 ): void {
   const variadicMinimum = VARIADIC_MINIMUMS.get(key);
   const min = variadicMinimum ?? op.fieldCount.min;
   const max = variadicMinimum === undefined ? op.fieldCount.max : Infinity;
+
   if (argCount < min) {
     errors.push({
       path: `${path}.${key}`,
       message: `${key}: expected at least ${min} arg(s), got ${argCount}`,
     });
   }
+
   if (argCount > max) {
     errors.push({
       path: `${path}.${key}`,
@@ -59,47 +61,62 @@ function pushArityErrors(
 function walk(
   node: unknown,
   path: string,
-  errors: ValidationError[],
+  errors: Array<ValidationError>,
   isArrayElement = false,
 ): void {
-  if (node === null || typeof node !== "object") return;
+  if (node === null || typeof node !== "object") {
+    return;
+  }
+
   if (Array.isArray(node)) {
     node.forEach((item, i) => walk(item, `${path}[${i}]`, errors, true));
+
     return;
   }
 
   const obj = node as Record<string, unknown>;
   const keys = Object.keys(obj);
 
-  if (keys.length === 0) return;
+  if (keys.length === 0) {
+    return;
+  }
+
   if (keys.length > 1) {
-    // json-logic-js preserves multi-key objects inside arrays as literal
-    // records rather than interpreting them as operator objects.
-    if (isArrayElement) return;
+    if (isArrayElement) {
+      return;
+    }
+
     errors.push({
       path,
       message: `Operator object should have exactly one key, found ${keys.length}: ${keys.join(", ")}`,
     });
+
     return;
   }
 
   const [key] = keys;
-  if (key === undefined) return;
-  const op = OPERATORS.find((o) => o.signature === key);
 
-  // Custom operators remain valid, but their arguments still get checked.
-  const args = obj[key];
-
-  if (Array.isArray(args)) {
-    if (op) pushArityErrors(op, key, path, args.length, errors);
-    args.forEach((arg, i) => walk(arg, `${path}.${key}[${i}]`, errors, true));
+  if (key === undefined) {
     return;
   }
 
-  // json-logic-js treats a non-array payload as a single argument.
-  // `var` is the documented string-path shorthand and is not arity-flagged.
+  const op = OPERATORS.find((o) => o.signature === key);
+
+  const args = obj[key];
+
+  if (Array.isArray(args)) {
+    if (op) {
+      pushArityErrors(op, key, path, args.length, errors);
+    }
+
+    args.forEach((arg, i) => walk(arg, `${path}.${key}[${i}]`, errors, true));
+
+    return;
+  }
+
   if (op && key !== "var") {
     pushArityErrors(op, key, path, 1, errors);
   }
+
   walk(args, `${path}.${key}`, errors);
 }

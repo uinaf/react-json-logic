@@ -1,10 +1,6 @@
 import { useMemo, useState } from "react";
-import JsonLogicBuilder, {
-  applyLogic,
-  type JsonLogicData,
-  type JsonLogicValue,
-  rule,
-} from "react-json-logic";
+import JsonLogicBuilder, { applyLogic, rule } from "react-json-logic";
+import type { JsonLogicData, JsonLogicValue } from "react-json-logic";
 
 const SAMPLE_DATA = {
   user: { age: 21, name: "Ada" },
@@ -45,30 +41,33 @@ const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
 
 export default function App() {
   const [activeSample, setActiveSample] = useState(0);
-  const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
+  const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]?.rule ?? "");
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
 
   const { data, dataError } = useMemo(() => {
     try {
       const parsed: unknown = JSON.parse(dataText);
+
       if (parsed !== null && typeof parsed === "object") {
         return { data: parsed as JsonLogicData, dataError: null as string | null };
       }
-      return { data: {} as JsonLogicData, dataError: "data must be an object or array" };
-    } catch (err) {
+
+      return { data: {}, dataError: "data must be an object or array" };
+    } catch (error) {
       return {
-        data: {} as JsonLogicData,
-        dataError: err instanceof Error ? err.message : String(err),
+        data: {},
+        dataError: error instanceof Error ? error.message : String(error),
       };
     }
   }, [dataText]);
 
   let evaluated: unknown = null;
   let evalError: string | null = null;
+
   try {
     evaluated = applyLogic(r, data);
-  } catch (err) {
-    evalError = err instanceof Error ? err.message : String(err);
+  } catch (error) {
+    evalError = error instanceof Error ? error.message : String(error);
   }
 
   return (

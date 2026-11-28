@@ -3,7 +3,7 @@ import Any from "./any.tsx";
 
 interface Props {
   parent: string;
-  data?: Record<string, unknown> | unknown[] | undefined;
+  data?: Record<string, unknown> | Array<unknown> | undefined;
   value?: JsonLogicValue | undefined;
   onChange: (value: JsonLogicValue) => void;
 }
