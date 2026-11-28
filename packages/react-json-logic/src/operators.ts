@@ -25,7 +25,6 @@ export type JsonLogicValue =
   | Array<JsonLogicValue>
   | { [key: string]: JsonLogicValue };
 
-/** Caps UI-added fields above practical JsonLogic rule sizes. */
 const MAX_VARIADIC = 100;
 
 export const OPERATORS: Array<Operator> = [
@@ -243,7 +242,6 @@ export const OPERATORS: Array<Operator> = [
     fieldCount: { min: 0, max: MAX_VARIADIC },
   },
 
-  // Higher-order fields are [collection, predicate]. The predicate gets the `=>` cue.
   {
     type: "Higher Order",
     signature: "some",

@@ -26,7 +26,6 @@ export function JsonLogicBuilder({
   data = {},
   onDataError,
 }: JsonLogicBuilderProps) {
-  // A fresh callback must not report the same failed input again.
   const onDataErrorRef = useRef(onDataError);
   onDataErrorRef.current = onDataError;
 
@@ -48,8 +47,6 @@ export function JsonLogicBuilder({
     }
   }, [data]);
 
-  // Recovery clears the dedupe key so the same invalid value can be reported
-  // after it becomes invalid again.
   const lastReportedRaw = useRef<string | null>(null);
   const failedRaw: string | null = parseResult.ok ? null : parseResult.raw;
   useEffect(() => {

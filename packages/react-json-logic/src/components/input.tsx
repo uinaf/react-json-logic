@@ -14,13 +14,7 @@ const BOOLEAN_ITEMS = [
 interface Props {
   name?: string;
   value?: JsonLogicValue;
-  /** Initial type fallback if `value` is a string. Ignored for number/boolean/null/array. */
   type?: InputType;
-  /**
-   * Called with the next value. For unparseable numeric input, emits the raw
-   * string instead of `NaN`. Consumers should validate numeric fields at their
-   * boundary.
-   */
   onChange: (value: JsonLogicValue) => void;
 }
 
@@ -158,8 +152,6 @@ function ArrayEditor({
 }
 
 export function Input({ name = "", value = "", type: typeProp = "text", onChange }: Props) {
-  // The controlled value determines the type. A type selection emits a
-  // converted value, and the next render derives its new type.
   const type = useMemo<InputType>(() => getType(value, typeProp), [value, typeProp]);
 
   const onTypeChange = (next: InputType | null) => {

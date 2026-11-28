@@ -1,6 +1,5 @@
 import { OPERATORS } from "./operators.ts";
 
-// Variadic evaluator arities are independent of the editor's field limits.
 const VARIADIC_MINIMUMS = new Map<string, number>([
   ["missing", 0],
   ["or", 0],
@@ -83,8 +82,6 @@ function walk(
   }
 
   if (keys.length > 1) {
-    // json-logic-js preserves multi-key objects inside arrays as literal
-    // records rather than interpreting them as operator objects.
     if (isArrayElement) {
       return;
     }
@@ -105,7 +102,6 @@ function walk(
 
   const op = OPERATORS.find((o) => o.signature === key);
 
-  // Custom operators remain valid, but their arguments still get checked.
   const args = obj[key];
 
   if (Array.isArray(args)) {
@@ -118,8 +114,6 @@ function walk(
     return;
   }
 
-  // json-logic-js treats a non-array payload as a single argument.
-  // `var` is the documented string-path shorthand and is not arity-flagged.
   if (op && key !== "var") {
     pushArityErrors(op, key, path, 1, errors);
   }

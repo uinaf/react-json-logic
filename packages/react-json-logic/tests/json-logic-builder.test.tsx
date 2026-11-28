@@ -6,8 +6,6 @@ import type { ReactElement } from "react";
 import JsonLogicBuilder, { applyLogic, FIELD_TYPES, OPERATORS } from "../src/index.ts";
 import type { JsonLogicValue } from "../src/index.ts";
 
-// Keep StrictMode across rerenders so double invocation exercises the same
-// mounted subtree and its error-report dedupe state.
 const render = (ui: ReactElement) => {
   const result = rtlRender(<StrictMode>{ui}</StrictMode>);
 
@@ -19,7 +17,6 @@ const render = (ui: ReactElement) => {
 
 const ignoreChange = () => {};
 
-/** Keeps the builder controlled across multi-step interactions. */
 function StatefulHost(props: {
   initial?: JsonLogicValue;
   data?: Parameters<typeof JsonLogicBuilder>[0]["data"];
@@ -504,7 +501,6 @@ describe("<JsonLogicBuilder /> onChange interactions", () => {
     const { container } = render(<JsonLogicBuilder onChange={onChange} value="" />);
     const trigger = container.querySelector("[data-rjl-operator-trigger]") as HTMLElement;
     await user.click(trigger);
-    // Base UI portals listboxes into document.body.
     const popup = await screen.findByRole("listbox");
     const option = within(popup).getByRole("option", { name: "and" });
     await user.click(option);

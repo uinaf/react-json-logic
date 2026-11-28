@@ -16,8 +16,8 @@ export default defineConfig({
       typeAware: true,
       typeCheck: true,
     },
+    overrides: [{ files: ["src/builder.ts"], rules: { "uinaf/no-comments": "off" } }],
     rules: {
-      "uinaf/no-comments": "off",
       "anti-slop/require-safety-comment-for-type-assertion": "off",
       "quality/no-chained-type-assertions": "off",
       "quality/no-unsafe-dictionary-type": "off",

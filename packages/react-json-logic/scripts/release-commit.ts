@@ -22,7 +22,6 @@ function oid(value: unknown): string {
   return value;
 }
 
-// npm's prepare runs first. Only its version edit may enter the signed commit.
 export async function prepare(_config: unknown, context: Context): Promise<void> {
   const { cwd, env, nextRelease } = context;
   const expected = oid(env.GITHUB_SHA);
@@ -64,8 +63,6 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
     throw new Error("release preparation must change only the package version");
   }
 
-  // GitHub signs this commit and rejects a moved branch atomically. A preflight
-  // against main would leave a race between reading its head and writing it.
   const response = await fetch("https://api.github.com/graphql", {
     method: "POST",
     signal: AbortSignal.timeout(30_000),
@@ -115,8 +112,6 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
 
   const committed = oid(record(record(record(result.data).createCommitOnBranch).commit).oid);
 
-  // main may advance after the mutation. Fetch and tag the returned commit,
-  // never the moving branch. A failure here leaves writeback without a release.
   git("fetch", "origin", committed);
 
   if (git("show", "-s", "--format=%P", committed) !== expected) {

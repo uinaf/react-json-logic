@@ -49,7 +49,6 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
 
   const selectedOperator = OPERATORS.find((op) => op.signature === field || op.label === field);
 
-  // Preserve existing variadic arguments up to the operator's declared limit.
   const fields: Array<FieldType> = selectedOperator ? [...selectedOperator.fields] : [];
 
   if (selectedOperator && isPlainObject(value)) {
