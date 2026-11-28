@@ -53,10 +53,10 @@ export default function App() {
       }
 
       return { data: {} as JsonLogicData, dataError: "data must be an object or array" };
-    } catch (err) {
+    } catch (error) {
       return {
         data: {} as JsonLogicData,
-        dataError: err instanceof Error ? err.message : String(err),
+        dataError: error instanceof Error ? error.message : String(error),
       };
     }
   }, [dataText]);
@@ -66,8 +66,8 @@ export default function App() {
 
   try {
     evaluated = applyLogic(r, data);
-  } catch (err) {
-    evalError = err instanceof Error ? err.message : String(err);
+  } catch (error) {
+    evalError = error instanceof Error ? error.message : String(error);
   }
 
   return (

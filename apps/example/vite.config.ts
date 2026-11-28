@@ -15,7 +15,6 @@ export default defineConfig({
     },
     rules: {
       "typescript/no-non-null-assertion": "off",
-      "unicorn/catch-error-name": "off",
       "anti-slop/no-runtime-typeof": "off",
       "anti-slop/require-safety-comment-for-type-assertion": "off",
       "quality/no-known-value-widening": "off",
