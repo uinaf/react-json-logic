@@ -29,7 +29,6 @@ export default defineConfig({
       "typescript/no-unsafe-assignment": "off",
       "typescript/no-unsafe-argument": "off",
       "typescript/no-unsafe-type-assertion": "off",
-      "typescript/no-unsafe-return": "off",
     },
   },
   fmt: {},
