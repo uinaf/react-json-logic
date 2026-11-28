@@ -27,7 +27,6 @@ export default defineConfig({
       "react/refs": "off",
       "no-console": "off",
       "no-empty": "off",
-      "unicorn/prefer-number-properties": "off",
       "quality/no-unknown-returns": "off",
       "typescript/no-unsafe-assignment": "off",
       "typescript/no-unsafe-argument": "off",

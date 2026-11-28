@@ -161,7 +161,7 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
 
     switch (next) {
       case "number": {
-        const n = parseFloat(toText(value));
+        const n = Number.parseFloat(toText(value));
         onChange(Number.isFinite(n) ? n : 0);
 
         return;
@@ -201,7 +201,7 @@ export function Input({ name = "", value = "", type: typeProp = "text", onChange
       return;
     }
 
-    const n = parseFloat(raw);
+    const n = Number.parseFloat(raw);
     onChange(Number.isFinite(n) ? n : raw);
   };
 
