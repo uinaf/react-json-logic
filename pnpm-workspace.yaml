@@ -20,3 +20,5 @@ peerDependencyRules:
   allowedVersions:
     vite: "*"
     vitest: "*"
+minimumReleaseAgeExclude:
+  - "@uinaf/oxlint-config@1.0.0"

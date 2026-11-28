@@ -1,3 +1,4 @@
+import uinaf, { env, ignorePatterns } from "@uinaf/oxlint-config/vite-plus";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
@@ -8,9 +9,36 @@ export default defineConfig({
     exports: true,
   },
   lint: {
+    extends: [uinaf],
+    env,
+    ignorePatterns,
     options: {
       typeAware: true,
       typeCheck: true,
+    },
+    rules: {
+      "typescript/array-type": "off",
+      "uinaf/no-comments": "off",
+      "import/consistent-type-specifier-style": "off",
+      curly: "off",
+      "anti-slop/require-safety-comment-for-type-assertion": "off",
+      "quality/no-chained-type-assertions": "off",
+      "quality/no-unsafe-dictionary-type": "off",
+      "quality/no-known-value-widening": "off",
+      "anti-slop/require-readable-spacing": "off",
+      "anti-slop/no-unknown-parameters": "off",
+      "anti-slop/no-runtime-typeof": "off",
+      eqeqeq: "off",
+      "react/refs": "off",
+      "no-console": "off",
+      "no-empty": "off",
+      "unicorn/prefer-number-properties": "off",
+      "quality/no-unknown-returns": "off",
+      "typescript/no-unsafe-assignment": "off",
+      "typescript/no-unsafe-argument": "off",
+      "typescript/no-unnecessary-type-assertion": "off",
+      "typescript/no-unsafe-type-assertion": "off",
+      "typescript/no-unsafe-return": "off",
     },
   },
   fmt: {},
