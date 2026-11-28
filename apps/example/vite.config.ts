@@ -14,7 +14,6 @@ export default defineConfig({
       typeCheck: true,
     },
     rules: {
-      "typescript/no-non-null-assertion": "off",
       "anti-slop/no-runtime-typeof": "off",
       "anti-slop/require-safety-comment-for-type-assertion": "off",
       "quality/no-known-value-widening": "off",

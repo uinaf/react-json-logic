@@ -41,7 +41,7 @@ const SAMPLES: Array<{ title: string; rule: JsonLogicValue }> = [
 
 export default function App() {
   const [activeSample, setActiveSample] = useState(0);
-  const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]!.rule);
+  const [r, setR] = useState<JsonLogicValue>(SAMPLES[0]?.rule ?? "");
   const [dataText, setDataText] = useState<string>(JSON.stringify(SAMPLE_DATA, null, 2));
 
   const { data, dataError } = useMemo(() => {
