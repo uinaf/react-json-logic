@@ -246,11 +246,7 @@ describe("<JsonLogicBuilder /> render paths", () => {
 
   test("renders an accessor when data is an array of records", () => {
     const { container } = render(
-      <JsonLogicBuilder
-        onChange={ignoreChange}
-        value={{ var: ["a"] }}
-        data={[{ a: 1, b: 2 }] as unknown as Record<string, unknown>}
-      />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ var: ["a"] }} data={[{ a: 1, b: 2 }]} />,
     );
 
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();

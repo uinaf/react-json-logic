@@ -52,10 +52,10 @@ export default function App() {
         return { data: parsed as JsonLogicData, dataError: null as string | null };
       }
 
-      return { data: {} as JsonLogicData, dataError: "data must be an object or array" };
+      return { data: {}, dataError: "data must be an object or array" };
     } catch (error) {
       return {
-        data: {} as JsonLogicData,
+        data: {},
         dataError: error instanceof Error ? error.message : String(error),
       };
     }

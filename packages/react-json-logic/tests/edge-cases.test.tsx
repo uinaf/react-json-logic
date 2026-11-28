@@ -69,11 +69,7 @@ describe("edge-case value shapes", () => {
 describe("edge-case accessor and data shapes", () => {
   test("accessor with primitive-array data renders no level inputs", () => {
     const { container } = render(
-      <JsonLogicBuilder
-        onChange={ignoreChange}
-        value={{ var: ["a"] }}
-        data={[1, 2, 3] as unknown as Record<string, unknown>}
-      />,
+      <JsonLogicBuilder onChange={ignoreChange} value={{ var: ["a"] }} data={[1, 2, 3]} />,
     );
 
     expect(container.querySelector("[data-rjl-accessor]")).not.toBeNull();

@@ -19,7 +19,7 @@ function getIterator(data: unknown): Array<string> | null {
   }
 
   if (data !== null && typeof data === "object") {
-    return Object.keys(data as Record<string, unknown>);
+    return Object.keys(data);
   }
 
   return null;

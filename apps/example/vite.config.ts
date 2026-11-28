@@ -19,7 +19,6 @@ export default defineConfig({
       "anti-slop/require-safety-comment-for-type-assertion": "off",
       "quality/no-known-value-widening": "off",
       "typescript/no-unsafe-type-assertion": "off",
-      "typescript/no-unnecessary-type-assertion": "off",
     },
   },
   fmt: {},
