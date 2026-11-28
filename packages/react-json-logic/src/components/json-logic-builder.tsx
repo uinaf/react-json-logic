@@ -3,7 +3,7 @@ import type { JsonLogicValue } from "../operators.ts";
 import Any from "./any.tsx";
 
 /** Sample data the builder uses for accessor (`var`) suggestions. */
-export type JsonLogicData = Record<string, unknown> | unknown[];
+export type JsonLogicData = Record<string, unknown> | Array<unknown>;
 
 type ParseResult = { ok: true; data: JsonLogicData } | { ok: false; error: unknown; raw: string };
 

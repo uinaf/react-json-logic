@@ -3,7 +3,7 @@ import type { Operator } from "../operators.ts";
 
 interface Props {
   value: string;
-  options: Operator[];
+  options: Array<Operator>;
   onChange: (value: string) => void;
 }
 
@@ -13,7 +13,7 @@ interface Item {
 }
 
 export function SelectOperator({ value, options, onChange }: Props) {
-  const items: Item[] = options.map((op) => ({
+  const items: Array<Item> = options.map((op) => ({
     label: op.label,
     value: op.signature,
   }));

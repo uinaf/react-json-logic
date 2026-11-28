@@ -108,7 +108,7 @@ describe("edge-case validation", () => {
   });
 
   test("accepts every canonical operator shape", () => {
-    const samples: JsonLogicValue[] = [
+    const samples: Array<JsonLogicValue> = [
       { "==": [1, 1] },
       { "===": [1, 1] },
       { "!=": [1, 2] },

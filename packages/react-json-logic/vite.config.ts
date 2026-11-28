@@ -17,7 +17,6 @@ export default defineConfig({
       typeCheck: true,
     },
     rules: {
-      "typescript/array-type": "off",
       "uinaf/no-comments": "off",
       "import/consistent-type-specifier-style": "off",
       curly: "off",

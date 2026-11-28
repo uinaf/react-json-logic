@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 
 interface Props {
   value?: string;
-  data?: Record<string, unknown> | unknown[];
+  data?: Record<string, unknown> | Array<unknown>;
   onChange: (value: string) => void;
 }
 
-function getIterator(data: unknown): string[] | null {
+function getIterator(data: unknown): Array<string> | null {
   if (Array.isArray(data)) {
     const head = data[0];
     if (head && typeof head === "object") return Object.keys(head);

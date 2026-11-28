@@ -20,14 +20,14 @@ export interface ValidationError {
   message: string;
 }
 
-export type ValidationResult = { ok: true } | { ok: false; errors: ValidationError[] };
+export type ValidationResult = { ok: true } | { ok: false; errors: Array<ValidationError> };
 
 /**
  * Validates operator structure and arity independently of variadic UI limits.
  * Unknown keys remain valid because json-logic-js supports custom operations.
  */
 export function validate(rule: unknown): ValidationResult {
-  const errors: ValidationError[] = [];
+  const errors: Array<ValidationError> = [];
   walk(rule, "$", errors);
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
@@ -37,7 +37,7 @@ function pushArityErrors(
   key: string,
   path: string,
   argCount: number,
-  errors: ValidationError[],
+  errors: Array<ValidationError>,
 ): void {
   const variadicMinimum = VARIADIC_MINIMUMS.get(key);
   const min = variadicMinimum ?? op.fieldCount.min;
@@ -59,7 +59,7 @@ function pushArityErrors(
 function walk(
   node: unknown,
   path: string,
-  errors: ValidationError[],
+  errors: Array<ValidationError>,
   isArrayElement = false,
 ): void {
   if (node === null || typeof node !== "object") return;

@@ -11,7 +11,7 @@ import HigherOrder from "./higher-order.tsx";
 import Input from "./input.tsx";
 import SelectOperator from "./select-operator.tsx";
 
-type DataObject = Record<string, unknown> | unknown[];
+type DataObject = Record<string, unknown> | Array<unknown>;
 
 interface Props {
   parent: string;
@@ -23,14 +23,14 @@ interface Props {
 interface DerivedState {
   field: string;
   selectedOperator: Operator | undefined;
-  fields: FieldType[];
+  fields: Array<FieldType>;
 }
 
 function isPlainObject(value: unknown): value is Record<string, JsonLogicValue> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function getOperands(value: JsonLogicValue | undefined): JsonLogicValue[] {
+function getOperands(value: JsonLogicValue | undefined): Array<JsonLogicValue> {
   if (Array.isArray(value)) return value;
   return value === undefined ? [] : [value];
 }
@@ -51,7 +51,7 @@ function deriveState(value: JsonLogicValue | undefined): DerivedState {
   const selectedOperator = OPERATORS.find((op) => op.signature === field || op.label === field);
 
   // Preserve existing variadic arguments up to the operator's declared limit.
-  const fields: FieldType[] = selectedOperator ? [...selectedOperator.fields] : [];
+  const fields: Array<FieldType> = selectedOperator ? [...selectedOperator.fields] : [];
 
   if (selectedOperator && isPlainObject(value)) {
     const valueAtField = value[field];
@@ -92,7 +92,7 @@ export function Any({ parent, value, data = {}, onChange }: Props) {
     }
   };
 
-  const updateChildArray = (update: (arr: JsonLogicValue[]) => JsonLogicValue[]) => {
+  const updateChildArray = (update: (arr: Array<JsonLogicValue>) => Array<JsonLogicValue>) => {
     const current = isPlainObject(value) ? value : {};
     const arr = getOperands(current[field]);
     onChange({ ...current, [field]: update(arr) });

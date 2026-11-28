@@ -27,7 +27,8 @@ export async function prepare(_config: unknown, context: Context): Promise<void>
   assert.equal(repository, "uinaf/react-json-logic");
   const token = env.GITHUB_TOKEN ?? env.GH_TOKEN;
   assert(token, "Release token required");
-  const git = (...args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  const git = (...args: Array<string>) =>
+    execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
   if (git("rev-parse", "HEAD") !== expected || nextRelease.gitHead !== expected)
     throw new Error("release checkout must match the verified event commit");
   if (

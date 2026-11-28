@@ -8,7 +8,7 @@ import { URL } from "node:url";
 import { test, vi } from "vite-plus/test";
 import { prepare } from "../scripts/release-commit.ts";
 
-const git = (cwd: string, ...args: string[]) =>
+const git = (cwd: string, ...args: Array<string>) =>
   execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 const commit = (cwd: string) => {
   git(cwd, "add", ".");

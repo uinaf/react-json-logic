@@ -11,8 +11,8 @@ export interface Operator {
   type: string;
   signature: string;
   label: string;
-  fields: FieldType[];
-  notAvailableUnder: string[];
+  fields: Array<FieldType>;
+  notAvailableUnder: Array<string>;
   /** Field limits for the visual editor; variadic validation follows the evaluator. */
   fieldCount: { min: number; max: number };
 }
@@ -22,13 +22,13 @@ export type JsonLogicValue =
   | number
   | boolean
   | null
-  | JsonLogicValue[]
+  | Array<JsonLogicValue>
   | { [key: string]: JsonLogicValue };
 
 /** Caps UI-added fields above practical JsonLogic rule sizes. */
 const MAX_VARIADIC = 100;
 
-export const OPERATORS: Operator[] = [
+export const OPERATORS: Array<Operator> = [
   {
     type: "Value Field",
     signature: "value",

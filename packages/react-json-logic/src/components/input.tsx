@@ -41,7 +41,7 @@ const toText = (value: JsonLogicValue | undefined): string => {
 const toBoolean = (value: JsonLogicValue | undefined): boolean =>
   value === true || value === "true" || value === 1;
 
-const toArray = (value: JsonLogicValue | undefined): JsonLogicValue[] => {
+const toArray = (value: JsonLogicValue | undefined): Array<JsonLogicValue> => {
   if (Array.isArray(value)) return value;
   if (typeof value === "string") {
     try {
@@ -64,8 +64,8 @@ function ArrayEditor({
   onChange,
 }: {
   name: string;
-  value: JsonLogicValue[];
-  onChange: (value: JsonLogicValue[]) => void;
+  value: Array<JsonLogicValue>;
+  onChange: (value: Array<JsonLogicValue>) => void;
 }) {
   const serialized = JSON.stringify(value);
   const [editor, setEditor] = useState<ArrayEditorState>(() => ({
@@ -83,7 +83,7 @@ function ArrayEditor({
   }
 
   const onDraftChange = (raw: string) => {
-    let emitted: JsonLogicValue[] | undefined;
+    let emitted: Array<JsonLogicValue> | undefined;
     if (raw.trim() === "") {
       emitted = [];
     } else {

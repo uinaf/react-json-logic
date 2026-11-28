@@ -81,7 +81,7 @@ describe("OPERATORS table", () => {
     expect(signatures).toHaveLength(expectedSignatures.length);
     expect(new Set(signatures)).toEqual(new Set(expectedSignatures));
 
-    const fieldTypes: string[] = Object.values(FIELD_TYPES);
+    const fieldTypes: Array<string> = Object.values(FIELD_TYPES);
     for (const operator of OPERATORS) {
       expect(operator.label.trim()).not.toBe("");
       expect(operator.fieldCount.min).toBeGreaterThanOrEqual(0);
